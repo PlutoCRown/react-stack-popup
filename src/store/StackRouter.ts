@@ -25,8 +25,6 @@ type ConfigOf<C extends PopupConfigArray, Id extends StackRouterId<C>> = Extract
 
 export class StackRouter<Config extends PopupConfigArray> {
   popupConfigs: { [P in StackRouterId<Config>]: ConfigOf<Config, P> }
-
-
   config: StackRouterConfig
 
   private store: ReturnType<typeof createStore<
@@ -34,30 +32,19 @@ export class StackRouter<Config extends PopupConfigArray> {
     StackRouterArgs<Config, StackRouterId<Config>>,
     StackRouterWrapperProps<Config, StackRouterId<Config>>
   >>
-  private historyManager?: HistoryManager<StackRouterId<Config>>
+  private historyManager?: HistoryManager
   private keyCounter = 0
-
-  // Public EventBus channel
   public readonly channel: EventBus<StackRouterEvents<StackRouterId<Config>>>
 
   constructor(popups: Config, config: StackRouterConfig = {}) {
     // @ts-expect-error any
-    this.popupConfigs = popups.reduce((obj, value) => {
-      // @ts-expect-error any
-      obj[value.id] = value;
-      return obj
-    }, {})
-
+    this.popupConfigs = popups.reduce((obj, value) => (obj[value.id] = value, obj), {})
     this.config = config
     this.store = createStore()
     this.channel = new EventBus<StackRouterEvents<StackRouterId<Config>>>()
 
     if (config.urlManage) {
-      this.historyManager = new HistoryManager<StackRouterId<Config>>({
-        onPop: (id) => {
-          this.closeFromHistory(id ?? undefined)
-        },
-      })
+      this.historyManager = new HistoryManager({ onPop: this.close })
     }
   }
 
@@ -69,13 +56,8 @@ export class StackRouter<Config extends PopupConfigArray> {
     return this.store.getState()
   }
 
-  subscribe = (listener: (state: any) => void) => {
-    return this.store.subscribe(listener)
-  }
-
+  // 对外 API
   open<Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterArgs<Config, Ex>, extra?: StackRouterOpenOptions) {
-
-    // const options = (openArgs.length === 3 ? openArgs[2] : undefined) as StackRouterOpenOptions | undefined
     const popupConfig = this.popupConfigs[id]
     const stackItem = {
       id,
@@ -87,28 +69,20 @@ export class StackRouter<Config extends PopupConfigArray> {
     }
     this.instance.open(stackItem)
     this.channel.emit('open', { id })
-    if (this.historyManager) {
-      this.historyManager.push(id, extra?.url)
-    }
+    this.historyManager?.push(extra?.url)
   }
-
-  private closeInternal = (id?: StackRouterId<Config>, fromHistory?: boolean) => {
+  close(id?: StackRouterId<Config>) {
     this.channel.emit('close', { id: id || null })
     this.instance.close(id)
-    if (this.historyManager && !fromHistory) {
-      this.historyManager.pop()
-    }
+    this.historyManager?.pop()
   }
 
-  close = (id?: StackRouterId<Config>) => {
-    this.closeInternal(id)
-  }
-
-  private closeFromHistory = (id?: StackRouterId<Config>) => {
-    this.closeInternal(id, true)
-  }
-
+  // 服务于 Hook
   getStack = () => this.instance.stack
+  subscribe = (listener: (state: any) => void) => {
+    return this.store.subscribe(listener)
+  }
+
 }
 
 function createStore<ID extends string, T extends any, W extends WrapperBaseProps>() {

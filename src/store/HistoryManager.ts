@@ -1,14 +1,15 @@
-type HistoryManagerOptions<ID extends string> = {
-  onPop: (id: ID | null) => void
+type HistoryManagerOptions = {
+  onPop: () => void
 }
 
-export class HistoryManager<ID extends string> {
-  private onPop: (id: ID | null) => void
+export class HistoryManager {
+  private onPop: () => void
   private popThisFrame = false
   private scheduled = false
-  private pendingPushes: Array<{ state: { popupId: ID }; url?: string }> = []
+  private pendingPushes: Array<string> = []
+  private suppressPop = false
 
-  constructor(options: HistoryManagerOptions<ID>) {
+  constructor(options: HistoryManagerOptions) {
     this.onPop = options.onPop
     window.addEventListener('popstate', this.handlePopState)
   }
@@ -17,26 +18,33 @@ export class HistoryManager<ID extends string> {
     window.removeEventListener('popstate', this.handlePopState)
   }
 
-  push(id: ID, url?: string) {
-    const state = { popupId: id }
-    const targetUrl = url ?? window.location.href
+  push(url: string = window.location.href) {
     if (this.popThisFrame) {
-      this.pendingPushes.push({ state, url: targetUrl })
+      this.pendingPushes.push(url)
       this.scheduleNextFrame()
       return
     }
-    window.history.pushState(state, '', targetUrl)
+    window.history.pushState({}, '', url)
   }
 
   pop() {
+    if (this.suppressPop) return
+    if (this.pendingPushes.length > 0) {
+      this.pendingPushes.pop()
+      return
+    }
     this.markPopThisFrame()
     window.history.back()
   }
 
-  private handlePopState = (event: PopStateEvent) => {
+  private handlePopState = (_event: PopStateEvent) => {
     this.markPopThisFrame()
-    const popupId = (event.state && event.state.popupId) as ID | undefined
-    this.onPop(popupId ?? null)
+    this.suppressPop = true
+    try {
+      this.onPop()
+    } finally {
+      this.suppressPop = false
+    }
   }
 
   private markPopThisFrame() {
@@ -54,8 +62,8 @@ export class HistoryManager<ID extends string> {
       if (this.pendingPushes.length === 0) return
       const pushes = this.pendingPushes
       this.pendingPushes = []
-      for (const task of pushes) {
-        window.history.pushState(task.state, '', task.url)
+      for (const url of pushes) {
+        window.history.pushState({}, '', url)
       }
     })
   }

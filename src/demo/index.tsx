@@ -27,16 +27,11 @@ const PagePopup = lazy(() => import("./PagePopup"));
 
 // Register popups
 const popups = [
-  RegisterPopup({
-    id: PopupID.NONE,
-    content: () => <NonePopup />,
-    wrapper: NoneWrapper,
-  }),
+  RegisterPopup({ id: PopupID.NONE, content: NonePopup, wrapper: NoneWrapper }),
+  RegisterPopup({ id: PopupID.PAGE, content: PagePopup, wrapper: PageWrapper }),
   RegisterPopup({
     id: PopupID.MASK,
-    content: ({ onClose }: { onClose?: () => void }) => (
-      <MaskPopup onClose={onClose} />
-    ),
+    content: MaskPopup,
     wrapper: MaskWrapper,
     wrapperProps: { maskClosable: true },
   }),
@@ -95,13 +90,6 @@ const popups = [
       </button>
     ),
     wrapperProps: { backgroundColor: "#667eea" },
-  }),
-  RegisterPopup({
-    id: PopupID.PAGE,
-    content: ({ onClose }: { onClose?: () => void }) => (
-      <PagePopup onClose={onClose} />
-    ),
-    wrapper: PageWrapper,
   }),
 ] as const;
 
