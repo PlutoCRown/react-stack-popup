@@ -5,13 +5,15 @@ import {
   StackRouterArgs,
   StackRouterConfig,
   StackRouterId,
-  StackRouterOpenArgs,
+  StackRouterOpenArgsWithOptions,
+  StackRouterOpenOptions,
   StackRouterWrapperProps,
   StackItem,
   RouterState,
   WrapperBaseProps,
 } from '../types'
 import { EventBus } from '../utils/EventBus'
+import { HistoryManager } from './HistoryManager'
 
 // Define event types for StackRouter
 type StackRouterEvents<ID extends string> = {
@@ -32,6 +34,7 @@ export class StackRouter<Config extends PopupConfigArray> {
     StackRouterArgs<Config, StackRouterId<Config>>,
     StackRouterWrapperProps<Config, StackRouterId<Config>>
   >>
+  private historyManager?: HistoryManager<StackRouterId<Config>>
   private keyCounter = 0
 
   // Public EventBus channel
@@ -50,7 +53,11 @@ export class StackRouter<Config extends PopupConfigArray> {
     this.channel = new EventBus<StackRouterEvents<StackRouterId<Config>>>()
 
     if (config.urlManage) {
-      window.addEventListener('popstate', this.handlePopState)
+      this.historyManager = new HistoryManager<StackRouterId<Config>>({
+        onPop: (id) => {
+          this.closeFromHistory(id ?? undefined)
+        },
+      })
     }
   }
 
@@ -66,15 +73,9 @@ export class StackRouter<Config extends PopupConfigArray> {
     return this.store.subscribe(listener)
   }
 
-  private handlePopState = (event: PopStateEvent) => {
-    // Handle browser back/forward navigation
-    if (event.state && event.state.popupId) {
-      this.close(event.state.popupId)
-    }
-  }
+  open<Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterArgs<Config, Ex>, extra?: StackRouterOpenOptions) {
 
-  open<Ex extends StackRouterId<Config>>(...openArgs: StackRouterOpenArgs<Config, Ex>) {
-    const [id, args] = openArgs
+    // const options = (openArgs.length === 3 ? openArgs[2] : undefined) as StackRouterOpenOptions | undefined
     const popupConfig = this.popupConfigs[id]
     const stackItem = {
       id,
@@ -86,12 +87,25 @@ export class StackRouter<Config extends PopupConfigArray> {
     }
     this.instance.open(stackItem)
     this.channel.emit('open', { id })
+    if (this.historyManager) {
+      this.historyManager.push(id, extra?.url)
+    }
+  }
+
+  private closeInternal = (id?: StackRouterId<Config>, fromHistory?: boolean) => {
+    this.channel.emit('close', { id: id || null })
+    this.instance.close(id)
+    if (this.historyManager && !fromHistory) {
+      this.historyManager.pop()
+    }
   }
 
   close = (id?: StackRouterId<Config>) => {
-    this.channel.emit('close', { id: id || null })
-    this.instance.close(id)
+    this.closeInternal(id)
+  }
 
+  private closeFromHistory = (id?: StackRouterId<Config>) => {
+    this.closeInternal(id, true)
   }
 
   getStack = () => this.instance.stack

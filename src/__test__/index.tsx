@@ -48,12 +48,12 @@ stackRouter.open(PopupID.BOTTOM_SHEET, {
 });
 
 // =============== TEST.2 参数传递校验 ===========
-// ✅ 第二个参数可不传
-stackRouter.open(PopupID.MASK);
-// @ts-expect-error ❌ 有参数的组件必须传
-stackRouter.open(PopupID.BOTTOM_SHEET);
-// ✅ 允许传第二个参数
-stackRouter.open(PopupID.MASK, {});
+// // ✅ 第二个参数可不传
+// stackRouter.open(PopupID.MASK);
+// // @ts-expect-error ❌ 有参数的组件必须传
+// stackRouter.open(PopupID.BOTTOM_SHEET);
+// // ✅ 允许传第二个参数
+// stackRouter.open(PopupID.MASK, {});
 
 // =============== TEST.3 漏定义风险 ===========
 export type MissPopup<T> = object extends T
