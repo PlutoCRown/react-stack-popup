@@ -14,7 +14,7 @@ export type WrapperBaseProps = {
 // Wrapper function type
 export type Wrapper<W extends WrapperBaseProps> = React.FC<W>
 
-export interface PopupConfig<ID extends string, T extends object, W extends WrapperBaseProps> {
+export interface PopupConfig<ID extends string, T extends any, W extends WrapperBaseProps> {
   id: ID
   content: React.FC<T>
   wrapper: Wrapper<W>
@@ -31,7 +31,7 @@ export interface StackRouterConfig {
 }
 
 
-export interface StackItem<ID extends string, T extends object, W extends WrapperBaseProps> {
+export interface StackItem<ID extends string, T extends any, W extends WrapperBaseProps> {
   id: ID
   key: string
   args: T
@@ -40,7 +40,7 @@ export interface StackItem<ID extends string, T extends object, W extends Wrappe
   freeze: boolean
 }
 
-export interface RouterState<ID extends string, T extends object, W extends WrapperBaseProps> {
+export interface RouterState<ID extends string, T extends any, W extends WrapperBaseProps> {
   stack: StackItem<ID, T, W>[]
   open: (item: StackItem<ID, T, W>) => void
   close: (id?: ID) => void

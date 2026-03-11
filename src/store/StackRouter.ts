@@ -9,27 +9,38 @@ type StackRouterEvents<ID extends string> = {
   close: { id: ID | null }
 }
 
-export class StackRouter<ID extends string, T extends object, W extends WrapperBaseProps, Config extends readonly PopupConfig<ID, T, W>[]> {
-  popupConfigs: { [P in Config[number]['id']]: Config[number] }
+type PopupArray = readonly PopupConfig<any, any, any>[]
+type IdOf<C extends PopupArray> = C[number]['id']
+type ConfigOf<C extends PopupArray, Id extends IdOf<C>> = Extract<C[number], { id: Id }>
+type ArgsOf<C extends PopupArray, Id extends IdOf<C>> = Parameters<ConfigOf<C, Id>['content']>[0]
+type WrapperPropsOf<C extends PopupArray, Id extends IdOf<C>> = Parameters<ConfigOf<C, Id>['wrapper']>[0]
+
+export class StackRouter<Config extends PopupArray> {
+  popupConfigs: { [P in IdOf<Config>]: ConfigOf<Config, P> }
 
 
   config: StackRouterConfig
 
-  private store: ReturnType<typeof createStore<ID, T, W>>
+  private store: ReturnType<typeof createStore<
+    IdOf<Config>,
+    ArgsOf<Config, IdOf<Config>>,
+    WrapperPropsOf<Config, IdOf<Config>>
+  >>
   private keyCounter = 0
 
   // Public EventBus channel
-  public readonly channel: EventBus<StackRouterEvents<ID>>
+  public readonly channel: EventBus<StackRouterEvents<IdOf<Config>>>
 
   constructor(popups: Config, config: StackRouterConfig = {}) {
+    // @ts-expect-error any
     this.popupConfigs = popups.reduce((obj, value) => {
       obj[value.id] = value;
       return obj
-    }, {} as any) as { [P in (typeof popups)[number]['id']]: (typeof popups)[number] }
+    }, {})
 
     this.config = config
-    this.store = createStore<ID, T, W>()
-    this.channel = new EventBus<StackRouterEvents<ID>>()
+    this.store = createStore()
+    this.channel = new EventBus<StackRouterEvents<IdOf<Config>>>()
 
 
 
@@ -57,9 +68,13 @@ export class StackRouter<ID extends string, T extends object, W extends WrapperB
     }
   }
 
-  open<Ex extends ID>(id: Ex, args: T) {
+  open<Ex extends IdOf<Config>>(id: Ex, args: ArgsOf<Config, Ex>) {
     const popupConfig = this.popupConfigs[id]
-    const stackItem: StackItem<ID, T, W> = {
+    const stackItem: StackItem<
+      IdOf<Config>,
+      ArgsOf<Config, Ex>,
+      WrapperPropsOf<Config, Ex>
+    > = {
       id,
       key: this.generateKey(),
       args,
@@ -71,7 +86,7 @@ export class StackRouter<ID extends string, T extends object, W extends WrapperB
     this.channel.emit('open', { id })
   }
 
-  close = (id?: ID) => {
+  close = (id?: IdOf<Config>) => {
     this.channel.emit('close', { id: id || null })
     this.instance.close(id)
 
@@ -80,7 +95,7 @@ export class StackRouter<ID extends string, T extends object, W extends WrapperB
   getStack = () => this.instance.stack
 }
 
-function createStore<ID extends string, T extends object, W extends WrapperBaseProps>() {
+function createStore<ID extends string, T extends any, W extends WrapperBaseProps>() {
   return create<RouterState<ID, T, W>>()(
     immer((set, get) => ({
       stack: [],

@@ -7,9 +7,10 @@ export type RegisterPopupOptions<ID extends string, T extends object, W extends 
   wrapper: Wrapper<W>
   wrapperProps?: W
 }
+const __register_popup = Symbol.for("__register_popup")
 
 export function RegisterPopup<ID extends string, T extends object, W extends WrapperBaseProps>(
   options: RegisterPopupOptions<ID, T, W>
 ): PopupConfig<ID, T, W> {
-  return options
+  return Object.assign({ __register_popup }, options)
 }
