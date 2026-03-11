@@ -5,6 +5,7 @@ import { StackRouter } from "../store/StackRouter";
 import {
   PopupConfigArray,
   StackRouterArgs,
+  StackRouterContentArgs,
   StackRouterId,
   StackRouterWrapperProps,
 } from "../types";
@@ -28,16 +29,14 @@ export function PopupRenderer<Config extends PopupConfigArray>({
 
     const onClose = () => stackRouter.close(item.id);
     const Component = popupConfig.content as FC<
-      StackRouterArgs<Config, StackRouterId<Config>>
+      StackRouterContentArgs<Config, StackRouterId<Config>>
     >;
 
     // Merge args with onClose
-    const contentProps = { onClose, ...item.args } as StackRouterArgs<
+    const contentProps = { onClose, ...item.args } as StackRouterContentArgs<
       Config,
       StackRouterId<Config>
-    > & {
-      onClose: () => void;
-    };
+    >;
     let content = <Component {...contentProps} />;
 
     // Apply freeze, suspense, errorBoundary based on StackRouter config

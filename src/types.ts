@@ -24,13 +24,25 @@ export interface PopupConfig<ID extends string, T extends any, W extends Wrapper
 export type PopupConfigArray = readonly PopupConfig<any, any, any>[]
 export type StackRouterId<C extends PopupConfigArray> = C[number]['id']
 export type StackRouterConfigOf<C extends PopupConfigArray, Id extends StackRouterId<C>> = Extract<C[number], { id: Id }>
-export type StackRouterArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> = Parameters<StackRouterConfigOf<C, Id>['content']>[0]
+export type StackRouterContentArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> =
+  Parameters<StackRouterConfigOf<C, Id>['content']>[0]
+type StackRouterRemoveOnClose<T> = T extends object ? Omit<T, 'onClose'> : T
+export type StackRouterArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> =
+  StackRouterRemoveOnClose<StackRouterContentArgs<C, Id>>
 export type StackRouterWrapperProps<C extends PopupConfigArray, Id extends StackRouterId<C>> = Parameters<StackRouterConfigOf<C, Id>['wrapper']>[0]
 export type StackRouterItem<C extends PopupConfigArray, Id extends StackRouterId<C> = StackRouterId<C>> = StackItem<
   Id,
   StackRouterArgs<C, Id>,
   StackRouterWrapperProps<C, Id>
 >
+type StackRouterIsEmptyObject<T> = T extends object ? (keyof T extends never ? true : false) : false
+export type StackRouterOpenArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> =
+  StackRouterArgs<C, Id> extends void | undefined
+  ? [id: Id, args?: StackRouterArgs<C, Id>]
+  : StackRouterIsEmptyObject<StackRouterArgs<C, Id>> extends true
+    ? [id: Id] | [id: Id, args: StackRouterArgs<C, Id>]
+    : [id: Id, args: StackRouterArgs<C, Id>]
+
 export type StackRouterState<C extends PopupConfigArray> = RouterState<
   StackRouterId<C>,
   StackRouterArgs<C, StackRouterId<C>>,

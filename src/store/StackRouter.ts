@@ -5,6 +5,7 @@ import {
   StackRouterArgs,
   StackRouterConfig,
   StackRouterId,
+  StackRouterOpenArgs,
   StackRouterWrapperProps,
   StackItem,
   RouterState,
@@ -72,16 +73,13 @@ export class StackRouter<Config extends PopupConfigArray> {
     }
   }
 
-  open<Ex extends StackRouterId<Config>>(id: Ex, args: StackRouterArgs<Config, Ex>) {
+  open<Ex extends StackRouterId<Config>>(...openArgs: StackRouterOpenArgs<Config, Ex>) {
+    const [id, args] = openArgs
     const popupConfig = this.popupConfigs[id]
-    const stackItem: StackItem<
-      StackRouterId<Config>,
-      StackRouterArgs<Config, Ex>,
-      StackRouterWrapperProps<Config, Ex>
-    > = {
+    const stackItem = {
       id,
       key: this.generateKey(),
-      args,
+      args: args as StackRouterArgs<Config, Ex>,
       popupConfig,
       visible: true,
       freeze: false,

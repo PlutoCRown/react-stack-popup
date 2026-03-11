@@ -25,14 +25,14 @@ function App() {
             <button onClick={() => stackRouter.open(PopupID.NONE, {})}>
               None Wrapper
             </button>
-            <button onClick={() => stackRouter.open(PopupID.MASK, {})}>
+            <button onClick={() => stackRouter.open(PopupID.MASK)}>
               Mask Wrapper
             </button>
             <button onClick={() => {}}>Bottom Sheet</button>
-            <button onClick={() => stackRouter.open(PopupID.PAGE, {})}>
+            <button onClick={() => stackRouter.open(PopupID.PAGE)}>
               Page Wrapper
             </button>
-            <button onClick={() => stackRouter.open(PopupID.CUSTOM, {})}>
+            <button onClick={() => stackRouter.open(PopupID.CUSTOM)}>
               Custom Wrapper
             </button>
           </div>
