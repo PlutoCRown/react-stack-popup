@@ -1,86 +1,90 @@
-
-import { lazy, Suspense } from 'react'
-import { StackRouter } from './store/StackRouter'
-import { RegisterPopup } from './store/popupRegistry'
-import { PopupRenderer } from './components/PopupRenderer'
-import { MaskWrapper, BottomSheetWrapper } from './components/wrappers'
-import './App.css'
+import { lazy } from "react";
+import { StackRouter } from "./store/StackRouter";
+import { RegisterPopup } from "./store/popupRegistry";
+import { PopupRenderer } from "./components/PopupRenderer";
+import {
+  MaskWrapper,
+  BottomSheetWrapper,
+  PageWrapper,
+  NoneWrapper,
+} from "./components/wrappers";
+import "./App.css";
 
 // Define popup IDs
 enum PopupID {
-  NONE = 'none',
-  MASK = 'mask',
-  BOTTOM_SHEET = 'bottomSheet',
-  CUSTOM = 'custom'
+  NONE = "none",
+  MASK = "mask",
+  BOTTOM_SHEET = "bottomSheet",
+  CUSTOM = "custom",
+  PAGE = "page",
 }
 
 // Lazy import demo components
-const NonePopup = lazy(() => import('./demo/NonePopup'))
-const MaskPopup = lazy(() => import('./demo/MaskPopup'))
-const BottomSheetPopup = lazy(() => import('./demo/BottomSheetPopup'))
-const CustomPopup = lazy(() => import('./demo/CustomPopup'))
+const NonePopup = lazy(() => import("./demo/NonePopup"));
+const MaskPopup = lazy(() => import("./demo/MaskPopup"));
+const BottomSheetPopup = lazy(() => import("./demo/BottomSheetPopup"));
+const CustomPopup = lazy(() => import("./demo/CustomPopup"));
+const PagePopup = lazy(() => import("./demo/PagePopup"));
 
 // Register popups
 const popups = [
   RegisterPopup({
     id: PopupID.NONE,
-    content: () => (
-      <Suspense fallback={<div>Loading...</div>}>
-        <NonePopup />
-      </Suspense>
-    )
+    content: () => <NonePopup />,
+    wrapper: NoneWrapper,
   }),
   RegisterPopup({
     id: PopupID.MASK,
-    content: () => (
-      <Suspense fallback={<div>Loading...</div>}>
-        <MaskPopup />
-      </Suspense>
-    ),
-    wrapper: (preset, wrapperProps) => <MaskWrapper {...(wrapperProps || {})}>{preset}</MaskWrapper>,
-    wrapperProps: { maskClosable: true }
+    content: (onClose?: () => void) => <MaskPopup onClose={onClose} />,
+    wrapper: MaskWrapper,
+    wrapperProps: { maskClosable: true },
   }),
   RegisterPopup({
     id: PopupID.BOTTOM_SHEET,
-    content: (title: string, message: string) => (
-      <Suspense fallback={<div>Loading...</div>}>
-        <BottomSheetPopup title={title} message={message} />
-      </Suspense>
+    wrapper: BottomSheetWrapper,
+    content: (title: string, message: string, onClose?: () => void) => (
+      <BottomSheetPopup title={title} message={message} onClose={onClose} />
     ),
-    wrapper: (preset, wrapperProps) => <BottomSheetWrapper {...(wrapperProps || {})}>{preset}</BottomSheetWrapper>
   }),
   RegisterPopup({
     id: PopupID.CUSTOM,
-    content: () => (
-      <Suspense fallback={<div>Loading...</div>}>
-        <CustomPopup />
-      </Suspense>
-    ),
-    wrapper: (preset, wrapperProps: { backgroundColor?: string; onClose?: () => void } | undefined) => (
+    content: () => <CustomPopup />,
+    // 该示例是错误的
+    wrapper: (
+      preset,
+      wrapperProps:
+        | {
+            backgroundColor?: string;
+            onClose?: () => void;
+            visible?: boolean;
+            duration?: number;
+          }
+        | undefined,
+    ) => (
       <button
         type="button"
         style={{
-          position: 'fixed',
+          position: "fixed",
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'rgba(0,0,0,0.3)',
-          animation: 'pulse 1s ease',
-          border: 'none',
-          padding: 0
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(0,0,0,0.3)",
+          animation: "pulse 1s ease",
+          border: "none",
+          padding: 0,
         }}
         onClick={(e) => {
           if (e.target === e.currentTarget && wrapperProps?.onClose) {
-            wrapperProps.onClose()
+            wrapperProps.onClose();
           }
         }}
         onKeyDown={(e) => {
-          if (e.key === 'Escape' && wrapperProps?.onClose) {
-            wrapperProps.onClose()
+          if (e.key === "Escape" && wrapperProps?.onClose) {
+            wrapperProps.onClose();
           }
         }}
       >
@@ -90,28 +94,39 @@ const popups = [
             50% { transform: scale(1.05); }
           }
         `}</style>
-        <div style={{ backgroundColor: wrapperProps?.backgroundColor || '#667eea', padding: '20px', borderRadius: '12px' }}>
+        <div
+          style={{
+            backgroundColor: wrapperProps?.backgroundColor || "#667eea",
+            padding: "20px",
+            borderRadius: "12px",
+          }}
+        >
           {preset}
         </div>
       </button>
     ),
-    wrapperProps: { backgroundColor: '#667eea' }
-  })
-]
+    wrapperProps: { backgroundColor: "#667eea" },
+  }),
+  RegisterPopup({
+    id: PopupID.PAGE,
+    content: (onClose?: () => void) => <PagePopup onClose={onClose} />,
+    wrapper: PageWrapper,
+  }),
+];
 
 // Create stack router
-const stackRouter = new StackRouter<PopupID, [], { maskClosable?: boolean; backgroundColor?: string; onClose?: () => void }>(popups, {
-  urlManage: true
-})
+const stackRouter = new StackRouter<PopupID, any[], any>(popups, {
+  urlManage: true,
+});
 
 function App() {
-  const _nestedColor = 'blue' // or use useState if you need dynamic color
-
   const openNestedPopup = (level: number) => {
-    const colors = ['#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#f39c12']
-    const color = colors[level % colors.length]
-    stackRouter.open(PopupID.CUSTOM, undefined, { wrapperProps: { backgroundColor: color } })
-  }
+    const colors = ["#e74c3c", "#3498db", "#2ecc71", "#9b59b6", "#f39c12"];
+    const color = colors[level % colors.length];
+    stackRouter.open(PopupID.CUSTOM, [], {
+      wrapperProps: { backgroundColor: color },
+    });
+  };
 
   return (
     <div className="app">
@@ -124,16 +139,26 @@ function App() {
         <section className="controls">
           <h2>Wrapper Types</h2>
           <div className="button-group">
-            <button type="button" onClick={() => stackRouter.open(PopupID.NONE)}>
+            <button onClick={() => stackRouter.open(PopupID.NONE, [])}>
               None Wrapper
             </button>
-            <button type="button" onClick={() => stackRouter.open(PopupID.MASK)}>
+            <button onClick={() => stackRouter.open(PopupID.MASK, [])}>
               Mask Wrapper
             </button>
-            <button type="button" onClick={() => stackRouter.open(PopupID.BOTTOM_SHEET, ['Bottom Sheet Title', 'This is a bottom sheet popup'])}>
+            <button
+              onClick={() =>
+                stackRouter.open(PopupID.BOTTOM_SHEET, [
+                  "Bottom Sheet Title",
+                  "This is a bottom sheet popup",
+                ])
+              }
+            >
               Bottom Sheet
             </button>
-            <button type="button" onClick={() => stackRouter.open(PopupID.CUSTOM, undefined)}>
+            <button onClick={() => stackRouter.open(PopupID.PAGE, [])}>
+              Page Wrapper
+            </button>
+            <button onClick={() => stackRouter.open(PopupID.CUSTOM, [])}>
               Custom Wrapper
             </button>
           </div>
@@ -145,7 +170,7 @@ function App() {
             <button type="button" onClick={() => stackRouter.close()}>
               Close Last Popup
             </button>
-            <button type="button" onClick={() => stackRouter.close(PopupID.BOTTOM_SHEET)}>
+            <button onClick={() => stackRouter.close(PopupID.BOTTOM_SHEET)}>
               Close Bottom Sheet Only
             </button>
             <button type="button" onClick={() => openNestedPopup(0)}>
@@ -159,8 +184,12 @@ function App() {
           <ul>
             <li>Register popups with unique IDs</li>
             <li>Create a StackRouter with your popups</li>
-            <li>Open popups with <code>stackRouter.open(id, args)</code></li>
-            <li>Close popups with <code>stackRouter.close(id?)</code></li>
+            <li>
+              Open popups with <code>stackRouter.open(id, args)</code>
+            </li>
+            <li>
+              Close popups with <code>stackRouter.close(id?)</code>
+            </li>
             <li>The router maintains a stack of open popups</li>
           </ul>
         </section>
@@ -168,7 +197,7 @@ function App() {
 
       <PopupRenderer stackRouter={stackRouter} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
