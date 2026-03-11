@@ -4,14 +4,15 @@ import { PopupConfig, StackRouterConfig, StackItem, RouterState, WrapperBaseProp
 import { EventBus } from '../utils/EventBus'
 
 // Define event types for StackRouter
-export interface StackRouterEvents<ID extends string> {
+type StackRouterEvents<ID extends string> = {
   open: { id: ID }
   close: { id: ID | null }
-  [key: string]: object | null
 }
 
-export class StackRouter<ID extends string, T extends object, W extends WrapperBaseProps> {
-  private popupConfigs: Map<ID, PopupConfig<ID, T, W>>
+export class StackRouter<ID extends string, T extends object, W extends WrapperBaseProps, Config extends readonly PopupConfig<ID, T, W>[]> {
+  popupConfigs: { [P in Config[number]['id']]: Config[number] }
+
+
   config: StackRouterConfig
 
   private store: ReturnType<typeof createStore<ID, T, W>>
@@ -20,8 +21,12 @@ export class StackRouter<ID extends string, T extends object, W extends WrapperB
   // Public EventBus channel
   public readonly channel: EventBus<StackRouterEvents<ID>>
 
-  constructor(popups: readonly PopupConfig<ID, T, W>[], config: StackRouterConfig = {}) {
-    this.popupConfigs = new Map(popups.map(p => [p.id, p]))
+  constructor(popups: Config, config: StackRouterConfig = {}) {
+    this.popupConfigs = popups.reduce((obj, value) => {
+      obj[value.id] = value;
+      return obj
+    }, {} as any) as { [P in (typeof popups)[number]['id']]: (typeof popups)[number] }
+
     this.config = config
     this.store = createStore<ID, T, W>()
     this.channel = new EventBus<StackRouterEvents<ID>>()
@@ -52,8 +57,8 @@ export class StackRouter<ID extends string, T extends object, W extends WrapperB
     }
   }
 
-  open = (id: ID, args: object) => {
-    const popupConfig = this.popupConfigs.get(id)
+  open<Ex extends ID>(id: Ex, args: T) {
+    const popupConfig = this.popupConfigs[id]
     const stackItem: StackItem<ID, T, W> = {
       id,
       key: this.generateKey(),

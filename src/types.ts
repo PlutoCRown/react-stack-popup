@@ -1,10 +1,14 @@
 import React, { ReactNode } from 'react'
 
+// 所有弹窗外层 Wrapper 的基础属性。
+// 为了兼容各种自定义 Wrapper，这里将 visible/onClose 都设为可选，
+// 实际使用时由 PopupRenderer 统一注入。
 export type WrapperBaseProps = {
-  visible: boolean
-  onClose: () => void | Promise<void>
+  visible?: boolean
+  onClose?: () => void | Promise<void>
   duration?: number
-  children: ReactNode
+  // children 由 JSX 传入，这里不强制在 wrapperProps 中必填
+  children?: ReactNode
 }
 
 // Wrapper function type
@@ -30,7 +34,7 @@ export interface StackRouterConfig {
 export interface StackItem<ID extends string, T extends object, W extends WrapperBaseProps> {
   id: ID
   key: string
-  args: object
+  args: T
   popupConfig?: PopupConfig<ID, T, W>
   visible: boolean,
   freeze: boolean

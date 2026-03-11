@@ -1,6 +1,7 @@
-import { lazy, ReactNode } from "react";
+import { lazy } from "react";
 import { StackRouter } from "./store/StackRouter";
 import { RegisterPopup } from "./store/popupRegistry";
+import { WrapperBaseProps } from "./types";
 import { PopupRenderer } from "./components/PopupRenderer";
 import {
   MaskWrapper,
@@ -48,15 +49,9 @@ const popups = [
   }),
   RegisterPopup({
     id: PopupID.CUSTOM,
-    content: () => <CustomPopup />,
+    content: CustomPopup,
     // 该示例是错误的
-    wrapper: (props: {
-      backgroundColor?: string;
-      onClose?: () => void;
-      visible?: boolean;
-      duration?: number;
-      children: ReactNode;
-    }) => (
+    wrapper: (props: WrapperBaseProps & { backgroundColor?: string }) => (
       <button
         type="button"
         style={{
@@ -105,10 +100,12 @@ const popups = [
   }),
   RegisterPopup({
     id: PopupID.PAGE,
-    content: (onClose?: () => void) => <PagePopup onClose={onClose} />,
+    content: ({ onClose }: { onClose?: () => void }) => (
+      <PagePopup onClose={onClose} />
+    ),
     wrapper: PageWrapper,
   }),
-];
+] as const;
 
 // Create stack router
 const stackRouter = new StackRouter(popups, {
@@ -125,6 +122,9 @@ function App() {
     stackRouter.open(PopupID.CUSTOM, {
       wrapperProps: { backgroundColor: color },
     });
+    stackRouter.open(PopupID.BOTTOM_SHEET, { babel: "123" });
+    type c = typeof stackRouter.popupConfigs.bottomSheet.content;
+    type d = Parameters<c>[0]; // BottomSheetPopupProps
   };
 
   return (
@@ -138,10 +138,10 @@ function App() {
         <section className="controls">
           <h2>Wrapper Types</h2>
           <div className="button-group">
-            <button onClick={() => stackRouter.open(PopupID.NONE, [])}>
+            <button onClick={() => stackRouter.open(PopupID.NONE, {})}>
               None Wrapper
             </button>
-            <button onClick={() => stackRouter.open(PopupID.MASK, [])}>
+            <button onClick={() => stackRouter.open(PopupID.MASK, {})}>
               Mask Wrapper
             </button>
             <button
@@ -154,10 +154,10 @@ function App() {
             >
               Bottom Sheet
             </button>
-            <button onClick={() => stackRouter.open(PopupID.PAGE, [])}>
+            <button onClick={() => stackRouter.open(PopupID.PAGE, {})}>
               Page Wrapper
             </button>
-            <button onClick={() => stackRouter.open(PopupID.CUSTOM, [])}>
+            <button onClick={() => stackRouter.open(PopupID.CUSTOM, {})}>
               Custom Wrapper
             </button>
           </div>

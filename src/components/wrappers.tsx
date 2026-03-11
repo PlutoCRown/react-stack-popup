@@ -1,17 +1,8 @@
-import { ReactNode } from "react";
+import { WrapperBaseProps } from "../types";
 import styles from "./wrappers.module.css";
 
-// Base props for all wrappers
-export interface BaseWrapperProps {
-  visible?: boolean;
-  duration?: number;
-  children: ReactNode;
-}
-
 // 1. NoneWrapper - No background or animation
-export interface NoneWrapperProps extends BaseWrapperProps {
-  children: ReactNode;
-}
+export interface NoneWrapperProps extends WrapperBaseProps {}
 
 export const NoneWrapper = ({ children, visible = true }: NoneWrapperProps) => {
   if (!visible) return null;
@@ -19,11 +10,9 @@ export const NoneWrapper = ({ children, visible = true }: NoneWrapperProps) => {
 };
 
 // 2. MaskWrapper - Transparent background with opacity animation
-export interface MaskWrapperProps extends BaseWrapperProps {
-  children: ReactNode;
+export interface MaskWrapperProps extends WrapperBaseProps {
   opacity?: number;
   maskClosable?: boolean;
-  onClose?: () => void;
 }
 
 export const MaskWrapper = ({
@@ -66,10 +55,8 @@ export const MaskWrapper = ({
 };
 
 // 3. BottomSheetWrapper - MaskWrapper with bottom sheet animation
-export interface BottomSheetWrapperProps extends BaseWrapperProps {
-  children: ReactNode;
+export interface BottomSheetWrapperProps extends WrapperBaseProps {
   maxHeight?: string;
-  onClose?: () => void;
 }
 
 export const BottomSheetWrapper = ({
@@ -99,9 +86,7 @@ export const BottomSheetWrapper = ({
 };
 
 // 4. PageWrapper - Full page with slide in from right animation
-export interface PageWrapperProps extends BaseWrapperProps {
-  children: ReactNode;
-}
+export interface PageWrapperProps extends WrapperBaseProps {}
 
 export const PageWrapper = ({
   children,
