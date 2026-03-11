@@ -1,20 +1,15 @@
-import { ReactNode } from 'react'
-import { PopupConfig, Wrapper } from '../types'
+import React, { ReactNode } from 'react'
+import { PopupConfig, Wrapper, WrapperBaseProps } from '../types'
 
-export type RegisterPopupOptions<ID extends string, T extends object, W = any> = {
+export type RegisterPopupOptions<ID extends string, T extends object, W extends WrapperBaseProps> = {
   id: ID
-  content: (...args: T) => ReactNode
-  wrapper: Wrapper<W, T>
+  content: React.FC<T>
+  wrapper: Wrapper<W>
   wrapperProps?: W
 }
 
-export function RegisterPopup<ID extends string, T extends object, W = any>(
+export function RegisterPopup<ID extends string, T extends object, W extends WrapperBaseProps>(
   options: RegisterPopupOptions<ID, T, W>
 ): PopupConfig<ID, T, W> {
-  return {
-    id: options.id,
-    content: options.content,
-    wrapper: options.wrapper,
-    wrapperProps: options.wrapperProps
-  }
+  return options
 }

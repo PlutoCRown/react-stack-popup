@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, ReactNode } from "react";
 import { StackRouter } from "./store/StackRouter";
 import { RegisterPopup } from "./store/popupRegistry";
 import { PopupRenderer } from "./components/PopupRenderer";
@@ -31,42 +31,32 @@ const popups = [
   RegisterPopup({
     id: PopupID.NONE,
     content: () => <NonePopup />,
-    wrapper: (preset, wrapperProps) => (
-      <NoneWrapper {...wrapperProps}>{preset}</NoneWrapper>
-    ),
+    wrapper: NoneWrapper,
   }),
   RegisterPopup({
     id: PopupID.MASK,
-    content: (onClose?: () => void) => <MaskPopup onClose={onClose} />,
-    wrapper: (preset, wrapperProps) => (
-      <MaskWrapper {...wrapperProps}>{preset}</MaskWrapper>
+    content: ({ onClose }: { onClose?: () => void }) => (
+      <MaskPopup onClose={onClose} />
     ),
+    wrapper: MaskWrapper,
     wrapperProps: { maskClosable: true },
   }),
   RegisterPopup({
     id: PopupID.BOTTOM_SHEET,
-    content: (title: string, message: string, onClose?: () => void) => (
-      <BottomSheetPopup title={title} message={message} onClose={onClose} />
-    ),
-    wrapper: (preset, wrapperProps) => (
-      <BottomSheetWrapper {...wrapperProps}>{preset}</BottomSheetWrapper>
-    ),
+    content: BottomSheetPopup,
+    wrapper: BottomSheetWrapper,
   }),
   RegisterPopup({
     id: PopupID.CUSTOM,
     content: () => <CustomPopup />,
     // 该示例是错误的
-    wrapper: (
-      preset,
-      wrapperProps:
-        | {
-            backgroundColor?: string;
-            onClose?: () => void;
-            visible?: boolean;
-            duration?: number;
-          }
-        | undefined,
-    ) => (
+    wrapper: (props: {
+      backgroundColor?: string;
+      onClose?: () => void;
+      visible?: boolean;
+      duration?: number;
+      children: ReactNode;
+    }) => (
       <button
         type="button"
         style={{
@@ -84,13 +74,13 @@ const popups = [
           padding: 0,
         }}
         onClick={(e) => {
-          if (e.target === e.currentTarget && wrapperProps?.onClose) {
-            wrapperProps.onClose();
+          if (e.target === e.currentTarget && props?.onClose) {
+            props.onClose();
           }
         }}
         onKeyDown={(e) => {
-          if (e.key === "Escape" && wrapperProps?.onClose) {
-            wrapperProps.onClose();
+          if (e.key === "Escape" && props?.onClose) {
+            props.onClose();
           }
         }}
       >
@@ -102,12 +92,12 @@ const popups = [
         `}</style>
         <div
           style={{
-            backgroundColor: wrapperProps?.backgroundColor || "#667eea",
+            backgroundColor: props?.backgroundColor || "#667eea",
             padding: "20px",
             borderRadius: "12px",
           }}
         >
-          {preset}
+          {props.children}
         </div>
       </button>
     ),
@@ -116,14 +106,12 @@ const popups = [
   RegisterPopup({
     id: PopupID.PAGE,
     content: (onClose?: () => void) => <PagePopup onClose={onClose} />,
-    wrapper: (preset, wrapperProps) => (
-      <PageWrapper {...wrapperProps}>{preset}</PageWrapper>
-    ),
+    wrapper: PageWrapper,
   }),
 ];
 
 // Create stack router
-const stackRouter = new StackRouter<PopupID, object, any>(popups, {
+const stackRouter = new StackRouter(popups, {
   urlManage: true,
   freeze: true,
   suspense: true,
@@ -134,7 +122,7 @@ function App() {
   const openNestedPopup = (level: number) => {
     const colors = ["#e74c3c", "#3498db", "#2ecc71", "#9b59b6", "#f39c12"];
     const color = colors[level % colors.length];
-    stackRouter.open(PopupID.CUSTOM, [], {
+    stackRouter.open(PopupID.CUSTOM, {
       wrapperProps: { backgroundColor: color },
     });
   };

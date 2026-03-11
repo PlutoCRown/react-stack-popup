@@ -4,6 +4,7 @@ export type WrapperBaseProps = {
   visible: boolean
   onClose: () => void | Promise<void>
   duration?: number
+  children: ReactNode
 }
 
 // Wrapper function type

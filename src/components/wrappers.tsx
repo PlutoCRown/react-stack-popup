@@ -5,6 +5,7 @@ import styles from "./wrappers.module.css";
 export interface BaseWrapperProps {
   visible?: boolean;
   duration?: number;
+  children: ReactNode;
 }
 
 // 1. NoneWrapper - No background or animation
