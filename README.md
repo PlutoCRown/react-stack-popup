@@ -11,13 +11,13 @@ cosnt popup = RegisterPopup({
     wrapper: (preset) => ReactNode
 })
 2. 创建Router
-const StackRouter = new StackRouter<PopupID>([popup,...] as const,{
+const StackRouter = new StackRouter([popup,...] as const,{
     urlManage: boolean // 若开启。并且在StackRouter.open种传递url参数的话，会代理执行 history.pushState / history.back
 })
-> 注： 此前需要定义好全部PopupID
+> 注： PopupID 会从 popups 自动推导，无需额外定义
 
 1. 打开和关闭
-StackRouter.open(PopupID,T,config);
+StackRouter.open(PopupID, args);
 StackRouter.close(PopupID?);
 
 # 项目包含

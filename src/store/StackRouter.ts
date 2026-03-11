@@ -1,6 +1,15 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import { PopupConfig, StackRouterConfig, StackItem, RouterState, WrapperBaseProps } from '../types'
+import {
+  PopupConfigArray,
+  StackRouterArgs,
+  StackRouterConfig,
+  StackRouterId,
+  StackRouterWrapperProps,
+  StackItem,
+  RouterState,
+  WrapperBaseProps,
+} from '../types'
 import { EventBus } from '../utils/EventBus'
 
 // Define event types for StackRouter
@@ -9,40 +18,35 @@ type StackRouterEvents<ID extends string> = {
   close: { id: ID | null }
 }
 
-type PopupArray = readonly PopupConfig<any, any, any>[]
-type IdOf<C extends PopupArray> = C[number]['id']
-type ConfigOf<C extends PopupArray, Id extends IdOf<C>> = Extract<C[number], { id: Id }>
-type ArgsOf<C extends PopupArray, Id extends IdOf<C>> = Parameters<ConfigOf<C, Id>['content']>[0]
-type WrapperPropsOf<C extends PopupArray, Id extends IdOf<C>> = Parameters<ConfigOf<C, Id>['wrapper']>[0]
+type ConfigOf<C extends PopupConfigArray, Id extends StackRouterId<C>> = Extract<C[number], { id: Id }>
 
-export class StackRouter<Config extends PopupArray> {
-  popupConfigs: { [P in IdOf<Config>]: ConfigOf<Config, P> }
+export class StackRouter<Config extends PopupConfigArray> {
+  popupConfigs: { [P in StackRouterId<Config>]: ConfigOf<Config, P> }
 
 
   config: StackRouterConfig
 
   private store: ReturnType<typeof createStore<
-    IdOf<Config>,
-    ArgsOf<Config, IdOf<Config>>,
-    WrapperPropsOf<Config, IdOf<Config>>
+    StackRouterId<Config>,
+    StackRouterArgs<Config, StackRouterId<Config>>,
+    StackRouterWrapperProps<Config, StackRouterId<Config>>
   >>
   private keyCounter = 0
 
   // Public EventBus channel
-  public readonly channel: EventBus<StackRouterEvents<IdOf<Config>>>
+  public readonly channel: EventBus<StackRouterEvents<StackRouterId<Config>>>
 
   constructor(popups: Config, config: StackRouterConfig = {}) {
     // @ts-expect-error any
     this.popupConfigs = popups.reduce((obj, value) => {
+      // @ts-expect-error any
       obj[value.id] = value;
       return obj
     }, {})
 
     this.config = config
     this.store = createStore()
-    this.channel = new EventBus<StackRouterEvents<IdOf<Config>>>()
-
-
+    this.channel = new EventBus<StackRouterEvents<StackRouterId<Config>>>()
 
     if (config.urlManage) {
       window.addEventListener('popstate', this.handlePopState)
@@ -68,12 +72,12 @@ export class StackRouter<Config extends PopupArray> {
     }
   }
 
-  open<Ex extends IdOf<Config>>(id: Ex, args: ArgsOf<Config, Ex>) {
+  open<Ex extends StackRouterId<Config>>(id: Ex, args: StackRouterArgs<Config, Ex>) {
     const popupConfig = this.popupConfigs[id]
     const stackItem: StackItem<
-      IdOf<Config>,
-      ArgsOf<Config, Ex>,
-      WrapperPropsOf<Config, Ex>
+      StackRouterId<Config>,
+      StackRouterArgs<Config, Ex>,
+      StackRouterWrapperProps<Config, Ex>
     > = {
       id,
       key: this.generateKey(),
@@ -86,7 +90,7 @@ export class StackRouter<Config extends PopupArray> {
     this.channel.emit('open', { id })
   }
 
-  close = (id?: IdOf<Config>) => {
+  close = (id?: StackRouterId<Config>) => {
     this.channel.emit('close', { id: id || null })
     this.instance.close(id)
 

@@ -28,16 +28,7 @@ function App() {
             <button onClick={() => stackRouter.open(PopupID.MASK, {})}>
               Mask Wrapper
             </button>
-            <button
-              onClick={() =>
-                stackRouter.open(PopupID.BOTTOM_SHEET, [
-                  "Bottom Sheet Title",
-                  "This is a bottom sheet popup",
-                ])
-              }
-            >
-              Bottom Sheet
-            </button>
+            <button onClick={() => {}}>Bottom Sheet</button>
             <button onClick={() => stackRouter.open(PopupID.PAGE, {})}>
               Page Wrapper
             </button>

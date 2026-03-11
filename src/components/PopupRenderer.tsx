@@ -1,36 +1,41 @@
 import { Suspense } from "react";
+import type { FC } from "react";
 import { useStackRouter } from "../hooks/useStackRouter";
 import { StackRouter } from "../store/StackRouter";
-import { PopupConfig, WrapperBaseProps } from "../types";
+import {
+  PopupConfigArray,
+  StackRouterArgs,
+  StackRouterId,
+  StackRouterWrapperProps,
+} from "../types";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { Freeze } from "./Freeze";
 import { PopupLoading } from "./PopupLoading";
 
-interface PopupRendererProps<
-  ID extends string,
-  T extends object,
-  W extends WrapperBaseProps,
-> {
-  stackRouter: StackRouter<ID, T, W>;
+interface PopupRendererProps<Config extends PopupConfigArray> {
+  stackRouter: StackRouter<Config>;
 }
 
-export function PopupRenderer<
-  ID extends string,
-  T extends object,
-  W extends WrapperBaseProps,
->({ stackRouter }: PopupRendererProps<ID, T, W>) {
+export function PopupRenderer<Config extends PopupConfigArray>({
+  stackRouter,
+}: PopupRendererProps<Config>) {
   const stack = useStackRouter(stackRouter);
   const config = stackRouter.config;
 
   const renderItems = stack.map((item) => {
-    const popupConfig = item.popupConfig as PopupConfig<ID, T, W> | undefined;
+    const popupConfig = item.popupConfig as Config[number] | undefined;
     if (!popupConfig) return null;
 
     const onClose = () => stackRouter.close(item.id);
-    const Component = popupConfig.content;
+    const Component = popupConfig.content as FC<
+      StackRouterArgs<Config, StackRouterId<Config>>
+    >;
 
     // Merge args with onClose
-    const contentProps = { onClose, ...item.args } as T & {
+    const contentProps = { onClose, ...item.args } as StackRouterArgs<
+      Config,
+      StackRouterId<Config>
+    > & {
       onClose: () => void;
     };
     let content = <Component {...contentProps} />;
@@ -63,7 +68,7 @@ export function PopupRenderer<
       visible: item.visible !== false,
       onClose,
       ...popupConfig.wrapperProps,
-    } as W;
+    } as StackRouterWrapperProps<Config, StackRouterId<Config>>;
 
     return (
       <div key={item.key} data-stack>

@@ -21,6 +21,22 @@ export interface PopupConfig<ID extends string, T extends any, W extends Wrapper
   wrapperProps?: W
 }
 
+export type PopupConfigArray = readonly PopupConfig<any, any, any>[]
+export type StackRouterId<C extends PopupConfigArray> = C[number]['id']
+export type StackRouterConfigOf<C extends PopupConfigArray, Id extends StackRouterId<C>> = Extract<C[number], { id: Id }>
+export type StackRouterArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> = Parameters<StackRouterConfigOf<C, Id>['content']>[0]
+export type StackRouterWrapperProps<C extends PopupConfigArray, Id extends StackRouterId<C>> = Parameters<StackRouterConfigOf<C, Id>['wrapper']>[0]
+export type StackRouterItem<C extends PopupConfigArray, Id extends StackRouterId<C> = StackRouterId<C>> = StackItem<
+  Id,
+  StackRouterArgs<C, Id>,
+  StackRouterWrapperProps<C, Id>
+>
+export type StackRouterState<C extends PopupConfigArray> = RouterState<
+  StackRouterId<C>,
+  StackRouterArgs<C, StackRouterId<C>>,
+  StackRouterWrapperProps<C, StackRouterId<C>>
+>
+
 export interface StackRouterConfig {
   urlManage?: boolean
   freeze?: boolean

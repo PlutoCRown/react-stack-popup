@@ -27,10 +27,11 @@ export const stackRouter = new StackRouter(popups, {
 });
 
 stackRouter.open(PopupID.BOTTOM_SHEET, {
-  randomName: "", // 按道理 应该报错的
+  // @ts-expect-error 应该提醒 未知字段
+  randomName: "",
 });
 
+// @ts-expect-error 应该提示缺少 message 字段
 stackRouter.open(PopupID.BOTTOM_SHEET, {
   title: "",
-  // 应该提示缺少 message 字段
 });
