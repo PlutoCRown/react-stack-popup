@@ -1,44 +1,42 @@
-import { ReactNode, ComponentType } from 'react'
+import React, { ReactNode } from 'react'
 
-// Wrapper function type
-export type WrapperFunction<W = any, T extends any[] = any[]> = (
-  preset: ReactNode,
-  wrapperProps?: W,
-  ...args: T
-) => ReactNode
-
-// Wrapper component type (for components like MaskWrapper, PageWrapper)
-export type WrapperComponent<W = any> = ComponentType<W & { children: ReactNode }>
-
-// Union type that accepts both function and component
-export type Wrapper<W = any, T extends any[] = any[]> =
-  | WrapperFunction<W, T>
-  | WrapperComponent<W>
-
-export interface PopupConfig<ID extends string, T extends any[], W = any> {
-  id: ID
-  content: (...args: T) => ReactNode
-  wrapper?: Wrapper<W, T>
-  wrapperProps?: W
+export type WrapperBaseProps = {
+  visible: boolean
+  onClose: () => void | Promise<void>
+  duration?: number
 }
 
-export interface WrapperCallback<ID extends string> {
-  onClose?: (id?: ID) => void
+// Wrapper function type
+export type Wrapper<W extends WrapperBaseProps> = React.FC<W>
+
+export interface PopupConfig<ID extends string, T extends object, W extends WrapperBaseProps> {
+  id: ID
+  content: React.FC<T>
+  wrapper: Wrapper<W>
+  wrapperProps?: W
 }
 
 export interface StackRouterConfig {
   urlManage?: boolean
+  freeze?: boolean
+  suspense?: boolean
+  errorBoundary?: boolean
+  suspenseFallback?: ReactNode
+  errorFallback?: ReactNode
 }
 
-export type PopupID = string
 
-export interface StackItem<ID extends string = string, T extends any[] = any[], W = any> {
+export interface StackItem<ID extends string, T extends object, W extends WrapperBaseProps> {
   id: ID
-  args: any[]
-  config?: any
+  key: string
+  args: object
   popupConfig?: PopupConfig<ID, T, W>
+  visible: boolean,
+  freeze: boolean
 }
 
-export interface RouterState<ID extends string = string, T extends any[] = any[], W = any> {
+export interface RouterState<ID extends string, T extends object, W extends WrapperBaseProps> {
   stack: StackItem<ID, T, W>[]
+  open: (item: StackItem<ID, T, W>) => void
+  close: (id?: ID) => void
 }

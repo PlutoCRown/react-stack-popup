@@ -31,19 +31,25 @@ const popups = [
   RegisterPopup({
     id: PopupID.NONE,
     content: () => <NonePopup />,
-    wrapper: NoneWrapper,
+    wrapper: (preset, wrapperProps) => (
+      <NoneWrapper {...wrapperProps}>{preset}</NoneWrapper>
+    ),
   }),
   RegisterPopup({
     id: PopupID.MASK,
     content: (onClose?: () => void) => <MaskPopup onClose={onClose} />,
-    wrapper: MaskWrapper,
+    wrapper: (preset, wrapperProps) => (
+      <MaskWrapper {...wrapperProps}>{preset}</MaskWrapper>
+    ),
     wrapperProps: { maskClosable: true },
   }),
   RegisterPopup({
     id: PopupID.BOTTOM_SHEET,
-    wrapper: BottomSheetWrapper,
     content: (title: string, message: string, onClose?: () => void) => (
       <BottomSheetPopup title={title} message={message} onClose={onClose} />
+    ),
+    wrapper: (preset, wrapperProps) => (
+      <BottomSheetWrapper {...wrapperProps}>{preset}</BottomSheetWrapper>
     ),
   }),
   RegisterPopup({
@@ -110,13 +116,18 @@ const popups = [
   RegisterPopup({
     id: PopupID.PAGE,
     content: (onClose?: () => void) => <PagePopup onClose={onClose} />,
-    wrapper: PageWrapper,
+    wrapper: (preset, wrapperProps) => (
+      <PageWrapper {...wrapperProps}>{preset}</PageWrapper>
+    ),
   }),
 ];
 
 // Create stack router
-const stackRouter = new StackRouter<PopupID, any[], any>(popups, {
+const stackRouter = new StackRouter<PopupID, object, any>(popups, {
   urlManage: true,
+  freeze: true,
+  suspense: true,
+  errorBoundary: true,
 });
 
 function App() {
