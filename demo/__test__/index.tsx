@@ -1,10 +1,6 @@
 import { lazy } from "react";
-import {
-  RegisterPopup,
-  BottomSheetWrapper,
-  MaskWrapper,
-  StackRouter,
-} from "../../src";
+import { RegisterPopup, MaskWrapper, StackRouter } from "../../src";
+import { Equal, Expect, Length, UnionLength } from "./types";
 
 // Define popup IDs
 enum PopupID {
@@ -21,11 +17,17 @@ const popups = [
   RegisterPopup({
     id: PopupID.TestProps,
     content: PropsTest,
-    wrapper: BottomSheetWrapper,
+    wrapper: MaskWrapper,
   }),
   RegisterPopup({
     id: PopupID.TestNone,
     content: NoneTest,
+    wrapper: MaskWrapper,
+  }),
+  // 错误注册 ⬇️
+  RegisterPopup({
+    id: PopupID.TestNone,
+    content: PropsTest,
     wrapper: MaskWrapper,
   }),
 ] as const;
@@ -42,11 +44,19 @@ stackRouter.open(PopupID.TestProps, { title: "miss message" });
 
 // =============== TEST.2 漏定义风险 ===========
 type MissPopup<T> = object extends T
-  ? { isOk: true }
-  : {
-      ERROR: `定义了弹窗ID: ${Extract<keyof T, number | string>} 但是没有注册对应的组件！`;
-    };
+  ? never
+  : `定义了弹窗ID: ${Extract<keyof T, number | string>} 但是没有注册对应的组件！`;
 
 type MissRegister = Omit<Record<PopupID, any>, (typeof popups)[number]["id"]>;
-// @ts-expect-error ❌ 检查有没有漏注册
-type _ = MissPopup<MissRegister>["isOk"];
+type Error = MissPopup<MissRegister>;
+// @ts-expect-error ❌ 检查有没有漏注册，瞄准 Error 以查看错误
+type _ = Expect<Equal<never, Error>>;
+
+// =============== TEST.3 重复ID校验 ===========
+
+type Len = Length<typeof popups>;
+
+type PopupCount = UnionLength<(typeof popups)[number]["id"]>;
+
+// @ts-expect-error ❌ 核算有无重复的PopupID被注册
+type __ = Expect<Equal<Len, PopupCount>>;

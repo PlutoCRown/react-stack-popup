@@ -1,5 +1,4 @@
 import React from "react";
-import { CloseButton } from "./CloseButton";
 import { stackRouter } from "../stackRouter";
 
 interface DemoCardProps {
@@ -25,7 +24,9 @@ export function DemoCard({ title, subtitle, children }: DemoCardProps) {
       </div>
       {children}
       <div style={{ marginTop: 16 }}>
-        <CloseButton onClick={() => stackRouter.close()} />
+        <button className="close-button" onClick={() => stackRouter.close()}>
+          关闭
+        </button>
       </div>
     </div>
   );

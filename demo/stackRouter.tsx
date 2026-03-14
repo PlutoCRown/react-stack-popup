@@ -13,11 +13,9 @@ import RandomHeightPopup from "./popups/RandomHeightPopup";
 import NormalPopup from "./popups/NormalPopup";
 import CustomPopup from "./popups/CustomPopup";
 import PagePopup from "./popups/PagePopup";
-import InfoPopup from "./popups/_InfoPopup";
-import ConfirmPopup from "./popups/_ConfirmPopup";
-import FormPopup from "./popups/_FormPopup";
 import PropsPopup from "./popups/PropsPopup";
 import React from "react";
+import LongContent from "./popups/LongContent";
 
 // Register popups
 const popups = [
@@ -47,17 +45,32 @@ const popups = [
     wrapper: BottomSheetWrapper,
     wrapperProps: { swipable: false },
   }),
+  // 测试 Swipe
   RegisterPopup({
     id: PopupID.TestSwipable,
     content: PropsPopup,
     wrapper: BottomSheetWrapper,
   }),
+  // 测试 FitContent
   RegisterPopup({
     id: PopupID.HighSheet,
     content: PropsPopup,
     wrapper: BottomSheetWrapper,
     wrapperProps: { fitContent: false },
   }),
+  // 测试页滚动
+  RegisterPopup({
+    id: PopupID.ScrollPage,
+    content: LongContent,
+    wrapper: PageWrapper,
+  }),
+  // 测试底表滚动
+  RegisterPopup({
+    id: PopupID.ScrollSheet,
+    content: LongContent,
+    wrapper: BottomSheetWrapper,
+  }),
+  // 动态调用弹窗
   RegisterPopup({
     id: PopupID.Invoke,
     content: (({ Component }) => Component) as React.FC<{
