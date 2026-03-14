@@ -9,10 +9,13 @@ export const MaskPopup: React.FC<MaskPopupProps> = ({ onClose }) => {
   return (
     <CommonPopup
       title="Mask Wrapper"
-      subtitle="Transparent background with fade animation"
+      subtitle="半透明背景 + 淡入淡出"
       onClose={onClose}
     >
-      <p>Click outside or press ESC to close with animation.</p>
+      <p>可以点击 Mask 关闭</p>
+      <p>
+        注册时可以：<code>maskClosable: false</code>来关闭此功能
+      </p>
     </CommonPopup>
   );
 };

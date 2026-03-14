@@ -8,25 +8,25 @@ interface PagePopupProps {
 }
 
 type PageAction =
-  | { label: string; id: PopupID.BOTTOM_SHEET }
-  | { label: string; id: Exclude<PopupID, PopupID.BOTTOM_SHEET> };
+  | { label: string; id: PopupID.BottomSheet }
+  | { label: string; id: Exclude<PopupID, PopupID.BottomSheet> };
 
 const pageActions: PageAction[] = [
-  { label: "Mask Wrapper", id: PopupID.MASK },
-  { label: "Bottom Sheet", id: PopupID.BOTTOM_SHEET },
-  { label: "Page Wrapper", id: PopupID.PAGE },
-  { label: "None Wrapper", id: PopupID.NONE },
-  { label: "Custom Wrapper", id: PopupID.CUSTOM },
-  { label: "Info Popup", id: PopupID.INFO },
-  { label: "Confirm Popup", id: PopupID.CONFIRM },
-  { label: "Form Popup", id: PopupID.FORM },
+  { label: "遮罩弹窗", id: PopupID.CenterPopup },
+  { label: "底部抽屉", id: PopupID.BottomSheet },
+  { label: "全屏页面", id: PopupID.FullPage },
+  { label: "无容器弹窗", id: PopupID.TestNoneWrap },
+  { label: "自定义弹窗", id: PopupID.TestCustom },
+  { label: "信息弹窗", id: PopupID.TestSwipable },
+  { label: "确认弹窗", id: PopupID.HighSheet },
+  { label: "表单弹窗", id: PopupID.ScrollSheet },
 ];
 
 const openAction = (action: PageAction) => {
-  if (action.id === PopupID.BOTTOM_SHEET) {
+  if (action.id === PopupID.BottomSheet) {
     stackRouter.open(action.id, {
-      title: "Bottom Sheet",
-      message: "A compact sheet with swipe-to-close.",
+      title: "底部抽屉",
+      message: "轻量内容，支持下滑关闭。",
     });
     return;
   }
@@ -44,13 +44,13 @@ export const PagePopup: React.FC<PagePopupProps> = ({ onClose }) => {
     >
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         <CommonPopup
-          title="Page Wrapper"
-          subtitle="Full-page overlay with slide-in transition"
+          title="全屏页面"
+          subtitle="全屏覆盖 + 右侧滑入"
           onClose={onClose}
         >
-          <p>Slides in from right on open, slides out to right on close.</p>
+          <p>打开时从右侧滑入，关闭时向右侧滑出。</p>
           <div style={{ marginTop: "24px" }}>
-            <h3 style={{ marginBottom: "12px" }}>Open Another Popup</h3>
+            <h3 style={{ marginBottom: "12px" }}>打开其他弹窗</h3>
             <div className="button-group">
               {pageActions.map((action) => (
                 <button

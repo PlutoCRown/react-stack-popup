@@ -4,10 +4,10 @@ import { CommonPopup } from "../components/CommonPopup";
 export const CustomPopup: React.FC = () => {
   return (
     <CommonPopup
-      title="Custom Wrapper"
-      subtitle="Dynamic wrapper color with a pulsing container"
+      title="自定义弹窗"
+      subtitle="动态包装器色彩 + 呼吸动效"
     >
-      <p>This popup uses a custom wrapper with dynamic color.</p>
+      <p>该弹窗使用自定义 wrapper 并支持动态颜色。</p>
     </CommonPopup>
   );
 };

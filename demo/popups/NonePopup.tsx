@@ -9,8 +9,8 @@ export const NonePopup: React.FC<NonePopupProps> = ({ onClose }) => {
   const randomSize = useRef(Math.random());
   return (
     <CommonPopup
-      title="High Popup"
-      subtitle="This popup has random height"
+      title="高内容弹窗"
+      subtitle="该弹窗高度随机"
       onClose={onClose}
     >
       <div style={{ width: "100%", height: `${randomSize.current * 100}vh` }} />

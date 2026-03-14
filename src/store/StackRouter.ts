@@ -101,7 +101,9 @@ function createStore<ID extends string, T extends any, W extends WrapperBaseProp
       },
       close: (id, duration = 300) => {
         const { stack } = get()
-        const targetKey = id ? stack.find(i => i.id)?.key : stack.findLast(i => i.visible)?.key
+        const targetKey = id
+          ? stack.findLast(i => i.id === id)?.key
+          : stack.findLast(i => i.visible)?.key
         if (!targetKey) return;
         set((state) => {
           const item = state.stack.find(i => i.key == targetKey)

@@ -1,4 +1,5 @@
 import React from "react";
+import { CloseButton } from "./CloseButton";
 
 interface CommonPopupProps {
   title: string;
@@ -7,7 +8,12 @@ interface CommonPopupProps {
   onClose?: () => void;
 }
 
-export function CommonPopup({ title, subtitle, children, onClose }: CommonPopupProps) {
+export function CommonPopup({
+  title,
+  subtitle,
+  children,
+  onClose,
+}: CommonPopupProps) {
   return (
     <div
       style={{
@@ -24,9 +30,9 @@ export function CommonPopup({ title, subtitle, children, onClose }: CommonPopupP
       </div>
       {children}
       {onClose && (
-        <button type="button" onClick={onClose} style={{ marginTop: 16 }}>
-          Close
-        </button>
+        <div style={{ marginTop: 16 }}>
+          <CloseButton onClick={onClose} />
+        </div>
       )}
     </div>
   );

@@ -11,7 +11,7 @@ export const BottomSheetPopup: React.FC<BottomSheetPopupProps> = ({ title, messa
   return (
     <CommonPopup title={title} subtitle={message} onClose={onClose}>
       <p style={{ fontSize: "14px", color: "#666", marginTop: "10px" }}>
-        Slides up on open, slides down on close
+        打开时上滑进入，关闭时下滑退出
       </p>
     </CommonPopup>
   );

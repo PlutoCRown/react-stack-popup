@@ -184,6 +184,14 @@ button.ghost {
   box-shadow: none;
 }
 
+.close-button {
+  width: 100%;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2f1f14, #6a3c2a);
+  color: #fff3ea;
+  font-weight: 600;
+}
+
 .code-block {
   display: grid;
   gap: 0.5rem;

@@ -7,18 +7,18 @@ interface FormPopupProps {
 
 export const FormPopup: React.FC<FormPopupProps> = ({ onClose }) => {
   return (
-    <CommonPopup title="Form Popup" subtitle="Collect a quick response" onClose={onClose}>
+    <CommonPopup title="表单弹窗" subtitle="收集快速反馈" onClose={onClose}>
       <label style={{ display: "grid", gap: 6, marginTop: 8 }}>
-        <span style={{ fontSize: 12, color: "#666" }}>Email</span>
+        <span style={{ fontSize: 12, color: "#666" }}>邮箱</span>
         <input
           type="email"
-          placeholder="you@example.com"
+          placeholder="邮箱地址"
           style={{ padding: "10px 12px", borderRadius: 8, border: "1px solid #ddd" }}
         />
       </label>
       <div style={{ marginTop: 12, display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <button type="button">Submit</button>
-        <button type="button">Cancel</button>
+        <button type="button">提交</button>
+        <button type="button">取消</button>
       </div>
     </CommonPopup>
   );

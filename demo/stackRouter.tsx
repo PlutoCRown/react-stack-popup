@@ -21,48 +21,48 @@ import FormPopup from "./popups/FormPopup";
 // Register popups
 const popups = [
   RegisterPopup({
-    id: PopupID.NONE,
+    id: PopupID.TestNoneWrap,
     content: NonePopup,
     wrapper: NoneWrapper,
     wrapperProps: { duration: 0 },
   }),
   RegisterPopup({
-    id: PopupID.PAGE,
+    id: PopupID.FullPage,
     content: PagePopup,
     wrapper: PageWrapper,
   }),
   RegisterPopup({
-    id: PopupID.MASK,
+    id: PopupID.CenterPopup,
     content: MaskPopup,
     wrapper: MaskWrapper,
     wrapperProps: { maskClosable: true },
   }),
   RegisterPopup({
-    id: PopupID.BOTTOM_SHEET,
+    id: PopupID.BottomSheet,
     content: BottomSheetPopup,
     wrapper: BottomSheetWrapper,
     wrapperProps: { fitContent: true, swipable: true },
   }),
   RegisterPopup({
-    id: PopupID.INFO,
+    id: PopupID.TestSwipable,
     content: InfoPopup,
     wrapper: MaskWrapper,
     wrapperProps: { maskClosable: true },
   }),
   RegisterPopup({
-    id: PopupID.CONFIRM,
+    id: PopupID.HighSheet,
     content: ConfirmPopup,
     wrapper: MaskWrapper,
     wrapperProps: { maskClosable: true },
   }),
   RegisterPopup({
-    id: PopupID.FORM,
+    id: PopupID.ScrollSheet,
     content: FormPopup,
     wrapper: MaskWrapper,
     wrapperProps: { maskClosable: true },
   }),
   RegisterPopup({
-    id: PopupID.CUSTOM,
+    id: PopupID.TestCustom,
     content: CustomPopup,
     // 该示例是错误的
     wrapper: ({
