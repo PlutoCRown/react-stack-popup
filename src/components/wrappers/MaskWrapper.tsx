@@ -30,7 +30,6 @@ export const MaskWrapper = ({
 
   return (
     <div
-      rsp-stack
       className={`${styles.maskWrapper} ${styles[animationState]} ${maskClosable ? styles.closable : styles.notClosable}`}
       style={
         {
