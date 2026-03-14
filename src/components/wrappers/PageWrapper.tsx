@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./PageWrapper.module.css";
 
@@ -43,7 +44,7 @@ export const PageWrapper = ({
   return (
     <div
       ref={pageRef}
-      className={`rsp-stack rsp-page ${styles.pageWrapper}`}
+      className={clsx("rsp-stack", "rsp-page", styles.pageWrapper)}
       style={{} as React.CSSProperties}
     >
       {children}

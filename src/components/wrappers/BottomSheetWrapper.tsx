@@ -26,13 +26,6 @@ export const BottomSheetWrapper = ({
   useEffect(() => {
     const el = sheetRef.current;
     if (!el) return;
-    const enterClass = "rsp-entering";
-    const exitClass = "rsp-exiting";
-    const activeClass = visible ? enterClass : exitClass;
-
-    el.classList.remove(enterClass, exitClass);
-    el.classList.add(activeClass);
-
     const animation = el.animate(
       visible
         ? [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }]
@@ -43,11 +36,8 @@ export const BottomSheetWrapper = ({
         fill: "forwards",
       },
     );
-    const timer = window.setTimeout(() => {
-      el.classList.remove(activeClass);
-    }, duration);
+
     return () => {
-      window.clearTimeout(timer);
       animation.cancel();
     };
   }, [visible, duration]);
@@ -56,6 +46,38 @@ export const BottomSheetWrapper = ({
     const el = sheetRef.current;
     if (!el) return;
     el.style.transform = `translateY(${Math.max(0, value)}px)`;
+  };
+
+  const resetDragState = () => {
+    dragStartY.current = null;
+    dragDelta.current = 0;
+    isDragging.current = false;
+  };
+
+  const finishDrag = () => {
+    if (!swipable) return;
+    const shouldClose = dragDelta.current > 80;
+    if (shouldClose) {
+      onClose?.();
+      resetDragState();
+      return;
+    }
+    const el = sheetRef.current;
+    if (!el) {
+      resetDragState();
+      return;
+    }
+    const animation = el.animate(
+      [
+        { transform: `translateY(${Math.max(0, dragDelta.current)}px)` },
+        { transform: "translateY(0)" },
+      ],
+      { duration: 200, easing: "ease-out", fill: "forwards" },
+    );
+    animation.onfinish = () => {
+      el.style.transform = "";
+      resetDragState();
+    };
   };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -76,39 +98,59 @@ export const BottomSheetWrapper = ({
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!swipable || !isDragging.current) return;
-    isDragging.current = false;
     (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
-    const shouldClose = dragDelta.current > 80;
-    if (shouldClose) {
-      onClose?.();
-      return;
-    }
+    finishDrag();
+  };
+
+  const handlePointerCancel = () => {
+    if (!swipable) return;
+    resetDragState();
     const el = sheetRef.current;
-    if (!el) return;
-    const animation = el.animate(
-      [
-        { transform: `translateY(${Math.max(0, dragDelta.current)}px)` },
-        { transform: "translateY(0)" },
-      ],
-      { duration: 200, easing: "ease-out", fill: "forwards" },
-    );
-    animation.onfinish = () => {
-      el.style.transform = "";
-    };
+    if (el) el.style.transform = "";
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!swipable) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    dragStartY.current = touch.clientY;
+    dragDelta.current = 0;
+    isDragging.current = true;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!swipable || !isDragging.current || dragStartY.current === null) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    dragDelta.current = touch.clientY - dragStartY.current;
+    if (dragDelta.current > 0) {
+      e.preventDefault();
+      setTranslateY(dragDelta.current);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!swipable || !isDragging.current) return;
+    finishDrag();
   };
 
   return (
     <MaskWrapper onClose={onClose} visible={visible} duration={duration}>
       <div
         ref={sheetRef}
-        className={`rsp-stack ${styles.bottomSheet}`}
+        className={`${styles.bottomSheet}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         style={
           {
             maxHeight: fitContent ? "none" : maxHeight,
             touchAction: swipable ? "pan-y" : "auto",
+            WebkitOverflowScrolling: "touch",
           } as React.CSSProperties
         }
       >

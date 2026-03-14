@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./MaskWrapper.module.css";
 
@@ -14,6 +15,7 @@ export const MaskWrapper = ({
   onClose,
   visible = true,
   duration = 300,
+  className,
 }: MaskWrapperProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -56,7 +58,7 @@ export const MaskWrapper = ({
   return (
     <div
       ref={containerRef}
-      className={`rsp-stack ${styles.maskWrapper}`}
+      className={clsx("rsp-stack", styles.maskWrapper, className)}
       style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
       onClick={handleClick}
     >

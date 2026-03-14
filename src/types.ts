@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { CSSProperties, ReactNode } from 'react'
 
 // 所有弹窗外层 Wrapper 的基础属性。
 // 为了兼容各种自定义 Wrapper，这里将 visible/onClose 都设为可选，
@@ -7,8 +7,10 @@ export type WrapperBaseProps = {
   visible?: boolean
   onClose?: () => void | Promise<void>
   duration?: number
-  // children 由 JSX 传入，这里不强制在 wrapperProps 中必填
-  children?: ReactNode
+  children?: ReactNode // children 由 JSX 传入，这里不强制在 wrapperProps 中必填
+  // 样式相关
+  className?: string
+  style?: CSSProperties
 }
 
 // Wrapper function type

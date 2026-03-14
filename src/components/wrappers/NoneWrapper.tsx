@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./NoneWrapper.module.css";
 
@@ -29,7 +30,7 @@ export const NoneWrapper = ({
   }, [visible, duration]);
 
   return (
-    <div ref={containerRef} className={`rsp-stack ${styles.noneWrapper}`}>
+    <div ref={containerRef} className={clsx("rsp-stack", styles.noneWrapper)}>
       {children}
     </div>
   );
