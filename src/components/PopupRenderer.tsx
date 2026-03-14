@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import type { FC } from "react";
+import { createPortal } from "react-dom";
 import { useStackRouter } from "../hooks/useStackRouter";
 import { StackRouter } from "../store/StackRouter";
 import {
   PopupConfigArray,
-  StackRouterArgs,
   StackRouterContentArgs,
   StackRouterId,
   StackRouterWrapperProps,
@@ -24,7 +24,9 @@ export function PopupRenderer<Config extends PopupConfigArray>({
   const config = stackRouter.config;
 
   const renderItems = stack.map((item) => {
-    const popupConfig = stackRouter.popupConfigs[item.id] as Config[number] | undefined;
+    const popupConfig = stackRouter.popupConfigs[item.id] as
+      | Config[number]
+      | undefined;
     if (!popupConfig) return null;
 
     const onClose = () => stackRouter.close(item.id);
@@ -49,17 +51,11 @@ export function PopupRenderer<Config extends PopupConfigArray>({
     }
 
     if (suspense) {
-      content = (
-        <Suspense fallback={config.suspenseFallback || <PopupLoading />}>
-          {content}
-        </Suspense>
-      );
+      content = <Suspense fallback={<PopupLoading />}>{content}</Suspense>;
     }
 
     if (errorBoundary) {
-      content = (
-        <ErrorBoundary fallback={config.errorFallback}>{content}</ErrorBoundary>
-      );
+      content = <ErrorBoundary>{content}</ErrorBoundary>;
     }
 
     const Wrapper = popupConfig.wrapper;
@@ -76,5 +72,10 @@ export function PopupRenderer<Config extends PopupConfigArray>({
     );
   });
 
-  return <>{renderItems}</>;
+  if (typeof document === "undefined") {
+    return <>{renderItems}</>;
+  }
+
+  const portalTarget = document.body;
+  return createPortal(<>{renderItems}</>, portalTarget);
 }

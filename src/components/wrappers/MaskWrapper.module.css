@@ -10,37 +10,3 @@
   border: none;
   padding: 0;
 }
-
-.maskWrapper.entering {
-  animation: fadeIn var(--animation-duration) ease;
-}
-
-.maskWrapper.exiting {
-  animation: fadeOut var(--animation-duration) ease;
-}
-
-.maskWrapper.closable {
-  cursor: pointer;
-}
-
-.maskWrapper.notClosable {
-  cursor: default;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}

@@ -1,12 +1,14 @@
-import React from 'react'
+import React from "react";
 
 interface MaskPopupProps {
-  onClose?: () => void
+  onClose?: () => void;
 }
 
 export const MaskPopup: React.FC<MaskPopupProps> = ({ onClose }) => {
   return (
-    <div style={{ padding: '20px', backgroundColor: 'white', borderRadius: '8px', minWidth: '300px' }}>
+    <div
+      style={{ padding: 20, background: "white", borderRadius: 8, margin: 20 }}
+    >
       <h2>Mask Wrapper</h2>
       <p>This popup has a transparent background with fade animation</p>
       <p>Click outside or press ESC to close with animation</p>
@@ -14,13 +16,13 @@ export const MaskPopup: React.FC<MaskPopupProps> = ({ onClose }) => {
         <button
           type="button"
           onClick={onClose}
-          style={{ marginTop: '10px', padding: '8px 16px', cursor: 'pointer' }}
+          style={{ marginTop: "10px", padding: "8px 16px", cursor: "pointer" }}
         >
           Close
         </button>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default MaskPopup
+export default MaskPopup;

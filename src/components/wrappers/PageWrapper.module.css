@@ -9,29 +9,3 @@
   background-color: white;
   overflow: auto;
 }
-
-.pageWrapper.entering {
-  animation: slideInFromRight var(--animation-duration) ease;
-}
-
-.pageWrapper.exiting {
-  animation: slideOutToRight var(--animation-duration) ease;
-}
-
-@keyframes slideInFromRight {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideOutToRight {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(100%);
-  }
-}

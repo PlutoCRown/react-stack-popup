@@ -14,37 +14,85 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>React Stack Popup Demo</h1>
-        <p>A stack-based popup router implementation</p>
+        <div className="header-inner">
+          <span className="badge">React Stack Popup</span>
+          <h1>Popups that stack, animate, and route with confidence.</h1>
+          <p>
+            A minimal, type-safe popup router for React. Manage complex flows with
+            a simple stack API and composable wrappers.
+          </p>
+          <div className="hero-actions">
+            <button type="button" onClick={() => stackRouter.open(PopupID.MASK, {})}>
+              Launch Demo
+            </button>
+            <button
+              type="button"
+              className="ghost"
+              onClick={() => stackRouter.open(PopupID.PAGE, {})}
+            >
+              Full Page
+            </button>
+          </div>
+        </div>
+        <div className="hero-panel">
+          <div className="metric">
+            <span className="metric-label">Wrappers</span>
+            <span className="metric-value">4</span>
+          </div>
+          <div className="metric">
+            <span className="metric-label">Routing</span>
+            <span className="metric-value">URL</span>
+          </div>
+          <div className="metric">
+            <span className="metric-label">Stacked</span>
+            <span className="metric-value">Yes</span>
+          </div>
+        </div>
       </header>
 
       <main className="main">
-        <section className="controls">
-          <h2>Wrapper Types</h2>
+        <section className="card controls">
+          <div className="card-header">
+            <h2>Wrapper Types</h2>
+            <span className="subtle">Pick a wrapper to open</span>
+          </div>
           <div className="button-group">
-            <button onClick={() => stackRouter.open(PopupID.NONE, {})}>
+            <button type="button" onClick={() => stackRouter.open(PopupID.NONE, {})}>
               None Wrapper
             </button>
-            <button onClick={() => stackRouter.open(PopupID.MASK, {})}>
+            <button type="button" onClick={() => stackRouter.open(PopupID.MASK, {})}>
               Mask Wrapper
             </button>
-            <button onClick={() => {}}>Bottom Sheet</button>
-            <button onClick={() => stackRouter.open(PopupID.PAGE, {})}>
+            <button
+              type="button"
+              onClick={() =>
+                stackRouter.open(PopupID.BOTTOM_SHEET, {
+                  title: "Bottom Sheet",
+                  message: "Slides from the bottom with a clean sheet layout.",
+                })
+              }
+            >
+              Bottom Sheet
+            </button>
+            <button type="button" onClick={() => stackRouter.open(PopupID.PAGE, {})}>
               Page Wrapper
             </button>
-            <button onClick={() => stackRouter.open(PopupID.CUSTOM, {})}>
+            <button type="button" onClick={() => stackRouter.open(PopupID.CUSTOM, {})}>
               Custom Wrapper
             </button>
           </div>
         </section>
 
-        <section className="demo">
-          <h2>Stack Operations</h2>
+        <section className="card demo">
+          <div className="card-header">
+            <h2>Stack Operations</h2>
+            <span className="subtle">Manage the popup stack</span>
+          </div>
           <div className="button-group">
             <button type="button" onClick={() => stackRouter.close()}>
               Close Last Popup
             </button>
-            <button onClick={() => stackRouter.close(PopupID.BOTTOM_SHEET)}>
+            <button type="button" onClick={() => stackRouter.close(PopupID.BOTTOM_SHEET)}>
               Close Bottom Sheet Only
             </button>
             <button type="button" onClick={() => openNestedPopup(0)}>
@@ -53,18 +101,20 @@ function App() {
           </div>
         </section>
 
-        <section className="info">
-          <h2>How It Works</h2>
-          <ul>
+        <section className="card info">
+          <div className="card-header">
+            <h2>Quick Start</h2>
+            <span className="subtle">The core API</span>
+          </div>
+          <div className="code-block">
+            <code>stackRouter.open(id, args)</code>
+            <code>stackRouter.close(id?)</code>
+            <code>new StackRouter(popups, config)</code>
+          </div>
+          <ul className="feature-list">
             <li>Register popups with unique IDs</li>
-            <li>Create a StackRouter with your popups</li>
-            <li>
-              Open popups with <code>stackRouter.open(id, args)</code>
-            </li>
-            <li>
-              Close popups with <code>stackRouter.close(id?)</code>
-            </li>
-            <li>The router maintains a stack of open popups</li>
+            <li>Compose wrappers for animation + layout</li>
+            <li>URL sync and stack-driven navigation</li>
           </ul>
         </section>
       </main>
