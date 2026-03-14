@@ -9,57 +9,59 @@ import {
 } from "../src";
 import { PopupID } from "./constants/popupIds";
 
-import NonePopup from "./popups/NonePopup";
-import MaskPopup from "./popups/MaskPopup";
-import BottomSheetPopup from "./popups/BottomSheetPopup";
+import RandomHeightPopup from "./popups/RandomHeightPopup";
+import NormalPopup from "./popups/NormalPopup";
 import CustomPopup from "./popups/CustomPopup";
 import PagePopup from "./popups/PagePopup";
-import InfoPopup from "./popups/InfoPopup";
-import ConfirmPopup from "./popups/ConfirmPopup";
-import FormPopup from "./popups/FormPopup";
+import InfoPopup from "./popups/_InfoPopup";
+import ConfirmPopup from "./popups/_ConfirmPopup";
+import FormPopup from "./popups/_FormPopup";
+import PropsPopup from "./popups/PropsPopup";
 
 // Register popups
 const popups = [
+  // 无包装弹窗
   RegisterPopup({
     id: PopupID.TestNoneWrap,
-    content: NonePopup,
+    content: NormalPopup,
     wrapper: NoneWrapper,
     wrapperProps: { duration: 0 },
   }),
+  // 页包装
   RegisterPopup({
     id: PopupID.FullPage,
     content: PagePopup,
     wrapper: PageWrapper,
   }),
+  // 背景包装
   RegisterPopup({
     id: PopupID.CenterPopup,
-    content: MaskPopup,
+    content: NormalPopup,
     wrapper: MaskWrapper,
-    wrapperProps: { maskClosable: true },
   }),
+  // 底部表
   RegisterPopup({
     id: PopupID.BottomSheet,
-    content: BottomSheetPopup,
+    content: RandomHeightPopup,
     wrapper: BottomSheetWrapper,
-    wrapperProps: { fitContent: true, swipable: true },
+    wrapperProps: { swipable: false },
   }),
   RegisterPopup({
     id: PopupID.TestSwipable,
-    content: InfoPopup,
-    wrapper: MaskWrapper,
-    wrapperProps: { maskClosable: true },
+    content: PropsPopup,
+    wrapper: BottomSheetWrapper,
   }),
   RegisterPopup({
     id: PopupID.HighSheet,
-    content: ConfirmPopup,
-    wrapper: MaskWrapper,
-    wrapperProps: { maskClosable: true },
+    content: PropsPopup,
+    wrapper: BottomSheetWrapper,
+    wrapperProps: { fitContent: false },
   }),
+  // 暂时未用上
   RegisterPopup({
     id: PopupID.ScrollSheet,
     content: FormPopup,
-    wrapper: MaskWrapper,
-    wrapperProps: { maskClosable: true },
+    wrapper: BottomSheetWrapper,
   }),
   RegisterPopup({
     id: PopupID.TestCustom,

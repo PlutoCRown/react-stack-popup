@@ -54,14 +54,13 @@ body {
 }
 
 .badge {
-  align-self: start;
-  display: inline-flex;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 236, 220, 0.4);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-align: center;
   font-family: "Space Grotesk", "Avenir Next", sans-serif;
 }
 

@@ -7,4 +7,5 @@ export enum PopupID {
   TestSwipable = "TestSwipable",
   HighSheet = "HighSheet",
   ScrollSheet = "ScrollSheet",
+  Invoke = 'invoke'
 }

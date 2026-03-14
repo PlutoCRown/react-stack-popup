@@ -1,17 +1,14 @@
 import { stackRouter } from "../stackRouter";
 import { PopupID } from "../constants/popupIds";
 
-export function BottomSheetIntroPanel() {
+export function ScrollCompatiblePanel() {
   return (
     <section className="card">
       <div className="card-header">
-        <h2>底部抽屉容器</h2>
-        <span className="subtle">内容自适应 + 滑动关闭</span>
+        <h2>滚动兼容性测试</h2>
+        <span className="subtle">页面内容滚动控制</span>
       </div>
-      <p style={{ marginBottom: 16, color: "#6a625b" }}>
-        BottomSheet 支持内容高度自适应，并支持滑动手势关闭。适合行动面板、
-        选择器与轻量流程。
-      </p>
+
       <div className="button-group">
         <button
           onClick={() =>
@@ -21,7 +18,7 @@ export function BottomSheetIntroPanel() {
             })
           }
         >
-          可以滑动关闭
+          Page内滚动
         </button>
         <button
           onClick={() =>
@@ -31,17 +28,17 @@ export function BottomSheetIntroPanel() {
             })
           }
         >
-          全高的
+          Sheet内滚动
         </button>
         <button
           onClick={() =>
-            stackRouter.open(PopupID.BottomSheet, {
+            stackRouter.open(PopupID.HighSheet, {
               title: "底部抽屉",
               message: "已支持内容自适应和滑动关闭。",
             })
           }
         >
-          FIXME: 这边多传递了参数怎么还不报错
+          Mask内滚动
         </button>
       </div>
     </section>
