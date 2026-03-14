@@ -8,5 +8,6 @@ export enum PopupID {
   HighSheet = "HighSheet",
   ScrollSheet = "ScrollSheet",
   ScrollPage = "ScrollPage",
+  ScrollMask = "ScrollMask",
   CustomContent = 'invoke'
 }

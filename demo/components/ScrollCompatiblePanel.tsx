@@ -16,14 +16,7 @@ export function ScrollCompatiblePanel() {
         <button onClick={() => stackRouter.open(PopupID.ScrollSheet, {})}>
           Sheet内滚动
         </button>
-        <button
-          onClick={() =>
-            stackRouter.open(PopupID.HighSheet, {
-              title: "底部抽屉",
-              message: "已支持内容自适应和滑动关闭。",
-            })
-          }
-        >
+        <button onClick={() => stackRouter.open(PopupID.ScrollMask, {})}>
           Mask内滚动
         </button>
       </div>

@@ -9,9 +9,14 @@ export const RandomHeightPopup = () => {
   return (
     <DemoCard title="随机高度弹窗" subtitle="该弹窗高度随机">
       <div style={{ width: "100%", height: `${randomSize.current * 50}vh` }} />
-      <button onClick={() => stackRouter.open(PopupID.BottomSheet, {})}>
-        打开下一层
-      </button>
+      <div style={{ display: "flex", gap: 8 }}>
+        <button onClick={() => stackRouter.open(PopupID.BottomSheet, {})}>
+          打开下一层
+        </button>
+        <button onClick={() => stackRouter.open(PopupID.HighSheet, {})}>
+          全高的
+        </button>
+      </div>
     </DemoCard>
   );
 };

@@ -1,13 +1,8 @@
-import React from "react";
 import { DemoCard } from "../components/DemoCard";
 import { stackRouter } from "../stackRouter";
 import { PopupID } from "../constants/popupIds";
 
-interface PagePopupProps {
-  onClose?: () => void;
-}
-
-export const PagePopup: React.FC<PagePopupProps> = ({ onClose }) => {
+export const PagePopup = () => {
   return (
     <div
       style={{
@@ -41,7 +36,14 @@ export const AllWrapBtnGroup = () => {
       <button onClick={() => stackRouter.open(PopupID.CenterPopup, {})}>
         MaskWrapper
       </button>
-      <button onClick={() => stackRouter.open(PopupID.TestNoneWrap, {})}>
+      <button
+        onClick={() =>
+          stackRouter.open(PopupID.TestNoneWrap, {
+            title: "什么包装都没有",
+            message: "关闭也需要自己在内部实现",
+          })
+        }
+      >
         NoneWrapper
       </button>
       <button onClick={() => stackRouter.open(PopupID.CustomWrapper, {})}>

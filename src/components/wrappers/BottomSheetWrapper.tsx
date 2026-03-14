@@ -4,18 +4,16 @@ import { MaskWrapper } from "./MaskWrapper";
 import styles from "./BottomSheetWrapper.module.css";
 
 export interface BottomSheetWrapperProps extends WrapperBaseProps {
-  maxHeight?: string;
   fitContent?: boolean;
   swipable?: boolean;
 }
 
 export const BottomSheetWrapper = ({
   children,
-  maxHeight = "80vh",
   fitContent = true,
   swipable = true,
   onClose,
-  visible = true,
+  visible,
   duration = 300,
 }: BottomSheetWrapperProps) => {
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -146,13 +144,11 @@ export const BottomSheetWrapper = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        style={
-          {
-            maxHeight: fitContent ? "none" : maxHeight,
-            touchAction: swipable ? "pan-y" : "auto",
-            WebkitOverflowScrolling: "touch",
-          } as React.CSSProperties
-        }
+        style={{
+          height: fitContent ? undefined : "calc(100% - 48px)",
+          touchAction: swipable ? "pan-y" : "auto",
+          WebkitOverflowScrolling: "touch",
+        }}
       >
         {children}
       </div>

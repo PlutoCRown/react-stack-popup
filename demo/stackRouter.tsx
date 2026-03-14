@@ -20,7 +20,7 @@ import LongContent from "./popups/LongContent";
 // Register popups
 const popups = [
   // 基础用法
-  RegisterPopup(PopupID.TestNoneWrap, NormalPopup, NoneWrapper, {
+  RegisterPopup(PopupID.TestNoneWrap, PropsPopup, NoneWrapper, {
     duration: 0,
   }),
   RegisterPopup(PopupID.FullPage, PagePopup, PageWrapper),
@@ -30,7 +30,7 @@ const popups = [
   }),
   // BottomSheet
   RegisterPopup(PopupID.TestSwipable, PropsPopup, BottomSheetWrapper),
-  RegisterPopup(PopupID.HighSheet, PropsPopup, BottomSheetWrapper, {
+  RegisterPopup(PopupID.HighSheet, RandomHeightPopup, BottomSheetWrapper, {
     fitContent: false,
   }),
   // 测试页滚动
