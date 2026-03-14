@@ -6,7 +6,13 @@ interface PagePopupProps {
 
 export const PagePopup: React.FC<PagePopupProps> = ({ onClose }) => {
   return (
-    <div style={{ padding: '40px' }}>
+    <div
+      style={{
+        padding: "40px",
+        minHeight: "100vh",
+        background: "linear-gradient(140deg, #fff7f0, #f6efe7)",
+      }}
+    >
       <h2>Page Wrapper</h2>
       <p>This is a full-page popup that slides in from the right</p>
       <p>It has a white background and covers the entire viewport</p>
@@ -17,7 +23,7 @@ export const PagePopup: React.FC<PagePopupProps> = ({ onClose }) => {
         <button
           type="button"
           onClick={onClose}
-          style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}
+          style={{ marginTop: '20px', padding: '10px 20px' }}
         >
           Close Page
         </button>

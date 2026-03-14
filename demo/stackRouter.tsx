@@ -18,20 +18,36 @@ export enum PopupID {
   PAGE = "page",
 }
 
-// Lazy import demo components
-const NonePopup = lazy(() => import("./popups/NonePopup"));
-const MaskPopup = lazy(() => import("./popups/MaskPopup"));
-const BottomSheetPopup = lazy(() => import("./popups/BottomSheetPopup"));
-const CustomPopup = lazy(() => import("./popups/CustomPopup"));
-const PagePopup = lazy(() => import("./popups/PagePopup"));
+// // Lazy import demo components
+// const NonePopup = lazy(() => import("./popups/NonePopup"));
+// const MaskPopup = lazy(() => import("./popups/MaskPopup"));
+// const BottomSheetPopup = lazy(() => import("./popups/BottomSheetPopup"));
+// const CustomPopup = lazy(() => import("./popups/CustomPopup"));
+// const PagePopup = lazy(() => import("./popups/PagePopup"));
+
+// import demo components
+import NonePopup from "./popups/NonePopup";
+import CommonPopup from "./popups/CommonPopup";
+import BottomSheetPopup from "./popups/BottomSheetPopup";
+import CustomPopup from "./popups/CustomPopup";
+import PagePopup from "./popups/PagePopup";
 
 // Register popups
 const popups = [
-  RegisterPopup({ id: PopupID.NONE, content: NonePopup, wrapper: NoneWrapper }),
-  RegisterPopup({ id: PopupID.PAGE, content: PagePopup, wrapper: PageWrapper }),
+  RegisterPopup({
+    id: PopupID.NONE,
+    content: CommonPopup,
+    wrapper: NoneWrapper,
+    wrapperProps: { duration: 0 },
+  }),
+  RegisterPopup({
+    id: PopupID.PAGE,
+    content: CommonPopup,
+    wrapper: PageWrapper,
+  }),
   RegisterPopup({
     id: PopupID.MASK,
-    content: MaskPopup,
+    content: CommonPopup,
     wrapper: MaskWrapper,
     wrapperProps: { maskClosable: true },
   }),
@@ -44,15 +60,15 @@ const popups = [
     id: PopupID.CUSTOM,
     content: CustomPopup,
     // 该示例是错误的
-    wrapper: (props: WrapperBaseProps & { backgroundColor?: string }) => (
-      <button
-        type="button"
+    wrapper: ({
+      backgroundColor,
+      onClose,
+      children,
+    }: WrapperBaseProps & { backgroundColor?: string }) => (
+      <div
         style={{
           position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          inset: 0,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -61,16 +77,7 @@ const popups = [
           border: "none",
           padding: 0,
         }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget && props?.onClose) {
-            props.onClose();
-          }
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Escape" && props?.onClose) {
-            props.onClose();
-          }
-        }}
+        onClick={(e) => e.target === e.currentTarget && onClose?.()}
       >
         <style>{`
             @keyframes pulse {
@@ -79,17 +86,13 @@ const popups = [
             }
           `}</style>
         <div
-          style={{
-            backgroundColor: props?.backgroundColor || "#667eea",
-            padding: "20px",
-            borderRadius: "12px",
-          }}
+          style={{ backgroundColor, padding: 20, borderRadius: 12, margin: 20 }}
         >
-          {props.children}
+          {children}
         </div>
-      </button>
+      </div>
     ),
-    wrapperProps: { backgroundColor: "#667eea" },
+    wrapperProps: { backgroundColor: "#667eea", duration: 0 },
   }),
 ] as const;
 

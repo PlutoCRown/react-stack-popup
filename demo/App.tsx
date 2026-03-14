@@ -18,11 +18,14 @@ function App() {
           <span className="badge">React Stack Popup</span>
           <h1>Popups that stack, animate, and route with confidence.</h1>
           <p>
-            A minimal, type-safe popup router for React. Manage complex flows with
-            a simple stack API and composable wrappers.
+            A minimal, type-safe popup router for React. Manage complex flows
+            with a simple stack API and composable wrappers.
           </p>
           <div className="hero-actions">
-            <button type="button" onClick={() => stackRouter.open(PopupID.MASK, {})}>
+            <button
+              type="button"
+              onClick={() => stackRouter.open(PopupID.MASK, {})}
+            >
               Launch Demo
             </button>
             <button
@@ -57,10 +60,10 @@ function App() {
             <span className="subtle">Pick a wrapper to open</span>
           </div>
           <div className="button-group">
-            <button type="button" onClick={() => stackRouter.open(PopupID.NONE, {})}>
-              None Wrapper
-            </button>
-            <button type="button" onClick={() => stackRouter.open(PopupID.MASK, {})}>
+            <button
+              type="button"
+              onClick={() => stackRouter.open(PopupID.MASK, {})}
+            >
               Mask Wrapper
             </button>
             <button
@@ -74,10 +77,23 @@ function App() {
             >
               Bottom Sheet
             </button>
-            <button type="button" onClick={() => stackRouter.open(PopupID.PAGE, {})}>
+            <button
+              type="button"
+              onClick={() => stackRouter.open(PopupID.PAGE, {})}
+            >
               Page Wrapper
             </button>
-            <button type="button" onClick={() => stackRouter.open(PopupID.CUSTOM, {})}>
+
+            <button
+              type="button"
+              onClick={() => stackRouter.open(PopupID.NONE, {})}
+            >
+              None Wrapper
+            </button>
+            <button
+              type="button"
+              onClick={() => stackRouter.open(PopupID.CUSTOM, {})}
+            >
               Custom Wrapper
             </button>
           </div>
@@ -92,7 +108,10 @@ function App() {
             <button type="button" onClick={() => stackRouter.close()}>
               Close Last Popup
             </button>
-            <button type="button" onClick={() => stackRouter.close(PopupID.BOTTOM_SHEET)}>
+            <button
+              type="button"
+              onClick={() => stackRouter.close(PopupID.BOTTOM_SHEET)}
+            >
               Close Bottom Sheet Only
             </button>
             <button type="button" onClick={() => openNestedPopup(0)}>

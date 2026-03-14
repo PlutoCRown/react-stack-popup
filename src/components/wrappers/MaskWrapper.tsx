@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { WrapperBaseProps } from "../../types";
+import "../../shared.css";
 import styles from "./MaskWrapper.module.css";
 
 export interface MaskWrapperProps extends WrapperBaseProps {
@@ -20,15 +21,31 @@ export const MaskWrapper = ({
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    const enterClass = "rsp-entering";
+    const exitClass = "rsp-exiting";
+    const activeClass = visible ? enterClass : exitClass;
+
+    el.classList.remove(enterClass, exitClass);
+    el.classList.add(activeClass);
+
     const animation = el.animate(
-      visible ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }],
+      visible
+        ? [{ opacity: 0 }, { opacity: 1 }]
+        : [{ opacity: 1 }, { opacity: 0 }],
       {
         duration,
         easing: "ease",
         fill: "forwards",
       },
     );
-    return () => animation.cancel();
+    const timer = window.setTimeout(
+      () => el.classList.remove(activeClass),
+      duration,
+    );
+    return () => {
+      window.clearTimeout(timer);
+      animation.cancel();
+    };
   }, [visible, duration]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -37,24 +54,12 @@ export const MaskWrapper = ({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (maskClosable && e.key === "Escape" && onClose) {
-      onClose();
-    }
-  };
-
   return (
     <div
-      rsp-stack
       ref={containerRef}
-      className={styles.maskWrapper}
-      style={
-        {
-          backgroundColor: `rgba(0, 0, 0, ${opacity})`,
-        } as React.CSSProperties
-      }
+      className={`rsp-stack ${styles.maskWrapper}`}
+      style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
       onClick={handleClick}
-      onKeyDown={handleKeyDown}
     >
       {children}
     </div>

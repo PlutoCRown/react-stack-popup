@@ -8,7 +8,14 @@ interface BottomSheetPopupProps {
 
 export const BottomSheetPopup: React.FC<BottomSheetPopupProps> = ({ title, message, onClose }) => {
   return (
-    <div>
+    <div
+      style={{
+        background: "white",
+        borderRadius: "16px 16px 0 0",
+        boxShadow: "0 -12px 30px rgba(0,0,0,0.15)",
+        padding: "24px",
+      }}
+    >
       <h2>{title}</h2>
       <p>{message}</p>
       <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
@@ -18,7 +25,7 @@ export const BottomSheetPopup: React.FC<BottomSheetPopupProps> = ({ title, messa
         <button
           type="button"
           onClick={onClose}
-          style={{ marginTop: '10px', padding: '8px 16px', cursor: 'pointer' }}
+          style={{ marginTop: '10px', padding: '8px 16px' }}
         >
           Close
         </button>
