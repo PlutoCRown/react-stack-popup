@@ -93,9 +93,4 @@ const popups = [
   }),
 ] as const;
 
-export const stackRouter = new StackRouter(popups, {
-  urlManage: true,
-  freeze: true,
-  suspense: true,
-  errorBoundary: true,
-});
+export const stackRouter = new StackRouter(popups, { urlManage: false });

@@ -66,8 +66,6 @@ export interface StackRouterConfig {
   freeze?: boolean
   suspense?: boolean
   errorBoundary?: boolean
-  suspenseFallback?: ReactNode
-  errorFallback?: ReactNode
 }
 
 
@@ -83,5 +81,5 @@ export interface StackItem<ID extends string, T extends any, W extends WrapperBa
 export interface RouterState<ID extends string, T extends any, W extends WrapperBaseProps> {
   stack: StackItem<ID, T, W>[]
   open: (item: StackItem<ID, T, W>) => void
-  close: (id?: ID) => void
+  close: (id?: ID, duration?: number) => void
 }

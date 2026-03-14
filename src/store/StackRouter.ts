@@ -36,10 +36,16 @@ export class StackRouter<Config extends PopupConfigArray> {
   private keyCounter = 0
   public readonly channel: EventBus<StackRouterEvents<StackRouterId<Config>>>
 
-  constructor(popups: Config, config: StackRouterConfig = {}) {
+  constructor(popups: Config, config: Partial<StackRouterConfig> = {}) {
+    const defaultConfig: StackRouterConfig = {
+      urlManage: false,
+      freeze: true,
+      suspense: true,
+      errorBoundary: true
+    }
+    this.config = Object.assign(defaultConfig, config)
     // @ts-expect-error any
     this.popupConfigs = popups.reduce((obj, value) => (obj[value.id] = value, obj), {})
-    this.config = config
     this.store = createStore()
     this.channel = new EventBus<StackRouterEvents<StackRouterId<Config>>>()
 
@@ -58,12 +64,10 @@ export class StackRouter<Config extends PopupConfigArray> {
 
   // 对外 API
   open<Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterArgs<Config, Ex>, extra?: StackRouterOpenOptions) {
-    const popupConfig = this.popupConfigs[id]
     const stackItem = {
       id,
       key: this.generateKey(),
       args: args as StackRouterArgs<Config, Ex>,
-      popupConfig,
       visible: true,
       freeze: false,
     }
@@ -73,15 +77,16 @@ export class StackRouter<Config extends PopupConfigArray> {
   }
   close(id?: StackRouterId<Config>) {
     this.channel.emit('close', { id: id || null })
-    this.instance.close(id)
+    const stack = this.instance.stack
+    const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)
+    const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : undefined
+    this.instance.close(id, duration)
     this.historyManager?.pop()
   }
 
   // 服务于 Hook
   getStack = () => this.instance.stack
-  subscribe = (listener: (state: any) => void) => {
-    return this.store.subscribe(listener)
-  }
+  subscribe = (listener: (...args: any) => any) => this.store.subscribe(listener)
 
 }
 
@@ -94,7 +99,7 @@ function createStore<ID extends string, T extends any, W extends WrapperBaseProp
           state.stack.push(item as any)
         })
       },
-      close: (id) => {
+      close: (id, duration = 300) => {
         const { stack } = get()
         const targetKey = id ? stack.find(i => i.id)?.key : stack.findLast(i => i.visible)?.key
         if (!targetKey) return;
@@ -103,8 +108,6 @@ function createStore<ID extends string, T extends any, W extends WrapperBaseProp
           if (!item) return;
           item.visible = false
         })
-        const target = stack.find(i => i.key === targetKey)
-        const duration = target?.popupConfig?.wrapperProps?.duration || 300
         setTimeout(() => {
           set({ stack: stack.filter(item => item.key !== targetKey) })
         }, duration + 50)
