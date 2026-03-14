@@ -1,6 +1,6 @@
 import "./App.css";
-import { PopupRenderer } from "./components/PopupRenderer";
-import { PopupID, stackRouter } from "./demo";
+import { PopupRenderer } from "../src";
+import { PopupID, stackRouter } from "./stackRouter";
 
 function App() {
   const openNestedPopup = (level: number) => {

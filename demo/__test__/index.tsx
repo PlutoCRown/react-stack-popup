@@ -1,7 +1,5 @@
 import { lazy } from "react";
-import { BottomSheetWrapper, MaskWrapper } from "../components/wrappers";
-import { RegisterPopup } from "../store/popupRegistry";
-import { StackRouter } from "../store/StackRouter";
+import { BottomSheetWrapper, MaskWrapper, RegisterPopup, StackRouter } from "../../src";
 
 // Define popup IDs
 export enum PopupID {
@@ -10,8 +8,8 @@ export enum PopupID {
   NONE = "none",
 }
 
-const BottomSheetPopup = lazy(() => import("../demo/BottomSheetPopup"));
-const MaskPopup = lazy(() => import("../demo/MaskPopup"));
+const BottomSheetPopup = lazy(() => import("../popups/BottomSheetPopup"));
+const MaskPopup = lazy(() => import("../popups/MaskPopup"));
 
 // Register popups
 const popups = [
