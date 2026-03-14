@@ -70,9 +70,9 @@ export function PopupRenderer<Config extends PopupConfigArray>({
     } as StackRouterWrapperProps<Config, StackRouterId<Config>>;
 
     return (
-      <div key={item.key} data-stack>
-        <Wrapper {...wrapperProps}>{content}</Wrapper>
-      </div>
+      <Wrapper {...wrapperProps} key={item.key}>
+        {content}
+      </Wrapper>
     );
   });
 
