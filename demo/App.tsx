@@ -1,6 +1,9 @@
 import "./App.css";
 import { PopupRenderer } from "../src";
 import { PopupID, stackRouter } from "./stackRouter";
+import { QuickStartPanel } from "./components/QuickStartPanel";
+import { StackPanel } from "./components/StackPanel";
+import { WrapperPanel } from "./components/WrapperPanel";
 
 function App() {
   const openNestedPopup = (level: number) => {
@@ -54,88 +57,9 @@ function App() {
       </header>
 
       <main className="main">
-        <section className="card controls">
-          <div className="card-header">
-            <h2>Wrapper Types</h2>
-            <span className="subtle">Pick a wrapper to open</span>
-          </div>
-          <div className="button-group">
-            <button
-              type="button"
-              onClick={() => stackRouter.open(PopupID.MASK, {})}
-            >
-              Mask Wrapper
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                stackRouter.open(PopupID.BOTTOM_SHEET, {
-                  title: "Bottom Sheet",
-                  message: "Slides from the bottom with a clean sheet layout.",
-                })
-              }
-            >
-              Bottom Sheet
-            </button>
-            <button
-              type="button"
-              onClick={() => stackRouter.open(PopupID.PAGE, {})}
-            >
-              Page Wrapper
-            </button>
-
-            <button
-              type="button"
-              onClick={() => stackRouter.open(PopupID.NONE, {})}
-            >
-              None Wrapper
-            </button>
-            <button
-              type="button"
-              onClick={() => stackRouter.open(PopupID.CUSTOM, {})}
-            >
-              Custom Wrapper
-            </button>
-          </div>
-        </section>
-
-        <section className="card demo">
-          <div className="card-header">
-            <h2>Stack Operations</h2>
-            <span className="subtle">Manage the popup stack</span>
-          </div>
-          <div className="button-group">
-            <button type="button" onClick={() => stackRouter.close()}>
-              Close Last Popup
-            </button>
-            <button
-              type="button"
-              onClick={() => stackRouter.close(PopupID.BOTTOM_SHEET)}
-            >
-              Close Bottom Sheet Only
-            </button>
-            <button type="button" onClick={() => openNestedPopup(0)}>
-              Open Nested (Level 1)
-            </button>
-          </div>
-        </section>
-
-        <section className="card info">
-          <div className="card-header">
-            <h2>Quick Start</h2>
-            <span className="subtle">The core API</span>
-          </div>
-          <div className="code-block">
-            <code>stackRouter.open(id, args)</code>
-            <code>stackRouter.close(id?)</code>
-            <code>new StackRouter(popups, config)</code>
-          </div>
-          <ul className="feature-list">
-            <li>Register popups with unique IDs</li>
-            <li>Compose wrappers for animation + layout</li>
-            <li>URL sync and stack-driven navigation</li>
-          </ul>
-        </section>
+        <WrapperPanel />
+        <StackPanel openNestedPopup={openNestedPopup} />
+        <QuickStartPanel />
       </main>
 
       <PopupRenderer stackRouter={stackRouter} />

@@ -1,8 +1,17 @@
-import React from 'react'
+import React from "react";
+import { PopupID, stackRouter } from "../stackRouter";
 
 interface PagePopupProps {
   onClose?: () => void
 }
+
+const pageActions = [
+  { label: "Mask Wrapper", id: PopupID.MASK as const },
+  { label: "Bottom Sheet", id: PopupID.BOTTOM_SHEET as const },
+  { label: "Page Wrapper", id: PopupID.PAGE as const },
+  { label: "None Wrapper", id: PopupID.NONE as const },
+  { label: "Custom Wrapper", id: PopupID.CUSTOM as const },
+];
 
 export const PagePopup: React.FC<PagePopupProps> = ({ onClose }) => {
   return (
@@ -16,14 +25,28 @@ export const PagePopup: React.FC<PagePopupProps> = ({ onClose }) => {
       <h2>Page Wrapper</h2>
       <p>This is a full-page popup that slides in from the right</p>
       <p>It has a white background and covers the entire viewport</p>
-      <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
+      <p style={{ fontSize: "14px", color: "#666", marginTop: "10px" }}>
         Slides in from right on open, slides out to right on close
       </p>
+      <div style={{ marginTop: "24px" }}>
+        <h3 style={{ marginBottom: "12px" }}>Open Another Popup</h3>
+        <div className="button-group">
+          {pageActions.map((action) => (
+            <button
+              key={action.id}
+              type="button"
+              onClick={() => stackRouter.open(action.id, {})}
+            >
+              {action.label}
+            </button>
+          ))}
+        </div>
+      </div>
       {onClose && (
         <button
           type="button"
           onClick={onClose}
-          style={{ marginTop: '20px', padding: '10px 20px' }}
+          style={{ marginTop: "24px", padding: "10px 20px" }}
         >
           Close Page
         </button>
