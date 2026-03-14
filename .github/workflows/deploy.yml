@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "example/**"
-      - ".github/workflows/deploy-example.yml"
+      - "demo/**"
+      - ".github/workflows/deploy.yml"
 
 permissions:
   contents: read
@@ -25,15 +25,15 @@ jobs:
       - name: Install root deps
         run: bun install --frozen-lockfile
       - name: Install example deps
-        working-directory: example
+        working-directory: demo
         run: bun install --frozen-lockfile
       - name: Build example
-        working-directory: example
+        working-directory: demo
         run: bun run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: example/dist
+          path: demo/dist
 
   deploy:
     runs-on: ubuntu-latest
