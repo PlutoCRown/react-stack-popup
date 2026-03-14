@@ -1,9 +1,11 @@
 import "./App.css";
 import { PopupRenderer } from "../src";
-import { PopupID, stackRouter } from "./stackRouter";
+import { stackRouter } from "./stackRouter";
+import { PopupID } from "./constants/popupIds";
 import { QuickStartPanel } from "./components/QuickStartPanel";
 import { StackPanel } from "./components/StackPanel";
 import { WrapperPanel } from "./components/WrapperPanel";
+import { BottomSheetIntroPanel } from "./components/BottomSheetIntroPanel";
 
 function App() {
   const openNestedPopup = (level: number) => {
@@ -58,6 +60,7 @@ function App() {
 
       <main className="main">
         <WrapperPanel />
+        <BottomSheetIntroPanel />
         <StackPanel openNestedPopup={openNestedPopup} />
         <QuickStartPanel />
       </main>

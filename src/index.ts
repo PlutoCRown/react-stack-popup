@@ -10,3 +10,7 @@ export * from "./store/HistoryManager";
 export * from "./types";
 export * from "./utils/EventBus";
 export * from "./utils/LRUMap";
+
+// css
+import "./components/shared.css"
+import "./components/animation.css"

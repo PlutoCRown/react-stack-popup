@@ -1,21 +1,15 @@
-import React from 'react'
+import React from "react";
+import { CommonPopup } from "../components/CommonPopup";
 
 export const CustomPopup: React.FC = () => {
   return (
-    <div
-      style={{
-        padding: "30px",
-        borderRadius: "16px",
-        color: "white",
-        background: "rgba(0,0,0,0.15)",
-        boxShadow: "0 18px 40px rgba(0,0,0,0.35)",
-        backdropFilter: "blur(6px)",
-      }}
+    <CommonPopup
+      title="Custom Wrapper"
+      subtitle="Dynamic wrapper color with a pulsing container"
     >
-      <h2>Custom Wrapper</h2>
-      <p>This popup uses a custom wrapper with dynamic color</p>
-    </div>
-  )
-}
+      <p>This popup uses a custom wrapper with dynamic color.</p>
+    </CommonPopup>
+  );
+};
 
-export default CustomPopup
+export default CustomPopup;

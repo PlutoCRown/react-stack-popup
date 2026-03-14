@@ -1,17 +1,37 @@
 import React from "react";
-import { PopupID, stackRouter } from "../stackRouter";
+import { CommonPopup } from "../components/CommonPopup";
+import { stackRouter } from "../stackRouter";
+import { PopupID } from "../constants/popupIds";
 
 interface PagePopupProps {
-  onClose?: () => void
+  onClose?: () => void;
 }
 
-const pageActions = [
-  { label: "Mask Wrapper", id: PopupID.MASK as const },
-  { label: "Bottom Sheet", id: PopupID.BOTTOM_SHEET as const },
-  { label: "Page Wrapper", id: PopupID.PAGE as const },
-  { label: "None Wrapper", id: PopupID.NONE as const },
-  { label: "Custom Wrapper", id: PopupID.CUSTOM as const },
+type PageAction =
+  | { label: string; id: PopupID.BOTTOM_SHEET }
+  | { label: string; id: Exclude<PopupID, PopupID.BOTTOM_SHEET> };
+
+const pageActions: PageAction[] = [
+  { label: "Mask Wrapper", id: PopupID.MASK },
+  { label: "Bottom Sheet", id: PopupID.BOTTOM_SHEET },
+  { label: "Page Wrapper", id: PopupID.PAGE },
+  { label: "None Wrapper", id: PopupID.NONE },
+  { label: "Custom Wrapper", id: PopupID.CUSTOM },
+  { label: "Info Popup", id: PopupID.INFO },
+  { label: "Confirm Popup", id: PopupID.CONFIRM },
+  { label: "Form Popup", id: PopupID.FORM },
 ];
+
+const openAction = (action: PageAction) => {
+  if (action.id === PopupID.BOTTOM_SHEET) {
+    stackRouter.open(action.id, {
+      title: "Bottom Sheet",
+      message: "A compact sheet with swipe-to-close.",
+    });
+    return;
+  }
+  stackRouter.open(action.id, {});
+};
 
 export const PagePopup: React.FC<PagePopupProps> = ({ onClose }) => {
   return (
@@ -22,37 +42,31 @@ export const PagePopup: React.FC<PagePopupProps> = ({ onClose }) => {
         background: "linear-gradient(140deg, #fff7f0, #f6efe7)",
       }}
     >
-      <h2>Page Wrapper</h2>
-      <p>This is a full-page popup that slides in from the right</p>
-      <p>It has a white background and covers the entire viewport</p>
-      <p style={{ fontSize: "14px", color: "#666", marginTop: "10px" }}>
-        Slides in from right on open, slides out to right on close
-      </p>
-      <div style={{ marginTop: "24px" }}>
-        <h3 style={{ marginBottom: "12px" }}>Open Another Popup</h3>
-        <div className="button-group">
-          {pageActions.map((action) => (
-            <button
-              key={action.id}
-              type="button"
-              onClick={() => stackRouter.open(action.id, {})}
-            >
-              {action.label}
-            </button>
-          ))}
-        </div>
-      </div>
-      {onClose && (
-        <button
-          type="button"
-          onClick={onClose}
-          style={{ marginTop: "24px", padding: "10px 20px" }}
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <CommonPopup
+          title="Page Wrapper"
+          subtitle="Full-page overlay with slide-in transition"
+          onClose={onClose}
         >
-          Close Page
-        </button>
-      )}
+          <p>Slides in from right on open, slides out to right on close.</p>
+          <div style={{ marginTop: "24px" }}>
+            <h3 style={{ marginBottom: "12px" }}>Open Another Popup</h3>
+            <div className="button-group">
+              {pageActions.map((action) => (
+                <button
+                  key={action.id}
+                  type="button"
+                  onClick={() => openAction(action)}
+                >
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </CommonPopup>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default PagePopup
+export default PagePopup;

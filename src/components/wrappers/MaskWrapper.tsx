@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import type { WrapperBaseProps } from "../../types";
-import "../../shared.css";
 import styles from "./MaskWrapper.module.css";
 
 export interface MaskWrapperProps extends WrapperBaseProps {

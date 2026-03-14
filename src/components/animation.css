@@ -1,0 +1,3 @@
+.rsp-stack:has(+ .rsp-page) {
+    transform: translate(0,-20vw);
+}

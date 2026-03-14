@@ -1,4 +1,3 @@
-import { lazy } from "react";
 import {
   NoneWrapper,
   MaskWrapper,
@@ -8,46 +7,33 @@ import {
   StackRouter,
   WrapperBaseProps,
 } from "../src";
+import { PopupID } from "./constants/popupIds";
 
-// Define popup IDs
-export enum PopupID {
-  NONE = "none",
-  MASK = "mask",
-  BOTTOM_SHEET = "bottomSheet",
-  CUSTOM = "custom",
-  PAGE = "page",
-}
-
-// // Lazy import demo components
-// const NonePopup = lazy(() => import("./popups/NonePopup"));
-// const MaskPopup = lazy(() => import("./popups/MaskPopup"));
-// const BottomSheetPopup = lazy(() => import("./popups/BottomSheetPopup"));
-// const CustomPopup = lazy(() => import("./popups/CustomPopup"));
-// const PagePopup = lazy(() => import("./popups/PagePopup"));
-
-// import demo components
 import NonePopup from "./popups/NonePopup";
-import CommonPopup from "./popups/CommonPopup";
+import MaskPopup from "./popups/MaskPopup";
 import BottomSheetPopup from "./popups/BottomSheetPopup";
 import CustomPopup from "./popups/CustomPopup";
 import PagePopup from "./popups/PagePopup";
+import InfoPopup from "./popups/InfoPopup";
+import ConfirmPopup from "./popups/ConfirmPopup";
+import FormPopup from "./popups/FormPopup";
 
 // Register popups
 const popups = [
   RegisterPopup({
     id: PopupID.NONE,
-    content: CommonPopup,
+    content: NonePopup,
     wrapper: NoneWrapper,
     wrapperProps: { duration: 0 },
   }),
   RegisterPopup({
     id: PopupID.PAGE,
-    content: CommonPopup,
+    content: PagePopup,
     wrapper: PageWrapper,
   }),
   RegisterPopup({
     id: PopupID.MASK,
-    content: CommonPopup,
+    content: MaskPopup,
     wrapper: MaskWrapper,
     wrapperProps: { maskClosable: true },
   }),
@@ -55,6 +41,25 @@ const popups = [
     id: PopupID.BOTTOM_SHEET,
     content: BottomSheetPopup,
     wrapper: BottomSheetWrapper,
+    wrapperProps: { fitContent: true, swipable: true },
+  }),
+  RegisterPopup({
+    id: PopupID.INFO,
+    content: InfoPopup,
+    wrapper: MaskWrapper,
+    wrapperProps: { maskClosable: true },
+  }),
+  RegisterPopup({
+    id: PopupID.CONFIRM,
+    content: ConfirmPopup,
+    wrapper: MaskWrapper,
+    wrapperProps: { maskClosable: true },
+  }),
+  RegisterPopup({
+    id: PopupID.FORM,
+    content: FormPopup,
+    wrapper: MaskWrapper,
+    wrapperProps: { maskClosable: true },
   }),
   RegisterPopup({
     id: PopupID.CUSTOM,

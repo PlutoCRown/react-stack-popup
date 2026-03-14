@@ -14,7 +14,7 @@ export enum PopupID {
 }
 
 const BottomSheetPopup = lazy(() => import("../popups/BottomSheetPopup"));
-const MaskPopup = lazy(() => import("../popups/CommonPopup"));
+const MaskPopup = lazy(() => import("../popups/MaskPopup"));
 
 // Register popups
 const popups = [

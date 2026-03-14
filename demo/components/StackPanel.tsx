@@ -1,4 +1,5 @@
-import { PopupID, stackRouter } from "../stackRouter";
+import { stackRouter } from "../stackRouter";
+import { PopupID } from "../constants/popupIds";
 
 interface StackPanelProps {
   openNestedPopup: (level: number) => void;
