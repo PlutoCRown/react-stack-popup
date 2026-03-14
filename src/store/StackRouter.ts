@@ -11,6 +11,7 @@ import {
   StackItem,
   RouterState,
   WrapperBaseProps,
+  StackRouterOpenArgs,
 } from '../types'
 import { EventBus } from '../utils/EventBus'
 import { HistoryManager } from './HistoryManager'
@@ -63,7 +64,7 @@ export class StackRouter<Config extends PopupConfigArray> {
   }
 
   // 对外 API
-  open<Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterArgs<Config, Ex>, extra?: StackRouterOpenOptions) {
+  open<Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) {
     const stackItem = {
       id,
       key: this.generateKey(),

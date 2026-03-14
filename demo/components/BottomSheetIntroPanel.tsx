@@ -1,5 +1,7 @@
 import { stackRouter } from "../stackRouter";
 import { PopupID } from "../constants/popupIds";
+import NormalPopup from "../popups/NormalPopup";
+import RandomHeightPopup from "../popups/RandomHeightPopup";
 
 export function BottomSheetIntroPanel() {
   return (
@@ -35,13 +37,13 @@ export function BottomSheetIntroPanel() {
         </button>
         <button
           onClick={() =>
-            stackRouter.open(PopupID.BottomSheet, {
-              title: "底部抽屉",
-              message: "已支持内容自适应和滑动关闭。",
+            stackRouter.open(PopupID.Invoke, {
+              Component:
+                Math.random() > 0.5 ? <NormalPopup /> : <RandomHeightPopup />,
             })
           }
         >
-          FIXME: 这边多传递了参数怎么还不报错
+          调用时传入！
         </button>
       </div>
     </section>

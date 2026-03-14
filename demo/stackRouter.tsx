@@ -17,6 +17,7 @@ import InfoPopup from "./popups/_InfoPopup";
 import ConfirmPopup from "./popups/_ConfirmPopup";
 import FormPopup from "./popups/_FormPopup";
 import PropsPopup from "./popups/PropsPopup";
+import React from "react";
 
 // Register popups
 const popups = [
@@ -57,11 +58,12 @@ const popups = [
     wrapper: BottomSheetWrapper,
     wrapperProps: { fitContent: false },
   }),
-  // 暂时未用上
   RegisterPopup({
-    id: PopupID.ScrollSheet,
-    content: FormPopup,
-    wrapper: BottomSheetWrapper,
+    id: PopupID.Invoke,
+    content: (({ Component }) => Component) as React.FC<{
+      Component: React.ReactNode;
+    }>,
+    wrapper: MaskWrapper,
   }),
   RegisterPopup({
     id: PopupID.TestCustom,

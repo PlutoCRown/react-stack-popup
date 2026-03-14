@@ -21,39 +21,27 @@ export interface PopupConfig<ID extends string, T extends any, W extends Wrapper
   wrapperProps?: W
 }
 
+type EmptyObject = Record<string, never>
 export type PopupConfigArray = readonly PopupConfig<any, any, any>[]
 export type StackRouterId<C extends PopupConfigArray> = C[number]['id']
-export type StackRouterConfigOf<C extends PopupConfigArray, Id extends StackRouterId<C>> = Extract<C[number], { id: Id }>
-export type StackRouterContentArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> =
-  Parameters<StackRouterConfigOf<C, Id>['content']>[0]
+
 export type StackRouterArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> =
-  StackRouterContentArgs<C, Id>
-export type StackRouterWrapperProps<C extends PopupConfigArray, Id extends StackRouterId<C>> = Parameters<StackRouterConfigOf<C, Id>['wrapper']>[0]
-export type StackRouterItem<C extends PopupConfigArray, Id extends StackRouterId<C> = StackRouterId<C>> = StackItem<
-  Id,
-  StackRouterArgs<C, Id>,
-  StackRouterWrapperProps<C, Id>
->
+  Parameters<Extract<C[number], { id: Id }>['content']>[0]
+
+// 做此步封装的原因是 如果内容组件没写React.FC<参数>类型声明。默认是object，这时候只允许传空对象，避免外部误解
+export type StackRouterOpenArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> =
+  object extends StackRouterArgs<C, Id> ? EmptyObject : StackRouterArgs<C, Id>
+
+export type StackRouterWrapperProps<C extends PopupConfigArray, Id extends StackRouterId<C>> =
+  Parameters<Extract<C[number], { id: Id }>['wrapper']>[0]
+
+export type StackRouterItem<C extends PopupConfigArray, Id extends StackRouterId<C> = StackRouterId<C>> =
+  StackItem<Id, StackRouterArgs<C, Id>, StackRouterWrapperProps<C, Id>>
+
 export type StackRouterOpenOptions = { url: string }
-// type StackRouterIsEmptyObject<T> = T extends object ? (keyof T extends never ? true : false) : false
-// export type StackRouterOpenArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> =
-//   StackRouterArgs<C, Id> extends void | undefined
-//   ? [id: Id, args?: StackRouterArgs<C, Id>]
-//   : StackRouterIsEmptyObject<StackRouterArgs<C, Id>> extends true
-//   ? [id: Id] | [id: Id, args: StackRouterArgs<C, Id>]
-//   : [id: Id, args: StackRouterArgs<C, Id>]
+
 export type StackRouterOpenArgsWithOptions<C extends PopupConfigArray, Id extends StackRouterId<C>> =
   [id: Id, args: StackRouterArgs<C, Id>, options: StackRouterOpenOptions]
-// StackRouterArgs<C, Id> extends void | undefined
-// ? [id: Id]
-// | [id: Id, args?: StackRouterArgs<C, Id>]
-// | [id: Id, args: StackRouterArgs<C, Id>, options: StackRouterOpenOptions]
-// : StackRouterIsEmptyObject<StackRouterArgs<C, Id>> extends true
-// ? [id: Id]
-// | [id: Id, args: StackRouterArgs<C, Id>]
-// | [id: Id, args: StackRouterArgs<C, Id>, options: StackRouterOpenOptions]
-// : [id: Id, args: StackRouterArgs<C, Id>]
-// | [id: Id, args: StackRouterArgs<C, Id>, options: StackRouterOpenOptions]
 
 export type StackRouterState<C extends PopupConfigArray> = RouterState<
   StackRouterId<C>,
