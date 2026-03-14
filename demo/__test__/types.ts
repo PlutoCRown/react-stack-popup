@@ -26,6 +26,9 @@ type UnionToTuple<U, T extends any[] = []> = [U] extends [never]
     : UnionToTuple<Exclude<U, LastOf<U>>, [LastOf<U>, ...T]>;
 
 // union length
-export type UnionLength<U> = UnionToTuple<U>["length"];
+export type UnionLength<U> =
+    UnionToTuple<U> extends { length: infer L }
+    ? L
+    : never
 
 export type Length<Arr extends readonly any[]> = Arr["length"];

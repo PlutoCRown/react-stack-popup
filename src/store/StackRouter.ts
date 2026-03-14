@@ -5,7 +5,6 @@ import {
   StackRouterArgs,
   StackRouterConfig,
   StackRouterId,
-  StackRouterOpenArgsWithOptions,
   StackRouterOpenOptions,
   StackRouterWrapperProps,
   StackItem,

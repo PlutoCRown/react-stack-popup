@@ -6,8 +6,8 @@ export interface NoneWrapperProps extends WrapperBaseProps {}
 
 export const NoneWrapper = ({
   children,
-  visible = true,
-  duration = 300,
+  visible,
+  duration,
 }: NoneWrapperProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 

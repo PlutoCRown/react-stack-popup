@@ -146,7 +146,6 @@ body {
 .subtle {
   color: var(--muted);
   font-size: 0.9rem;
-  font-family: "Space Grotesk", "Avenir Next", sans-serif;
 }
 
 .button-group {

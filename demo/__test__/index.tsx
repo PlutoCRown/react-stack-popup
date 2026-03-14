@@ -14,22 +14,10 @@ const PropsTest = lazy(() => import("./PropsTest"));
 
 // Register popups
 const popups = [
-  RegisterPopup({
-    id: PopupID.TestProps,
-    content: PropsTest,
-    wrapper: MaskWrapper,
-  }),
-  RegisterPopup({
-    id: PopupID.TestNone,
-    content: NoneTest,
-    wrapper: MaskWrapper,
-  }),
-  // 错误注册 ⬇️
-  RegisterPopup({
-    id: PopupID.TestNone,
-    content: PropsTest,
-    wrapper: MaskWrapper,
-  }),
+  RegisterPopup(PopupID.TestProps, PropsTest, MaskWrapper),
+  RegisterPopup(PopupID.TestNone, NoneTest, MaskWrapper),
+  RegisterPopup(PopupID.TestNone, PropsTest, MaskWrapper),
+  // 错误注册 ⬆️
 ] as const;
 
 const stackRouter = new StackRouter(popups);
@@ -54,9 +42,9 @@ type _ = Expect<Equal<never, Error>>;
 
 // =============== TEST.3 重复ID校验 ===========
 
-type Len = Length<typeof popups>;
+type RegLen = Length<typeof popups>;
 
 type PopupCount = UnionLength<(typeof popups)[number]["id"]>;
 
 // @ts-expect-error ❌ 核算有无重复的PopupID被注册
-type __ = Expect<Equal<Len, PopupCount>>;
+type __ = Expect<Equal<RegLen, PopupCount>>;

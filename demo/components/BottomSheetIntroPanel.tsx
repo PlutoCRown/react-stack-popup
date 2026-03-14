@@ -10,10 +10,7 @@ export function BottomSheetIntroPanel() {
         <h2>底部抽屉容器</h2>
         <span className="subtle">内容自适应 + 滑动关闭</span>
       </div>
-      <p style={{ marginBottom: 16, color: "#6a625b" }}>
-        BottomSheet 支持内容高度自适应，并支持滑动手势关闭。适合行动面板、
-        选择器与轻量流程。
-      </p>
+
       <div className="button-group">
         <button
           onClick={() =>
@@ -37,7 +34,7 @@ export function BottomSheetIntroPanel() {
         </button>
         <button
           onClick={() =>
-            stackRouter.open(PopupID.Invoke, {
+            stackRouter.open(PopupID.CustomContent, {
               Component:
                 Math.random() > 0.5 ? <NormalPopup /> : <RandomHeightPopup />,
             })

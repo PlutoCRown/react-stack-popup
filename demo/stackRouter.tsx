@@ -19,70 +19,37 @@ import LongContent from "./popups/LongContent";
 
 // Register popups
 const popups = [
-  // 无包装弹窗
-  RegisterPopup({
-    id: PopupID.TestNoneWrap,
-    content: NormalPopup,
-    wrapper: NoneWrapper,
-    wrapperProps: { duration: 0 },
+  // 基础用法
+  RegisterPopup(PopupID.TestNoneWrap, NormalPopup, NoneWrapper, {
+    duration: 0,
   }),
-  // 页包装
-  RegisterPopup({
-    id: PopupID.FullPage,
-    content: PagePopup,
-    wrapper: PageWrapper,
+  RegisterPopup(PopupID.FullPage, PagePopup, PageWrapper),
+  RegisterPopup(PopupID.CenterPopup, NormalPopup, MaskWrapper),
+  RegisterPopup(PopupID.BottomSheet, RandomHeightPopup, BottomSheetWrapper, {
+    swipable: false,
   }),
-  // 背景包装
-  RegisterPopup({
-    id: PopupID.CenterPopup,
-    content: NormalPopup,
-    wrapper: MaskWrapper,
-  }),
-  // 底部表
-  RegisterPopup({
-    id: PopupID.BottomSheet,
-    content: RandomHeightPopup,
-    wrapper: BottomSheetWrapper,
-    wrapperProps: { swipable: false },
-  }),
-  // 测试 Swipe
-  RegisterPopup({
-    id: PopupID.TestSwipable,
-    content: PropsPopup,
-    wrapper: BottomSheetWrapper,
-  }),
-  // 测试 FitContent
-  RegisterPopup({
-    id: PopupID.HighSheet,
-    content: PropsPopup,
-    wrapper: BottomSheetWrapper,
-    wrapperProps: { fitContent: false },
+  // BottomSheet
+  RegisterPopup(PopupID.TestSwipable, PropsPopup, BottomSheetWrapper),
+  RegisterPopup(PopupID.HighSheet, PropsPopup, BottomSheetWrapper, {
+    fitContent: false,
   }),
   // 测试页滚动
-  RegisterPopup({
-    id: PopupID.ScrollPage,
-    content: LongContent,
-    wrapper: PageWrapper,
-  }),
-  // 测试底表滚动
-  RegisterPopup({
-    id: PopupID.ScrollSheet,
-    content: LongContent,
-    wrapper: BottomSheetWrapper,
-  }),
-  // 动态调用弹窗
-  RegisterPopup({
-    id: PopupID.Invoke,
-    content: (({ Component }) => Component) as React.FC<{
+  RegisterPopup(PopupID.ScrollPage, LongContent, PageWrapper),
+  RegisterPopup(PopupID.ScrollSheet, LongContent, BottomSheetWrapper),
+  // 特殊用法：动态调用弹窗
+  RegisterPopup(
+    PopupID.CustomContent,
+    (({ Component }) => Component) as React.FC<{
       Component: React.ReactNode;
     }>,
-    wrapper: MaskWrapper,
-  }),
-  RegisterPopup({
-    id: PopupID.TestCustom,
-    content: CustomPopup,
+    MaskWrapper,
+  ),
+  // 特殊用法：自定义包装层弹窗
+  RegisterPopup(
+    PopupID.CustomWrapper,
+    CustomPopup,
     // 该示例是错误的
-    wrapper: ({
+    ({
       backgroundColor,
       onClose,
       children,
@@ -114,8 +81,8 @@ const popups = [
         </div>
       </div>
     ),
-    wrapperProps: { backgroundColor: "#667eea", duration: 0 },
-  }),
+    { backgroundColor: "#667eea", duration: 0 },
+  ),
 ] as const;
 
 export const stackRouter = new StackRouter(popups, { urlManage: false });

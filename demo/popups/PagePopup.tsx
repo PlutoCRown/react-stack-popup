@@ -44,7 +44,7 @@ export const AllWrapBtnGroup = () => {
       <button onClick={() => stackRouter.open(PopupID.TestNoneWrap, {})}>
         NoneWrapper
       </button>
-      <button onClick={() => stackRouter.open(PopupID.TestCustom, {})}>
+      <button onClick={() => stackRouter.open(PopupID.CustomWrapper, {})}>
         自定义实现
       </button>
     </div>
