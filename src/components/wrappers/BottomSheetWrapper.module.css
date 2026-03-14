@@ -1,0 +1,36 @@
+.bottomSheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 20px;
+}
+
+.bottomSheet.entering {
+  animation: slideUp var(--animation-duration) ease;
+}
+
+.bottomSheet.exiting {
+  animation: slideDown var(--animation-duration) ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
