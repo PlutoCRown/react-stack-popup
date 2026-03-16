@@ -37,7 +37,7 @@ function App() {
         <div className="hero-panel">
           <div className="metric">
             <span className="metric-label">包装器</span>
-            <span className="metric-value">4</span>
+            <span className="metric-value">5</span>
           </div>
           <div className="metric">
             <span className="metric-label">路由</span>

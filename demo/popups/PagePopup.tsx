@@ -28,11 +28,14 @@ export const AllWrapBtnGroup = () => {
   return (
     <div className="button-group">
       <button onClick={() => stackRouter.open(PopupID.FullPage, {})}>
-        PageWrapper
+        Page
       </button>
       <button onClick={() => stackRouter.open(PopupID.Sheet, {})}>Sheet</button>
       <button onClick={() => stackRouter.open(PopupID.CenterPopup, {})}>
-        MaskWrapper
+        Mask
+      </button>
+      <button onClick={() => stackRouter.open(PopupID.Drawer, {})}>
+        Drawer
       </button>
       <button
         onClick={() =>
@@ -42,7 +45,7 @@ export const AllWrapBtnGroup = () => {
           })
         }
       >
-        NoneWrapper
+        None
       </button>
       <button onClick={() => stackRouter.open(PopupID.CustomWrapper, {})}>
         自定义实现

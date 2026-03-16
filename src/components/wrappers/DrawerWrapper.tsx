@@ -33,8 +33,14 @@ export const DrawerWrapper = ({
     const fromX = direction === "left" ? "-100%" : "100%";
     const animation = el.animate(
       visible
-        ? [{ transform: `translateX(${fromX})` }, { transform: "translateX(0)" }]
-        : [{ transform: "translateX(0)" }, { transform: `translateX(${fromX})` }],
+        ? [
+            { transform: `translateX(${fromX})` },
+            { transform: "translateX(0)" },
+          ]
+        : [
+            { transform: "translateX(0)" },
+            { transform: `translateX(${fromX})` },
+          ],
       {
         duration,
         easing: "ease",
@@ -51,13 +57,12 @@ export const DrawerWrapper = ({
     };
   }, [visible, duration, direction]);
 
-  const normalizedWidth =
-    typeof width === "number" ? `${width}px` : width;
+  const normalizedWidth = typeof width === "number" ? `${width}px` : width;
 
   return (
     <div
       ref={drawerRef}
-      className={clsx("rsp-stack", "rsp-page", styles.drawerWrapper, className)}
+      className={clsx("rsp-stack", styles.drawerWrapper, className)}
       style={{
         width: normalizedWidth,
         left: direction === "left" ? 0 : undefined,

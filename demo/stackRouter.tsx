@@ -3,6 +3,7 @@ import {
   MaskWrapper,
   SheetWrapper,
   PageWrapper,
+  DrawerWrapper,
   RegisterPopup,
   StackRouter,
   WrapperBaseProps,
@@ -13,6 +14,7 @@ import RandomHeightPopup from "./popups/RandomHeightPopup";
 import NormalPopup from "./popups/NormalPopup";
 import CustomPopup from "./popups/CustomPopup";
 import PagePopup from "./popups/PagePopup";
+import DrawerPopup from "./popups/DrawerPopup";
 import PropsPopup from "./popups/PropsPopup";
 import React from "react";
 import LongContent from "./popups/LongContent";
@@ -24,6 +26,7 @@ const popups = [
     duration: 0,
   }),
   RegisterPopup(PopupID.FullPage, PagePopup, PageWrapper),
+  RegisterPopup(PopupID.Drawer, DrawerPopup, DrawerWrapper),
   RegisterPopup(PopupID.CenterPopup, NormalPopup, MaskWrapper),
   RegisterPopup(PopupID.Sheet, RandomHeightPopup, SheetWrapper, {
     swipable: false,

@@ -9,5 +9,6 @@ export enum PopupID {
   ScrollSheet = "ScrollSheet",
   ScrollPage = "ScrollPage",
   ScrollMask = "ScrollMask",
-  CustomContent = 'invoke'
+  Drawer = "Drawer",
+  CustomContent = "invoke"
 }
