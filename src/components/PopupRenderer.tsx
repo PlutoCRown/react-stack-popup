@@ -24,7 +24,7 @@ export function PopupRenderer<Config extends PopupConfigArray>({
   const stack = useStackRouter(stackRouter);
   const config = stackRouter.config;
 
-  const renderItems = stack.map((item) => {
+  const renderItems = stack.slice(-config.unloadDistance).map((item) => {
     const popupConfig = stackRouter.popupConfigs[item.id] as
       | Config[number]
       | undefined;

@@ -26,7 +26,7 @@ type ConfigOf<C extends PopupConfigArray, Id extends StackRouterId<C>> = Extract
 
 export class StackRouter<Config extends PopupConfigArray> {
   popupConfigs: { [P in StackRouterId<Config>]: ConfigOf<Config, P> }
-  config: StackRouterConfig
+  config: Required<StackRouterConfig>
 
   private store: ReturnType<typeof createStore<
     StackRouterId<Config>,
@@ -38,12 +38,12 @@ export class StackRouter<Config extends PopupConfigArray> {
   public readonly channel: EventBus<StackRouterEvents<StackRouterId<Config>>>
 
   constructor(popups: Config, config: Partial<StackRouterConfig> = {}) {
-    const defaultConfig: StackRouterConfig = {
+    const defaultConfig: Required<StackRouterConfig> = {
       urlManage: false,
       freeze: true,
       suspense: true,
       errorBoundary: true,
-      unloadDistance: 3
+      unloadDistance: Infinity
     }
     this.config = Object.assign(defaultConfig, config)
     // @ts-expect-error any

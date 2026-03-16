@@ -1,5 +1,5 @@
 [x] StackRouter 功能
-[x] 内置 Wrapper 功能（仍需要补齐参数和确认细节功能）
+[x] 内置 Wrapper 功能
 [x] HistoryManager 功能 (未测试)
 [x] 层间动画
 [x] 滚动Demo
@@ -17,11 +17,6 @@
   - 忽略进入
   - 忽略退出
   - Promise版API
-
-
-[ ] 新增包装
-  - BS pc端兼容
-  - PC 居中
 
 [ ] 测试
   - 冻结功能
