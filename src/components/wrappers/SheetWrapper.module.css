@@ -1,12 +1,113 @@
-.Sheet {
+.sheetWrapper {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.mask {
   position: absolute;
-  bottom: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 1;
+}
+
+.track {
+  position: absolute;
   left: 0;
   right: 0;
-  background-color: white;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
   max-height: calc(100% - 48px);
   display: flex;
   flex-direction: column;
+
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  /* 用于填充弹性滚动的底边 */
+  background: linear-gradient(to bottom,transparent 0, transparent 50vh, white 50vh, white 100%);
+}
+
+.panel {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  position: relative;
+  z-index: 1;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  transform: translate3d(0px,0px,0px);
+}
+/* 必须然内容元素参与背景色填充 */
+.panel > * {
+  background: linear-gradient(to bottom,transparent 0, transparent 50vh, white 50vh, white 100%);
+}
+/* 这个玩意只能覆盖到容器的视图高100% */
+.panel-bg {
+  position: fixed;
+  top:0;
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.sheetWrapper:global(.rsp-entering) .panel {
+  animation: sheet-slide-in var(--rsp-duration) ease;
+}
+
+.sheetWrapper:global(.rsp-exiting) .panel {
+  animation: sheet-slide-out var(--rsp-duration) ease forwards;
+}
+
+.sheetWrapper:global(.rsp-entering) .mask {
+  animation: sheet-mask-in var(--rsp-duration) ease;
+}
+
+.sheetWrapper:global(.rsp-exiting) .mask {
+  animation: sheet-mask-out var(--rsp-duration) ease forwards;
+}
+
+@keyframes sheet-slide-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes sheet-slide-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes sheet-mask-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-mask-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

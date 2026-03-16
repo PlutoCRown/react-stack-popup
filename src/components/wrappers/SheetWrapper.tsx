@@ -1,62 +1,67 @@
 import { useEffect, useRef } from "react";
-import type { WrapperBaseProps } from "../../types";
-import { MaskWrapper } from "./MaskWrapper";
-import styles from "./SheetWrapper.module.css";
-import { finalizeAnimation } from "../../utils/animation";
 import clsx from "clsx";
+import type { WrapperBaseProps } from "../../types";
+import styles from "./SheetWrapper.module.css";
 
 export interface SheetWrapperProps extends WrapperBaseProps {
   fitContent?: boolean;
   swipable?: boolean;
+  maskClosable?: boolean;
 }
 
 export const SheetWrapper = ({
   children,
   fitContent = true,
   swipable = true,
+  maskClosable = true,
   onClose,
   visible,
   duration = 300,
 }: SheetWrapperProps) => {
-  const sheetRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const el = sheetRef.current;
+    const el = containerRef.current;
     if (!el) return;
-    const animation = el.animate(
-      visible
-        ? [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }]
-        : [{ transform: "translateY(0)" }, { transform: "translateY(100%)" }],
-      {
-        duration,
-        easing: "ease",
-        fill: "forwards",
-      },
-    );
-    finalizeAnimation(animation);
+    const enterClass = "rsp-entering";
+    const exitClass = "rsp-exiting";
+    const activeClass = visible ? enterClass : exitClass;
 
-    return () => {
-      animation.cancel();
-    };
+    el.classList.remove(enterClass, exitClass);
+    el.classList.add(activeClass);
+
+    const timer = window.setTimeout(() => {
+      el.classList.remove(activeClass);
+    }, duration);
+    return () => window.clearTimeout(timer);
   }, [visible, duration]);
 
   return (
-    <MaskWrapper
-      onClose={onClose}
-      visible={visible}
-      duration={duration}
-      className="rsp-sheet"
-    >
+    <div ref={containerRef} className={clsx("rsp-stack", styles.sheetWrapper)}>
       <div
-        ref={sheetRef}
-        className={clsx(styles.Sheet, "rsp-sheet-panel")}
-        style={{
-          height: fitContent ? undefined : "calc(100% - 48px)",
-          touchAction: swipable ? "pan-y" : "auto",
-          WebkitOverflowScrolling: "touch",
-        }}
+        className={styles.mask}
+        onClick={
+          maskClosable
+            ? (e) => {
+                if (e.target === e.currentTarget) onClose?.();
+              }
+            : undefined
+        }
+      />
+      <div
+        className={styles.track}
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
-        {children}
+        <div
+          className={clsx(styles.panel, "rsp-sheet-panel")}
+          style={{
+            height: fitContent ? undefined : "calc(100% - 48px)",
+            touchAction: swipable ? "pan-y" : "auto",
+          }}
+        >
+          <div className={styles["panel-bg"]} />
+          {children}
+        </div>
       </div>
-    </MaskWrapper>
+    </div>
   );
 };
