@@ -1,6 +1,8 @@
 [x] StackRouter 功能
 [x] 内置 Wrapper 功能
 [x] HistoryManager 功能 (未测试)
+  - 抽层移除的问题
+  - 锁情况测试
 [x] 层间动画
 [x] 滚动Demo
 

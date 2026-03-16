@@ -58,6 +58,7 @@ export interface StackRouterConfig {
   suspense?: boolean
   errorBoundary?: boolean
   unloadDistance?: number
+  lock?: import("./store/FocusLock").FocusLock | null
 }
 
 

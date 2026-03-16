@@ -43,7 +43,8 @@ export class StackRouter<Config extends PopupConfigArray> {
       freeze: true,
       suspense: true,
       errorBoundary: true,
-      unloadDistance: Infinity
+      unloadDistance: Infinity,
+      lock: null,
     }
     this.config = Object.assign(defaultConfig, config)
     // @ts-expect-error any
@@ -66,6 +67,7 @@ export class StackRouter<Config extends PopupConfigArray> {
 
   // 对外 API
   open<Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) {
+    if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
     const stackItem = {
       id,
       key: this.generateKey(),
@@ -77,14 +79,20 @@ export class StackRouter<Config extends PopupConfigArray> {
     this.instance.open(stackItem)
     this.channel.emit('open', { id })
     this.historyManager?.push(extra?.url)
+    return Promise.resolve()
   }
   close(id?: StackRouterId<Config>) {
+    if (this.config.lock?.shouldIgnoreClose()) return Promise.reject()
     this.channel.emit('close', { id: id || null })
     const stack = this.instance.stack
     const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)
-    const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : undefined
+    const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : 0
+    if (!target) {
+      return Promise.resolve()
+    }
     this.instance.close(id, duration)
     this.historyManager?.pop()
+    return Promise.resolve()
   }
 
   // 服务于 Hook

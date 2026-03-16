@@ -35,21 +35,17 @@ export const SheetWrapper = ({
     return () => window.clearTimeout(timer);
   }, [visible, duration]);
 
+  const handleMaskClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (maskClosable && e.target === e.currentTarget && onClose) {
+      onClose();
+    }
+  };
   return (
     <div
       ref={containerRef}
       className={clsx("rsp-stack", "rsp-sheet", styles.sheetWrapper)}
     >
-      <div
-        className={styles.mask}
-        onClick={
-          maskClosable
-            ? (e) => {
-                if (e.target === e.currentTarget) onClose?.();
-              }
-            : undefined
-        }
-      />
+      <div className={styles.mask} onClick={handleMaskClick} />
       <div
         className={clsx(styles.track, "rsp-sheet-track")}
         style={{
