@@ -131,7 +131,7 @@ stackRouter.open('myPopup', ['Hello', 42]);
 | `opacity`      | `number`  | 遮罩透明度 (0-1) |
 | `maskClosable` | `boolean` | 点击遮罩是否关闭 |
 
-### BottomSheetWrapper 保留参数
+### SheetWrapper 保留参数
 
 | 参数名      | 类型     | 说明              |
 | ----------- | -------- | ----------------- |

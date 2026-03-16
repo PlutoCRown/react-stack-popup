@@ -1,7 +1,7 @@
 import {
   NoneWrapper,
   MaskWrapper,
-  BottomSheetWrapper,
+  SheetWrapper,
   PageWrapper,
   RegisterPopup,
   StackRouter,
@@ -25,17 +25,17 @@ const popups = [
   }),
   RegisterPopup(PopupID.FullPage, PagePopup, PageWrapper),
   RegisterPopup(PopupID.CenterPopup, NormalPopup, MaskWrapper),
-  RegisterPopup(PopupID.BottomSheet, RandomHeightPopup, BottomSheetWrapper, {
+  RegisterPopup(PopupID.Sheet, RandomHeightPopup, SheetWrapper, {
     swipable: false,
   }),
-  // BottomSheet
-  RegisterPopup(PopupID.TestSwipable, PropsPopup, BottomSheetWrapper),
-  RegisterPopup(PopupID.HighSheet, RandomHeightPopup, BottomSheetWrapper, {
+  // Sheet
+  RegisterPopup(PopupID.TestSwipable, PropsPopup, SheetWrapper),
+  RegisterPopup(PopupID.HighSheet, RandomHeightPopup, SheetWrapper, {
     fitContent: false,
   }),
   // 测试页滚动
   RegisterPopup(PopupID.ScrollPage, LongContent, PageWrapper),
-  RegisterPopup(PopupID.ScrollSheet, LongContent, BottomSheetWrapper),
+  RegisterPopup(PopupID.ScrollSheet, LongContent, SheetWrapper),
   RegisterPopup(PopupID.ScrollMask, LongContent, MaskWrapper),
   // 特殊用法：动态调用弹窗
   RegisterPopup(

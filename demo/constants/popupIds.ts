@@ -1,7 +1,7 @@
 export enum PopupID {
   TestNoneWrap = "TestNoneWrap",
   CenterPopup = "CenterPopup",
-  BottomSheet = "BottomSheet",
+  Sheet = "Sheet",
   CustomWrapper = "TestCustom",
   FullPage = "FullPage",
   TestSwipable = "TestSwipable",

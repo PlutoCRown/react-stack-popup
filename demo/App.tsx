@@ -4,7 +4,7 @@ import { stackRouter } from "./stackRouter";
 import { PopupID } from "./constants/popupIds";
 import { QuickStartPanel } from "./components/QuickStartPanel";
 import { WrapperPanel } from "./components/WrapperPanel";
-import { BottomSheetIntroPanel } from "./components/BottomSheetIntroPanel";
+import { SheetIntroPanel } from "./components/SheetIntroPanel";
 import { ScrollCompatiblePanel } from "./components/ScrollCompatiblePanel";
 
 function App() {
@@ -52,7 +52,7 @@ function App() {
 
       <main className="main">
         <WrapperPanel />
-        <BottomSheetIntroPanel />
+        <SheetIntroPanel />
         <ScrollCompatiblePanel />
         <QuickStartPanel />
       </main>

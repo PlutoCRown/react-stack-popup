@@ -56,7 +56,7 @@ stackRouter.close(PopupID.Center)
 ## 内置 Wrapper
 - `NoneWrapper`：不添加任何外层结构
 - `MaskWrapper`：遮罩层与渐隐动画
-- `BottomSheetWrapper`：自适应高度 + 滑动关闭
+- `SheetWrapper`：自适应高度 + 滑动关闭
 - `PageWrapper`：页面级过渡动画
 
 ## 适用场景

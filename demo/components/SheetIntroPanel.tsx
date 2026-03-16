@@ -3,7 +3,7 @@ import { PopupID } from "../constants/popupIds";
 import NormalPopup from "../popups/NormalPopup";
 import RandomHeightPopup from "../popups/RandomHeightPopup";
 
-export function BottomSheetIntroPanel() {
+export function SheetIntroPanel() {
   return (
     <section className="card">
       <div className="card-header">

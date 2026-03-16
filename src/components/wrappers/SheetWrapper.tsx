@@ -1,23 +1,23 @@
 import { useEffect, useRef } from "react";
 import type { WrapperBaseProps } from "../../types";
 import { MaskWrapper } from "./MaskWrapper";
-import styles from "./BottomSheetWrapper.module.css";
+import styles from "./SheetWrapper.module.css";
 import { finalizeAnimation } from "../../utils/animation";
 import clsx from "clsx";
 
-export interface BottomSheetWrapperProps extends WrapperBaseProps {
+export interface SheetWrapperProps extends WrapperBaseProps {
   fitContent?: boolean;
   swipable?: boolean;
 }
 
-export const BottomSheetWrapper = ({
+export const SheetWrapper = ({
   children,
   fitContent = true,
   swipable = true,
   onClose,
   visible,
   duration = 300,
-}: BottomSheetWrapperProps) => {
+}: SheetWrapperProps) => {
   const sheetRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = sheetRef.current;
@@ -48,7 +48,7 @@ export const BottomSheetWrapper = ({
     >
       <div
         ref={sheetRef}
-        className={clsx(styles.bottomSheet, "rsp-sheet-panel")}
+        className={clsx(styles.Sheet, "rsp-sheet-panel")}
         style={{
           height: fitContent ? undefined : "calc(100% - 48px)",
           touchAction: swipable ? "pan-y" : "auto",

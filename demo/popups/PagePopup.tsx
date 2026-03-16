@@ -30,9 +30,7 @@ export const AllWrapBtnGroup = () => {
       <button onClick={() => stackRouter.open(PopupID.FullPage, {})}>
         PageWrapper
       </button>
-      <button onClick={() => stackRouter.open(PopupID.BottomSheet, {})}>
-        BottomSheet
-      </button>
+      <button onClick={() => stackRouter.open(PopupID.Sheet, {})}>Sheet</button>
       <button onClick={() => stackRouter.open(PopupID.CenterPopup, {})}>
         MaskWrapper
       </button>

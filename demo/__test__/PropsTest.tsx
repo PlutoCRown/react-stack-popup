@@ -1,14 +1,11 @@
 import React from "react";
 
-interface BottomSheetPopupProps {
+interface SheetPopupProps {
   title: string;
   message: string;
 }
 
-export const BottomSheetPopup: React.FC<BottomSheetPopupProps> = ({
-  title,
-  message,
-}) => {
+export const SheetPopup: React.FC<SheetPopupProps> = ({ title, message }) => {
   return (
     <div>
       <h1>{title}</h1>
@@ -18,4 +15,4 @@ export const BottomSheetPopup: React.FC<BottomSheetPopupProps> = ({
   );
 };
 
-export default BottomSheetPopup;
+export default SheetPopup;
