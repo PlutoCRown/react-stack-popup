@@ -2,11 +2,11 @@ import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./DrawerWrapper.module.css";
-import { finalizeAnimation } from "../../utils/animation";
 
 export interface DrawerWrapperProps extends WrapperBaseProps {
   direction?: "left" | "right";
   width?: number | string;
+  maskClosable?: boolean;
 }
 
 export const DrawerWrapper = ({
@@ -15,8 +15,10 @@ export const DrawerWrapper = ({
   duration = 300,
   direction = "right",
   width,
+  maskClosable = true,
   className,
   style,
+  onClose,
 }: DrawerWrapperProps) => {
   const drawerRef = useRef<HTMLDivElement>(null);
 
@@ -30,30 +32,11 @@ export const DrawerWrapper = ({
     el.classList.remove(enterClass, exitClass);
     el.classList.add(activeClass);
 
-    const fromX = direction === "left" ? "-100%" : "100%";
-    const animation = el.animate(
-      visible
-        ? [
-            { transform: `translateX(${fromX})` },
-            { transform: "translateX(0)" },
-          ]
-        : [
-            { transform: "translateX(0)" },
-            { transform: `translateX(${fromX})` },
-          ],
-      {
-        duration,
-        easing: "ease",
-        fill: "forwards",
-      },
-    );
-    finalizeAnimation(animation);
     const timer = window.setTimeout(() => {
       el.classList.remove(activeClass);
     }, duration);
     return () => {
       window.clearTimeout(timer);
-      animation.cancel();
     };
   }, [visible, duration, direction]);
 
@@ -62,15 +45,34 @@ export const DrawerWrapper = ({
   return (
     <div
       ref={drawerRef}
-      className={clsx("rsp-stack", styles.drawerWrapper, className)}
-      style={{
-        width: normalizedWidth,
-        left: direction === "left" ? 0 : undefined,
-        right: direction === "right" ? 0 : undefined,
-        ...style,
-      }}
+      className={clsx(
+        "rsp-stack",
+        styles.drawerWrapper,
+        styles[direction],
+        className,
+      )}
+      style={style}
     >
-      {children}
+      <div
+        className={styles.mask}
+        onClick={
+          maskClosable
+            ? (e) => {
+                if (e.target === e.currentTarget) onClose?.();
+              }
+            : undefined
+        }
+      />
+      <div
+        className={styles.track}
+        style={{
+          width: normalizedWidth,
+          left: direction === "left" ? 0 : undefined,
+          right: direction === "right" ? 0 : undefined,
+        }}
+      >
+        <div className={styles.panel}>{children}</div>
+      </div>
     </div>
   );
 };

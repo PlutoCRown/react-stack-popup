@@ -12,34 +12,16 @@ const LongContent = () => {
         display: "flex",
         flexDirection: "column",
         gap: 16,
-        height: "100%",
-        overflowY: "scroll",
-        width: "100%",
-        flex: 1,
       }}
     >
       <button
         className="close-button"
-        style={{ position: "sticky", top: 0 }}
+        style={{ position: "sticky", top: 16 }}
         onClick={() => stackRouter.close()}
       >
         返回
       </button>
 
-      <div className="button-group">
-        <button
-          onClick={() => stackRouter.open(PopupID.ScrollPage, {})}
-          style={{ flex: 1 }}
-        >
-          Page内滚动
-        </button>
-        <button
-          onClick={() => stackRouter.open(PopupID.ScrollSheet, {})}
-          style={{ flex: 1 }}
-        >
-          Sheet内滚动
-        </button>
-      </div>
       <div
         style={{
           minHeight: "100%",
@@ -64,6 +46,21 @@ const LongContent = () => {
             />
           ))}
         </div>
+      </div>
+
+      <div className="button-group">
+        <button
+          onClick={() => stackRouter.open(PopupID.ScrollPage, {})}
+          style={{ flex: 1 }}
+        >
+          Page内滚动
+        </button>
+        <button
+          onClick={() => stackRouter.open(PopupID.ScrollSheet, {})}
+          style={{ flex: 1 }}
+        >
+          Sheet内滚动
+        </button>
       </div>
     </div>
   );

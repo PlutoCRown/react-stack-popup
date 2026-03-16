@@ -57,6 +57,7 @@ export interface StackRouterConfig {
   freeze?: boolean
   suspense?: boolean
   errorBoundary?: boolean
+  unloadDistance?: number
 }
 
 

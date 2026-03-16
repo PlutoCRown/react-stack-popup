@@ -42,7 +42,8 @@ export class StackRouter<Config extends PopupConfigArray> {
       urlManage: false,
       freeze: true,
       suspense: true,
-      errorBoundary: true
+      errorBoundary: true,
+      unloadDistance: 3
     }
     this.config = Object.assign(defaultConfig, config)
     // @ts-expect-error any

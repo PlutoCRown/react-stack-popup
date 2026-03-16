@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./PageWrapper.module.css";
-import { finalizeAnimation } from "../../utils/animation";
 
 export interface PageWrapperProps extends WrapperBaseProps {}
 
@@ -11,10 +10,10 @@ export const PageWrapper = ({
   visible = true,
   duration = 300,
 }: PageWrapperProps) => {
-  const pageRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = pageRef.current;
+    const el = containerRef.current;
     if (!el) return;
     const enterClass = "rsp-entering";
     const exitClass = "rsp-exiting";
@@ -23,31 +22,27 @@ export const PageWrapper = ({
     el.classList.remove(enterClass, exitClass);
     el.classList.add(activeClass);
 
-    const animation = el.animate(
-      visible
-        ? [{ transform: "translateX(100%)" }, { transform: "translateX(0)" }]
-        : [{ transform: "translateX(0)" }, { transform: "translateX(100%)" }],
-      {
-        duration,
-        easing: "ease",
-        fill: "forwards",
-      },
-    );
-    finalizeAnimation(animation);
-    const timer = setTimeout(() => el.classList.remove(activeClass), duration);
-    return () => {
-      clearTimeout(timer);
-      animation.cancel();
-    };
+    const timer = window.setTimeout(() => {
+      el.classList.remove(activeClass);
+    }, duration);
+    return () => window.clearTimeout(timer);
   }, [visible, duration]);
 
   return (
     <div
-      ref={pageRef}
+      ref={containerRef}
       className={clsx("rsp-stack", "rsp-page", styles.pageWrapper)}
-      style={{} as React.CSSProperties}
     >
-      {children}
+      <div className={styles.mask} />
+      {/* 
+        Q: 为什么需要分离 track 和 panel ？ 
+        A: 因为如果直接额让 track可以滚动+背景色，那么在浏览器的弹性效果中这个底色会被拉着跑，漏出后面的内容
+        - 所以底色要在track上，滚动容器要在panel上
+        - 如果要少一层元素，这个 overflow 的的复杂度要交给用户
+      */}
+      <div className={styles.track}>
+        <div className={styles.panel}>{children}</div>
+      </div>
     </div>
   );
 };

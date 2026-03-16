@@ -15,3 +15,4 @@ export * from "./utils/LRUMap";
 // css
 import "./components/shared.css"
 import "./components/animation.css"
+import "./components/compose.css"

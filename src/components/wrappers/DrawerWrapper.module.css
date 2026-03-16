@@ -1,7 +1,126 @@
 .drawerWrapper {
   position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transform: translateX(0);
+}
+
+.drawerWrapper.left:global(.rsp-entering) {
+  animation: none;
+}
+
+.drawerWrapper.left:global(.rsp-exiting) {
+  animation: none;
+}
+
+.drawerWrapper.right:global(.rsp-entering) {
+  animation: none;
+}
+
+.drawerWrapper.right:global(.rsp-exiting) {
+  animation: none;
+}
+
+.drawerWrapper.left:global(.rsp-entering) .track {
+  animation: drawer-left-in var(--rsp-duration) ease;
+}
+
+.drawerWrapper.left:global(.rsp-exiting) .track {
+  animation: drawer-left-out var(--rsp-duration) ease forwards;
+}
+
+.drawerWrapper.right:global(.rsp-entering) .track {
+  animation: drawer-right-in var(--rsp-duration) ease;
+}
+
+.drawerWrapper.right:global(.rsp-exiting) .track {
+  animation: drawer-right-out var(--rsp-duration) ease forwards;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 1;
+}
+
+.drawerWrapper:global(.rsp-entering) .mask {
+  animation: drawer-mask-in var(--rsp-duration) ease;
+}
+
+.drawerWrapper:global(.rsp-exiting) .mask {
+  animation: drawer-mask-out var(--rsp-duration) ease forwards;
+}
+
+.track {
+  position: absolute;
   top: 0;
   bottom: 0;
-  background-color: white;
-  overflow: auto;
+  height: 100%;
+  background: white;
+}
+
+.panel {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  background: transparent;
+}
+
+@keyframes drawer-left-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawer-left-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes drawer-right-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawer-right-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes drawer-mask-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drawer-mask-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

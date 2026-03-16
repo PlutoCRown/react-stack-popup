@@ -1,11 +1,90 @@
 .pageWrapper {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  background-color: white;
-  overflow: auto;
+}
+
+.pageWrapper:global(.rsp-entering) {
+  animation: none;
+}
+
+.pageWrapper:global(.rsp-exiting) {
+  animation: none;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 1;
+}
+
+.pageWrapper:global(.rsp-entering) .mask {
+  animation: page-mask-in var(--rsp-duration) ease;
+}
+
+.pageWrapper:global(.rsp-exiting) .mask {
+  animation: page-mask-out var(--rsp-duration) ease forwards;
+}
+
+.track {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+}
+
+.pageWrapper:global(.rsp-entering) .track {
+  animation: page-slide-in var(--rsp-duration) ease;
+}
+
+.pageWrapper:global(.rsp-exiting) .track {
+  animation: page-slide-out var(--rsp-duration) ease forwards;
+}
+
+.panel {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  background: transparent;
+}
+
+@keyframes page-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes page-slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes page-mask-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes page-mask-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
