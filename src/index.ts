@@ -4,6 +4,7 @@ export * from "./components/PopupLoading";
 export * from "./components/ErrorBoundary";
 export * from "./components/Freeze";
 export * from "./hooks/useStackRouter";
+export * from "./hooks/useStackContext";
 export * from "./store/StackRouter";
 export * from "./store/popupRegistry";
 export * from "./store/HistoryManager";

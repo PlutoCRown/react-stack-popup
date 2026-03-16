@@ -1,4 +1,5 @@
 import React, { CSSProperties, ReactNode } from 'react'
+import type { StackRouterContextStore } from './store/StackRouterContextStore'
 
 // 所有弹窗外层 Wrapper 的基础属性。
 // 为了兼容各种自定义 Wrapper，这里将 visible/onClose 都设为可选，
@@ -66,6 +67,7 @@ export interface StackItem<ID extends string, T extends any, W extends WrapperBa
   popupConfig?: PopupConfig<ID, T, W>
   visible: boolean,
   freeze: boolean
+  contextStore: StackRouterContextStore
 }
 
 export interface RouterState<ID extends string, T extends any, W extends WrapperBaseProps> {
