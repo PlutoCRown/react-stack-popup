@@ -1,23 +1,36 @@
 /**
  此文件为共享类名，均以 rsp- 开头
 */
+.rsp-root {
+    transition: all var(--rsp-duration);
+}
+
 .rsp-stack {
-}
-
-.rsp-entering {
-}
-
-.rsp-exiting {
+    transition: transform var(--rsp-duration);
 }
 
 .rsp-page {
+    transition: transform var(--rsp-duration);
+}
 
+.rsp-sheet {
+    transition: transform var(--rsp-duration);
+}
+
+.rsp-sheet-panel {
+    transition: transform var(--rsp-duration);
 }
 
 .rsp-entering {
-
+    transition: transform var(--rsp-duration);
 }
 
 .rsp-exiting {
+    transition: transform var(--rsp-duration);
+}
 
+/* 出现弹窗的时候禁止根滚动，这里需要兼容是同层或者子层的 */
+.rsp-root:has(~ .rsp-stack),
+.rsp-root:has(.rsp-stack) {
+    overflow: hidden;
 }

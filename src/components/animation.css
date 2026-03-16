@@ -1,3 +1,31 @@
-.rsp-stack:has(+ .rsp-page) {
-    transform: translate(0,-20vw);
+/* PageWrapper Animation */
+.rsp-root:has(~ .rsp-page),
+.rsp-stack:has(~ .rsp-page) {
+    transform: translate(-30vw);
+}
+
+.rsp-root:has(~ .rsp-page.rsp-exiting),
+.rsp-stack:has(~ .rsp-page.rsp-exiting) {
+    transform: translate(0vw);
+}
+
+/* SheetWrapper Animation */
+/* body:has(.rsp-sheet.rsp-exiting) {
+    transition: all .3s;
+    border-radius: 0;
+}
+
+.rsp-root:has(~ .rsp-sheet) {
+    border-radius: 16px;
+    overflow: hidden;
+    transform: scale(0.95) translateY(10px);
+} */
+/* 上面属于demo定制代码 */
+
+.rsp-sheet:has(~ .rsp-sheet:not(.rsp-exiting)) .rsp-sheet-panel  {
+    transform: scale(0.95) translateY(-40px);
+}
+
+.rsp-sheet:has(~ .rsp-sheet ~ .rsp-sheet:not(.rsp-exiting)) .rsp-sheet-panel {
+    transform: scale(0.92) translateY(-60px);
 }

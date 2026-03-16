@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./MaskWrapper.module.css";
+import { finalizeAnimation } from "../../utils/animation";
 
 export interface MaskWrapperProps extends WrapperBaseProps {
   opacity?: number;
@@ -39,6 +40,7 @@ export const MaskWrapper = ({
         fill: "forwards",
       },
     );
+    finalizeAnimation(animation);
     const timer = window.setTimeout(
       () => el.classList.remove(activeClass),
       duration,

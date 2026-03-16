@@ -1,3 +1,4 @@
+import { PopupID } from "../constants/popupIds";
 import { stackRouter } from "../stackRouter";
 
 const feedLeftHeights = [128, 179, 147, 208, 140, 192, 153, 195];
@@ -5,17 +6,46 @@ const feedRightHeights = [176, 137, 217, 150, 198, 131, 188, 166];
 
 const LongContent = () => {
   return (
-    <div>
-      <button className="close-button" onClick={() => stackRouter.close()}>
+    <div
+      style={{
+        padding: 16,
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        height: "100%",
+        overflowY: "scroll",
+        width: "100%",
+        flex: 1,
+      }}
+    >
+      <button
+        className="close-button"
+        style={{ position: "sticky", top: 0 }}
+        onClick={() => stackRouter.close()}
+      >
         返回
       </button>
+
+      <div className="button-group">
+        <button
+          onClick={() => stackRouter.open(PopupID.ScrollPage, {})}
+          style={{ flex: 1 }}
+        >
+          Page内滚动
+        </button>
+        <button
+          onClick={() => stackRouter.open(PopupID.ScrollSheet, {})}
+          style={{ flex: 1 }}
+        >
+          Sheet内滚动
+        </button>
+      </div>
       <div
         style={{
           minHeight: "100%",
           display: "grid",
           gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
           gap: 10,
-          padding: 16,
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -35,9 +65,6 @@ const LongContent = () => {
           ))}
         </div>
       </div>
-      <button className="close-button" onClick={() => stackRouter.close()}>
-        返回
-      </button>
     </div>
   );
 };

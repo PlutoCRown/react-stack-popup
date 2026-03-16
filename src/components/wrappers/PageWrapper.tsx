@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./PageWrapper.module.css";
+import { finalizeAnimation } from "../../utils/animation";
 
 export interface PageWrapperProps extends WrapperBaseProps {}
 
@@ -32,11 +33,10 @@ export const PageWrapper = ({
         fill: "forwards",
       },
     );
-    const timer = window.setTimeout(() => {
-      el.classList.remove(activeClass);
-    }, duration);
+    finalizeAnimation(animation);
+    const timer = setTimeout(() => el.classList.remove(activeClass), duration);
     return () => {
-      window.clearTimeout(timer);
+      clearTimeout(timer);
       animation.cancel();
     };
   }, [visible, duration]);

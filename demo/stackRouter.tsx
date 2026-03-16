@@ -36,6 +36,7 @@ const popups = [
   // 测试页滚动
   RegisterPopup(PopupID.ScrollPage, LongContent, PageWrapper),
   RegisterPopup(PopupID.ScrollSheet, LongContent, BottomSheetWrapper),
+  RegisterPopup(PopupID.ScrollMask, LongContent, MaskWrapper),
   // 特殊用法：动态调用弹窗
   RegisterPopup(
     PopupID.CustomContent,

@@ -9,7 +9,7 @@ import { ScrollCompatiblePanel } from "./components/ScrollCompatiblePanel";
 
 function App() {
   return (
-    <div className="app rsp-stack rsp-page">
+    <div className="app">
       <header className="header">
         <div className="header-inner">
           <span className="badge">REACT STACK POPUP</span>

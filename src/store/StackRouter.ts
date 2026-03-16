@@ -112,7 +112,7 @@ function createStore<ID extends string, T extends any, W extends WrapperBaseProp
         })
         setTimeout(() => {
           set({ stack: stack.filter(item => item.key !== targetKey) })
-        }, duration + 50)
+        }, duration)
       }
     }))
   )

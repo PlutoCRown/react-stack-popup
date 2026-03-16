@@ -5,7 +5,7 @@ import { useStackRouter } from "../hooks/useStackRouter";
 import { StackRouter } from "../store/StackRouter";
 import {
   PopupConfigArray,
-  StackRouterContentArgs,
+  StackRouterArgs,
   StackRouterId,
   StackRouterWrapperProps,
 } from "../types";
@@ -31,11 +31,11 @@ export function PopupRenderer<Config extends PopupConfigArray>({
 
     const onClose = () => stackRouter.close(item.id);
     const Component = popupConfig.content as FC<
-      StackRouterContentArgs<Config, StackRouterId<Config>>
+      StackRouterArgs<Config, StackRouterId<Config>>
     >;
 
     // Merge args with onClose
-    const contentProps = { onClose, ...item.args } as StackRouterContentArgs<
+    const contentProps = { onClose, ...item.args } as StackRouterArgs<
       Config,
       StackRouterId<Config>
     >;
