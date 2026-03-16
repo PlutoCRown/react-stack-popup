@@ -69,6 +69,7 @@
   height: 100%;
   overflow: scroll;
   background: transparent;
+  overscroll-behavior: contain;
 }
 
 @keyframes drawer-left-in {

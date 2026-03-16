@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./MaskWrapper.module.css";
-import { finalizeAnimation } from "../../utils/animation";
 
 export interface MaskWrapperProps extends WrapperBaseProps {
   opacity?: number;
@@ -30,28 +29,16 @@ export const MaskWrapper = ({
     el.classList.remove(enterClass, exitClass);
     el.classList.add(activeClass);
 
-    const animation = el.animate(
-      visible
-        ? [{ opacity: 0 }, { opacity: 1 }]
-        : [{ opacity: 1 }, { opacity: 0 }],
-      {
-        duration,
-        easing: "ease",
-        fill: "forwards",
-      },
-    );
-    finalizeAnimation(animation);
     const timer = window.setTimeout(
       () => el.classList.remove(activeClass),
       duration,
     );
     return () => {
       window.clearTimeout(timer);
-      animation.cancel();
     };
   }, [visible, duration]);
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMaskClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (maskClosable && e.target === e.currentTarget && onClose) {
       onClose();
     }
@@ -61,10 +48,13 @@ export const MaskWrapper = ({
     <div
       ref={containerRef}
       className={clsx("rsp-stack", styles.maskWrapper, className)}
-      style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
-      onClick={handleClick}
     >
-      {children}
+      <div
+        className={styles.mask}
+        style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
+        onClick={handleMaskClick}
+      />
+      <div className={styles.panel}>{children}</div>
     </div>
   );
 };

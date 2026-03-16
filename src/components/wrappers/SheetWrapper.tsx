@@ -36,7 +36,10 @@ export const SheetWrapper = ({
   }, [visible, duration]);
 
   return (
-    <div ref={containerRef} className={clsx("rsp-stack", styles.sheetWrapper)}>
+    <div
+      ref={containerRef}
+      className={clsx("rsp-stack", "rsp-sheet", styles.sheetWrapper)}
+    >
       <div
         className={styles.mask}
         onClick={
@@ -48,13 +51,15 @@ export const SheetWrapper = ({
         }
       />
       <div
-        className={styles.track}
-        style={{ WebkitOverflowScrolling: "touch" }}
+        className={clsx(styles.track, "rsp-sheet-track")}
+        style={{
+          WebkitOverflowScrolling: "touch",
+          height: fitContent ? undefined : "calc(100% - 48px)",
+        }}
       >
         <div
-          className={clsx(styles.panel, "rsp-sheet-panel")}
+          className={styles.panel}
           style={{
-            height: fitContent ? undefined : "calc(100% - 48px)",
             touchAction: swipable ? "pan-y" : "auto",
           }}
         >

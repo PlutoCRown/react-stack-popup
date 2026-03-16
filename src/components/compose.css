@@ -1,4 +1,4 @@
-/* PageWrapper Animation */
+/* ===================== PageWrapper Animation ===================== */
 .rsp-root:has(~ .rsp-page),
 .rsp-stack:has(~ .rsp-page) {
     transform: translate(-30vw);
@@ -8,8 +8,15 @@
 .rsp-stack:has(~ .rsp-page.rsp-exiting) {
     transform: translate(0vw);
 }
+/* 下面是性能优化 */
 
-/* SheetWrapper Animation */
+.rsp-root:has(~ .rsp-page:not(.rsp-exiting):not(.rsp-entering)),
+.rsp-stack:has(~ .rsp-page:not(.rsp-exiting):not(.rsp-entering)) {
+    content-visibility: hidden;
+}
+
+/* ===================== SheetWrapper Animation ===================== */
+
 /* body:has(.rsp-sheet.rsp-exiting) {
     transition: all .3s;
     border-radius: 0;
@@ -22,10 +29,10 @@
 } */
 /* 上面属于demo定制代码 */
 
-.rsp-sheet:has(~ .rsp-sheet:not(.rsp-exiting)) .rsp-sheet-panel  {
+.rsp-sheet:has(~ .rsp-sheet:not(.rsp-exiting)) .rsp-sheet-track  {
     transform: scale(0.95) translateY(-40px);
 }
 
-.rsp-sheet:has(~ .rsp-sheet ~ .rsp-sheet:not(.rsp-exiting)) .rsp-sheet-panel {
+.rsp-sheet:has(~ .rsp-sheet ~ .rsp-sheet:not(.rsp-exiting)) .rsp-sheet-track {
     transform: scale(0.92) translateY(-60px);
 }

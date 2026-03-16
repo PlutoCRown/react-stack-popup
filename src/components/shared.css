@@ -17,7 +17,7 @@
     transition: transform var(--rsp-duration);
 }
 
-.rsp-sheet-panel {
+.rsp-sheet-track {
     transition: transform var(--rsp-duration);
 }
 

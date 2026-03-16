@@ -89,4 +89,9 @@ const popups = [
   ),
 ] as const;
 
-export const stackRouter = new StackRouter(popups, { urlManage: false });
+const isSafari = navigator.userAgent.includes("Safari");
+
+export const stackRouter = new StackRouter(popups, {
+  urlManage: isSafari ? false : false,
+  unloadDistance: 3,
+});

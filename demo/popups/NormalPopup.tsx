@@ -2,7 +2,7 @@ import { DemoCard } from "../components/DemoCard";
 
 export const NormalPopup = () => {
   return (
-    <div style={{ margin: 10 }}>
+    <div style={{ margin: 10, width: "fit-content" }}>
       <DemoCard title="普通弹窗内容" subtitle="半透明背景 + 淡入淡出">
         <p>可以点击 Mask 关闭</p>
         <p>

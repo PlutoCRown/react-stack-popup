@@ -1,12 +1,84 @@
 .maskWrapper {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   padding: 0;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+.panel {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-height: 100vh;
+  overflow: scroll;
+  overscroll-behavior: contain;
+}
+
+.maskWrapper:global(.rsp-entering) .mask {
+  animation: mask-fade-in var(--rsp-duration) ease;
+}
+
+.maskWrapper:global(.rsp-exiting) .mask {
+  animation: mask-fade-out var(--rsp-duration) ease forwards;
+}
+
+.maskWrapper:global(.rsp-entering) .panel {
+  animation: panel-fade-in var(--rsp-duration) ease;
+}
+
+.maskWrapper:global(.rsp-exiting) .panel {
+  animation: panel-fade-out var(--rsp-duration) ease forwards;
+}
+
+@keyframes mask-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mask-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes panel-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panel-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
