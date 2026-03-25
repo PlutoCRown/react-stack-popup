@@ -14,7 +14,6 @@ type Props = {
   onClose?: () => void;
   onLongPress?: () => void;
   objectFit?: "contain" | "cover";
-  objectPosition?: string;
   hiddenControl?: HTMLElement | null;
   plugin?: React.ReactNode;
   duration?: number;
@@ -25,62 +24,92 @@ export const ImageViewer: FC<Props> = ({
   pos,
   onClose,
   objectFit = "cover",
-  objectPosition = "center",
   hiddenControl,
   plugin,
-  duration = 3000,
+  duration = 300,
 }) => {
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const imageWrapRef = useRef<HTMLDivElement | null>(null);
   const backgroundRef = useRef<HTMLDivElement | null>(null);
   const isClosingRef = useRef(false);
   const originRectRef = useRef<SharedImageRect | undefined>(undefined);
+  const imageRectRef = useRef<{
+    width: number;
+    height: number;
+  } | null>(null);
   const TRANSITION_MS = duration;
+  const initialRect: SharedImageRect = pos ?? {
+    x: 0,
+    y: 0,
+    width: typeof window === "undefined" ? 0 : window.innerWidth,
+    height: typeof window === "undefined" ? 0 : window.innerHeight,
+    radius: 0,
+  };
 
   const applyRect = (rect: SharedImageRect) => {
-    const img = imgRef.current;
-    if (!img) return;
-    img.style.left = `${rect.x}px`;
-    img.style.top = `${rect.y}px`;
-    img.style.width = `${rect.width}px`;
-    img.style.height = `${rect.height}px`;
-    img.style.borderRadius = rect.radius ? `${rect.radius}px` : "0px";
+    const wrap = imageWrapRef.current;
+    if (!wrap) return;
+    wrap.style.left = `${rect.x}px`;
+    wrap.style.top = `${rect.y}px`;
+    wrap.style.width = `${rect.width}px`;
+    wrap.style.height = `${rect.height}px`;
+    wrap.style.borderRadius = rect.radius ? `${rect.radius}px` : "0px";
   };
 
   const toFullscreen = () => {
-    const img = imgRef.current;
+    const wrap = imageWrapRef.current;
     const bg = backgroundRef.current;
-    if (!img || !bg) return;
-    img.style.transition = `all ${TRANSITION_MS}ms ease`;
+    const img = imgRef.current;
+    if (!wrap || !bg || !img) return;
+    wrap.style.transition = `all ${TRANSITION_MS}ms ease`;
     bg.style.transition = `opacity ${TRANSITION_MS}ms ease`;
-    img.style.left = "0px";
-    img.style.top = "0px";
-    img.style.width = "100vw";
-    img.style.height = "100vh";
-    img.style.borderRadius = "0px";
+    wrap.style.left = "0px";
+    wrap.style.top = "0px";
+    wrap.style.width = "100vw";
+    wrap.style.height = "100vh";
+    wrap.style.borderRadius = "0px";
+    img.style.transition = `all ${TRANSITION_MS}ms ease`;
+    img.style.width = "100%";
+    img.style.height = "100%";
     bg.style.opacity = "1";
   };
 
   const toOrigin = () => {
-    const img = imgRef.current;
+    const wrap = imageWrapRef.current;
     const bg = backgroundRef.current;
+    const img = imgRef.current;
     const rect = originRectRef.current ?? pos;
-    if (!img || !bg || !rect) return;
-    img.style.transition = `all ${TRANSITION_MS}ms ease`;
+    if (!wrap || !bg || !img || !rect) return;
+    wrap.style.transition = `all ${TRANSITION_MS}ms ease`;
     bg.style.transition = `opacity ${TRANSITION_MS}ms ease`;
     applyRect(rect);
+    const r = imageRectRef.current;
+    img.style.transition = `all ${TRANSITION_MS}ms ease`;
+    if (r) {
+      img.style.width = `${r.width}%`;
+      img.style.height = `${r.height}%`;
+    } else {
+      img.style.width = "100%";
+      img.style.height = "100%";
+    }
     bg.style.opacity = "0";
   };
 
   const handleClose = () => {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
-    if (hiddenControl) {
-      hiddenControl.style.opacity = "1";
-    }
     if (pos) {
       toOrigin();
-      window.setTimeout(() => onClose?.(), TRANSITION_MS);
+      window.setTimeout(() => {
+        if (hiddenControl) {
+          hiddenControl.style.opacity = "1";
+        }
+        onClose?.();
+      }, TRANSITION_MS);
       return;
+    }
+    if (hiddenControl) {
+      hiddenControl.style.opacity = "1";
     }
     onClose?.();
   };
@@ -91,34 +120,36 @@ export const ImageViewer: FC<Props> = ({
       hiddenControl.style.opacity = "0";
     }
     if (pos) {
-      if (objectFit === "contain") {
-        const img = imgRef.current;
+      originRectRef.current = pos;
+      const img = imgRef.current;
+      if (!img) return console.warn("找不到图片");
+      if (objectFit === "cover") {
         const naturalWidth = img?.naturalWidth ?? 0;
         const naturalHeight = img?.naturalHeight ?? 0;
         if (naturalWidth > 0 && naturalHeight > 0) {
-          const scale = Math.min(
-            pos.width / naturalWidth,
-            pos.height / naturalHeight,
-          );
-          const renderWidth = naturalWidth * scale;
-          const renderHeight = naturalHeight * scale;
-          const offsetX = (pos.width - renderWidth) / 2;
-          const offsetY = (pos.height - renderHeight) / 2;
-          originRectRef.current = {
+          let renderWidth = 100,
+            renderHeight = 100;
+          if (naturalHeight < naturalWidth) {
+            renderHeight = 100;
+            const scale = pos.height / naturalHeight;
+            renderWidth = scale * naturalWidth;
+          } else {
+            renderWidth = 100;
+            const scale = pos.width / naturalWidth;
+            renderHeight = scale * naturalHeight;
+          }
+          imageRectRef.current = {
             width: renderWidth,
             height: renderHeight,
-            x: pos.x + offsetX,
-            y: pos.y + offsetY,
-            radius: pos.radius,
           };
+          console.log(imageRectRef.current);
+          img.style.transition = "none";
+          img.style.width = `${renderWidth}%`;
+          img.style.height = `${renderHeight}%`;
+          img.style.objectFit = "contain";
         } else {
-          originRectRef.current = pos;
+          imageRectRef.current = null;
         }
-      } else {
-        originRectRef.current = pos;
-      }
-      if (originRectRef.current) {
-        applyRect(originRectRef.current);
       }
     }
     requestAnimationFrame(() => toFullscreen());
@@ -127,13 +158,13 @@ export const ImageViewer: FC<Props> = ({
   useEffect(() => {
     const img = imgRef.current;
     const bg = backgroundRef.current;
-    if (!img || !bg) return;
+    const wrap = imageWrapRef.current;
+    if (!img || !bg || !wrap) return;
     bg.style.opacity = "0";
+    wrap.style.position = "fixed";
+    wrap.style.overflow = "hidden";
+    wrap.style.willChange = "left, top, width, height, border-radius";
     if (pos) {
-      img.style.position = "fixed";
-      img.style.objectFit = "contain";
-      img.style.objectPosition = objectPosition;
-      img.style.willChange = "left, top, width, height, border-radius";
       applyRect(pos);
     } else {
       toFullscreen();
@@ -141,11 +172,10 @@ export const ImageViewer: FC<Props> = ({
     if (img.complete) {
       handleImageLoaded();
     }
-  }, [pos, objectFit, objectPosition]);
+  }, [pos, objectFit]);
 
   return (
     <div
-      id="imageViewPopup"
       style={{
         position: "fixed",
         inset: 0,
@@ -178,24 +208,37 @@ export const ImageViewer: FC<Props> = ({
         }}
         onClick={handleClose}
       >
-        <img
-          src={src}
-          ref={imgRef}
-          onLoad={handleImageLoaded}
-          onContextMenu={(e) => {
-            e.stopPropagation();
-          }}
+        <div
+          ref={imageWrapRef}
           style={{
             position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100vw",
-            height: "100vh",
-            objectFit: "contain",
-            background: "red",
-            objectPosition,
+            left: `${initialRect.x}px`,
+            top: `${initialRect.y}px`,
+            width: `${initialRect.width}px`,
+            height: `${initialRect.height}px`,
+            borderRadius: initialRect.radius
+              ? `${initialRect.radius}px`
+              : "0px",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
+        >
+          <img
+            src={src}
+            ref={imgRef}
+            onLoad={handleImageLoaded}
+            onContextMenu={(e) => {
+              e.stopPropagation();
+            }}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
