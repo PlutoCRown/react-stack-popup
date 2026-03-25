@@ -131,18 +131,18 @@ export const ImageViewer: FC<Props> = ({
             renderHeight = 100;
           if (naturalHeight < naturalWidth) {
             renderHeight = 100;
-            const scale = pos.height / naturalHeight;
-            renderWidth = scale * naturalWidth;
+            renderWidth =
+              (((pos.height / naturalHeight) * naturalWidth) / pos.width) * 100;
           } else {
             renderWidth = 100;
-            const scale = pos.width / naturalWidth;
-            renderHeight = scale * naturalHeight;
+            renderHeight =
+              (((pos.width / naturalWidth) * naturalHeight) / pos.height) * 100;
           }
           imageRectRef.current = {
             width: renderWidth,
             height: renderHeight,
           };
-          console.log(imageRectRef.current);
+          console.log(pos, imageRectRef.current);
           img.style.transition = "none";
           img.style.width = `${renderWidth}%`;
           img.style.height = `${renderHeight}%`;

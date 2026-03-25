@@ -45,7 +45,7 @@ export function OtherUseCasePanel() {
                 src: src,
                 pos: Object.assign(
                   (e.target as HTMLImageElement).getBoundingClientRect(),
-                  { radius: 8 },
+                  { radius: 12 },
                 ),
                 objectFit: index == 1 ? "contain" : "cover",
                 hiddenControl: e.target as HTMLElement,
