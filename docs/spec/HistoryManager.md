@@ -22,3 +22,4 @@
   表示当前正在处理浏览器发出的 `popstate` 回调；此时如果 `close()` 又走回 `HistoryManager.pop()`，就不应该再次调用 `history.back()`
 
 这两个状态都封装在 `HistoryManager` 内部，对外部 API 没有额外要求，`StackRouter.close(id?)` 的调用方式保持不变。
+> 为何两个变量才是严谨的？因为如果用一个变量存，那么pop会自己拦截自己。他无法区分下一个调用是来自于程序调用还是浏览器调用
