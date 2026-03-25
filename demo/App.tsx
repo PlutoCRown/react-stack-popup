@@ -28,7 +28,13 @@ function App() {
             <button
               type="button"
               className="ghost"
-              onClick={() => stackRouter.open(PopupID.FullPage, {})}
+              onClick={() =>
+                stackRouter.open(
+                  PopupID.FullPage,
+                  {},
+                  { url: "/react-stack-popup/cta" },
+                )
+              }
             >
               全屏页面
             </button>

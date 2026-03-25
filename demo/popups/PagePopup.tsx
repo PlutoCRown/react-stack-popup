@@ -8,6 +8,9 @@ export const PagePopup = () => {
       style={{
         padding: "20px",
         height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 20,
         background: "linear-gradient(140deg, #fff7f0, #f6efe7)",
       }}
     >
@@ -15,8 +18,36 @@ export const PagePopup = () => {
         title="全屏页面"
         subtitle="打开时从右侧滑入，关闭时向右侧滑出。"
       >
-        <h3 style={{ marginBottom: "12px" }}>打开其他弹窗</h3>
         <AllWrapBtnGroup />
+      </DemoCard>
+
+      <DemoCard
+        title="URL管理测试"
+        subtitle="如果 new StackRouter(...,{ urlManage: true })，那么可以"
+      >
+        <div className="button-group">
+          <button
+            onClick={() =>
+              stackRouter.open(
+                PopupID.FullPage,
+                {},
+                {
+                  url: `/react-stack-popup/${Math.random().toPrecision(5).slice(2)}`,
+                },
+              )
+            }
+          >
+            打开并更新URL
+          </button>
+          <button
+            onClick={() => {
+              stackRouter.close();
+              stackRouter.close();
+            }}
+          >
+            关闭x2
+          </button>
+        </div>
       </DemoCard>
     </div>
   );

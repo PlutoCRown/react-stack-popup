@@ -65,8 +65,8 @@ export class StackRouter<Config extends PopupConfigArray> {
     return this.store.getState()
   }
 
-  // 对外 API
-  open<Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) {
+  // 对外 API， 都用箭头函数避免this指去奇奇怪怪的地方
+  open = <Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) => {
     if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
     const stackItem = {
       id,
@@ -81,16 +81,14 @@ export class StackRouter<Config extends PopupConfigArray> {
     this.historyManager?.push(extra?.url)
     return Promise.resolve()
   }
-  close(id?: StackRouterId<Config>) {
+  close = (id?: StackRouterId<Config>) => {
     if (this.config.lock?.shouldIgnoreClose()) return Promise.reject()
     this.channel.emit('close', { id: id || null })
     const stack = this.instance.stack
     const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)
     const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : 0
-    if (!target) {
-      return Promise.resolve()
-    }
-    this.instance.close(id, duration)
+    if (!target) return Promise.resolve()
+    this.instance.close(target.key, duration)
     this.historyManager?.pop()
     return Promise.resolve()
   }
@@ -110,19 +108,16 @@ function createStore<ID extends string, T extends any, W extends WrapperBaseProp
           state.stack.push(item as any)
         })
       },
-      close: (id, duration = 300) => {
-        const { stack } = get()
-        const targetKey = id
-          ? stack.findLast(i => i.id === id)?.key
-          : stack.findLast(i => i.visible)?.key
-        if (!targetKey) return;
-        set((state) => {
-          const item = state.stack.find(i => i.key == targetKey)
+      close: (key, duration = 300) => {
+        set((draft) => {
+          const item = draft.stack.find(i => i.key == key)
           if (!item) return;
           item.visible = false
         })
         setTimeout(() => {
-          set({ stack: stack.filter(item => item.key !== targetKey) })
+          set(draft => {
+            draft.stack = draft.stack.filter(item => item.key !== key)
+          })
         }, duration)
       }
     }))

@@ -75,5 +75,5 @@ export interface StackItem<ID extends string, T extends any, W extends WrapperBa
 export interface RouterState<ID extends string, T extends any, W extends WrapperBaseProps> {
   stack: StackItem<ID, T, W>[]
   open: (item: StackItem<ID, T, W>) => void
-  close: (id?: ID, duration?: number) => void
+  close: (key: string, duration?: number) => void
 }
