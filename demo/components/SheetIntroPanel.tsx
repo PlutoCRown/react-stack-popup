@@ -1,7 +1,5 @@
 import { stackRouter } from "../stackRouter";
 import { PopupID } from "../constants/popupIds";
-import NormalPopup from "../popups/NormalPopup";
-import RandomHeightPopup from "../popups/RandomHeightPopup";
 
 export function SheetIntroPanel() {
   return (
@@ -25,15 +23,9 @@ export function SheetIntroPanel() {
         <button onClick={() => stackRouter.open(PopupID.HighSheet, {})}>
           全高的
         </button>
-        <button
-          onClick={() =>
-            stackRouter.open(PopupID.CustomContent, {
-              Component:
-                Math.random() > 0.5 ? <NormalPopup /> : <RandomHeightPopup />,
-            })
-          }
-        >
-          调用时传入！
+
+        <button onClick={() => stackRouter.open(PopupID.ScrollSheet, {})}>
+          即使包含滚动内容
         </button>
       </div>
     </section>

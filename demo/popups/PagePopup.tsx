@@ -78,9 +78,6 @@ export const AllWrapBtnGroup = () => {
       >
         None
       </button>
-      <button onClick={() => stackRouter.open(PopupID.CustomWrapper, {})}>
-        Custom
-      </button>
     </div>
   );
 };

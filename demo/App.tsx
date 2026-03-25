@@ -6,6 +6,7 @@ import { QuickStartPanel } from "./components/QuickStartPanel";
 import { WrapperPanel } from "./components/WrapperPanel";
 import { SheetIntroPanel } from "./components/SheetIntroPanel";
 import { ScrollCompatiblePanel } from "./components/ScrollCompatiblePanel";
+import { OtherUseCasePanel } from "./components/OtherUseCasePanel";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
         <SheetIntroPanel />
         <ScrollCompatiblePanel />
         <QuickStartPanel />
+        <OtherUseCasePanel />
       </main>
 
       <PopupRenderer stackRouter={stackRouter} />

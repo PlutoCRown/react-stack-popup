@@ -244,3 +244,19 @@ button.ghost {
     align-items: flex-start;
   }
 }
+
+.image-group {
+  
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  aspect-ratio: 3;
+  img {
+    width: 0;
+    height: 100%;
+    flex:1 0 0;
+    object-fit: cover;
+    border-radius: 12px;
+    aspect-ratio: 1;
+  }
+}

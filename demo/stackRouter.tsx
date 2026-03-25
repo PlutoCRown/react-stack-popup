@@ -18,6 +18,7 @@ import DrawerPopup from "./popups/DrawerPopup";
 import PropsPopup from "./popups/PropsPopup";
 import React from "react";
 import LongContent from "./popups/LongContent";
+import { ImageViewer } from "./popups/ImageViewer";
 
 // Register popups
 const popups = [
@@ -87,6 +88,9 @@ const popups = [
     ),
     { backgroundColor: "#667eea", duration: 0 },
   ),
+  // 查看大图
+
+  RegisterPopup(PopupID.ImageViewer, ImageViewer, NoneWrapper),
 ] as const;
 
 const isSafari = navigator.userAgent.includes("Safari");
