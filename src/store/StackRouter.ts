@@ -101,7 +101,7 @@ export class StackRouter<Config extends PopupConfigArray> {
 
 function createStore<ID extends string, T extends any, W extends WrapperBaseProps>() {
   return create<RouterState<ID, T, W>>()(
-    immer((set, get) => ({
+    immer((set) => ({
       stack: [],
       open: (item: StackItem<ID, T, W>) => {
         set((state) => {

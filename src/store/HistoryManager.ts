@@ -8,6 +8,7 @@ export class HistoryManager {
   private scheduled = false
   private pendingPushes: Array<string> = []
   private suppressPop = 0
+  private handlingPopState = false
 
   constructor(options: HistoryManagerOptions) {
     this.onPop = options.onPop
@@ -32,20 +33,25 @@ export class HistoryManager {
       this.pendingPushes.pop()
       return
     }
-    console.log('')
-    this.suppressPop++
     this.markPopThisFrame()
-    console.log('histroy.back')
+    if (this.handlingPopState) {
+      return
+    }
+    this.suppressPop++
     window.history.back()
   }
 
   private handlePopState = (_event: PopStateEvent) => {
     if (this.suppressPop > 0) {
       this.suppressPop--
-      console.log('suppress!')
       return
     }
-    this.onPop()
+    this.handlingPopState = true
+    try {
+      this.onPop()
+    } finally {
+      this.handlingPopState = false
+    }
   }
 
   private markPopThisFrame() {
