@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef } from "react";
+import styles from "./index.module.css";
 
 export type SharedImageRect = {
   width: number;
@@ -175,43 +176,18 @@ export const ImageViewer: FC<Props> = ({
   }, [pos, objectFit]);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-      }}
-    >
+    <div className={styles.root}>
       <div
         ref={backgroundRef}
         onClick={handleClose}
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "rgba(0, 0, 0, 0.8)",
-          opacity: 0,
-        }}
+        className={styles.background}
       />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-        }}
-      >
-        {plugin}
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-        }}
-        onClick={handleClose}
-      >
+      <div className={styles.overlay}>{plugin}</div>
+      <div className={styles.content} onClick={handleClose}>
         <div
           ref={imageWrapRef}
+          className={styles.imageWrap}
           style={{
-            position: "fixed",
             left: `${initialRect.x}px`,
             top: `${initialRect.y}px`,
             width: `${initialRect.width}px`,
@@ -219,10 +195,6 @@ export const ImageViewer: FC<Props> = ({
             borderRadius: initialRect.radius
               ? `${initialRect.radius}px`
               : "0px",
-            overflow: "hidden",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
           }}
         >
           <img
@@ -232,9 +204,8 @@ export const ImageViewer: FC<Props> = ({
             onContextMenu={(e) => {
               e.stopPropagation();
             }}
+            className={styles.image}
             style={{
-              width: "100%",
-              height: "100%",
               objectFit,
             }}
           />
