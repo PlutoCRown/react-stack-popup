@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, PointerEvent, useEffect, useRef } from "react";
 import styles from "./index.module.css";
 
 export type SharedImageRect = {
@@ -33,6 +33,13 @@ export const ImageViewer: FC<Props> = ({
   const imageWrapRef = useRef<HTMLDivElement | null>(null);
   const backgroundRef = useRef<HTMLDivElement | null>(null);
   const isClosingRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const wasDraggingRef = useRef(false);
+  const dragStartRef = useRef({
+    x: 0,
+    y: 0,
+    pointerId: -1,
+  });
   const originRectRef = useRef<SharedImageRect | undefined>(undefined);
   const imageRectRef = useRef<{
     width: number;
@@ -69,6 +76,7 @@ export const ImageViewer: FC<Props> = ({
     wrap.style.width = "100vw";
     wrap.style.height = "100vh";
     wrap.style.borderRadius = "0px";
+    wrap.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
     img.style.transition = `all ${TRANSITION_MS}ms ease`;
     img.style.width = "100%";
     img.style.height = "100%";
@@ -84,6 +92,7 @@ export const ImageViewer: FC<Props> = ({
     wrap.style.transition = `all ${TRANSITION_MS}ms ease`;
     bg.style.transition = `opacity ${TRANSITION_MS}ms ease`;
     applyRect(rect);
+    wrap.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
     const r = imageRectRef.current;
     img.style.transition = `all ${TRANSITION_MS}ms ease`;
     if (r) {
@@ -99,6 +108,7 @@ export const ImageViewer: FC<Props> = ({
   const handleClose = () => {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
+    isDraggingRef.current = false;
     if (pos) {
       toOrigin();
       window.setTimeout(() => {
@@ -156,6 +166,75 @@ export const ImageViewer: FC<Props> = ({
     requestAnimationFrame(() => toFullscreen());
   };
 
+  const clamp = (value: number, min: number, max: number) =>
+    Math.min(max, Math.max(min, value));
+
+  const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
+    if (isClosingRef.current) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    const wrap = imageWrapRef.current;
+    const bg = backgroundRef.current;
+    if (!wrap || !bg) return;
+    e.stopPropagation();
+    wasDraggingRef.current = false;
+    isDraggingRef.current = true;
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      pointerId: e.pointerId,
+    };
+    wrap.style.transition = "none";
+    bg.style.transition = "none";
+    if (wrap.setPointerCapture) {
+      wrap.setPointerCapture(e.pointerId);
+    }
+  };
+
+  const handlePointerMove = (e: PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const wrap = imageWrapRef.current;
+    const bg = backgroundRef.current;
+    if (!wrap || !bg) return;
+    const start = dragStartRef.current;
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    const distance = Math.abs(dx) + Math.abs(dy);
+    if (distance > 2) {
+      wasDraggingRef.current = true;
+    }
+    const scale = clamp(1 - distance / 600, 0.6, 1);
+    wrap.style.transform = `translate3d(${dx}px, ${dy}px, 0px) scale(${scale})`;
+    bg.style.opacity = `${clamp(1 - distance / 300, 0, 1)}`;
+  };
+
+  const handlePointerUp = (e: PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const wrap = imageWrapRef.current;
+    const bg = backgroundRef.current;
+    if (!wrap || !bg) return;
+    const start = dragStartRef.current;
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    const distance = Math.abs(dx) + Math.abs(dy);
+    isDraggingRef.current = false;
+    if (wrap.releasePointerCapture) {
+      wrap.releasePointerCapture(start.pointerId);
+    }
+    if (distance > 200) {
+      handleClose();
+      return;
+    }
+    wrap.style.transition = `all ${TRANSITION_MS}ms ease`;
+    bg.style.transition = `opacity ${TRANSITION_MS}ms ease`;
+    wrap.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
+    bg.style.opacity = "1";
+  };
+
+  const handlePointerCancel = (e: PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    handlePointerUp(e);
+  };
+
   useEffect(() => {
     const img = imgRef.current;
     const bg = backgroundRef.current;
@@ -164,7 +243,7 @@ export const ImageViewer: FC<Props> = ({
     bg.style.opacity = "0";
     wrap.style.position = "fixed";
     wrap.style.overflow = "hidden";
-    wrap.style.willChange = "left, top, width, height, border-radius";
+    wrap.style.willChange = "left, top, width, height, border-radius, transform";
     if (pos) {
       applyRect(pos);
     } else {
@@ -187,6 +266,17 @@ export const ImageViewer: FC<Props> = ({
         <div
           ref={imageWrapRef}
           className={styles.imageWrap}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
+          onClick={(e) => {
+            if (wasDraggingRef.current) {
+              e.stopPropagation();
+              return;
+            }
+            e.stopPropagation();
+          }}
           style={{
             left: `${initialRect.x}px`,
             top: `${initialRect.y}px`,
