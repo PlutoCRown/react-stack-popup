@@ -129,9 +129,11 @@ body {
 
 .main {
   max-width: 980px;
+  width: 100vw;
   margin: 0 auto;
   padding: 2.5rem 1.5rem 4rem;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
@@ -141,6 +143,7 @@ body {
   padding: 1.8rem;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  max-width: 100%;
 }
 
 .card-header {
@@ -203,16 +206,16 @@ button.ghost {
 }
 
 .code-block {
-  display: grid;
-  gap: 0.5rem;
+  color: #4a3c32;
   padding: 1rem;
   background: #f7efe6;
   border-radius: 12px;
   font-family: "Space Grotesk", "Avenir Next", sans-serif;
+  overflow-x: scroll;
 }
 
 .code-block code {
-  color: #4a3c32;
+  white-space: pre;
 }
 
 .feature-list {

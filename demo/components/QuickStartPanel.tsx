@@ -6,9 +6,17 @@ export function QuickStartPanel() {
         <span className="subtle">核心接口</span>
       </div>
       <div className="code-block">
-        <code>stackRouter.open(id, args)</code>
-        <code>stackRouter.close(id?)</code>
-        <code>new StackRouter(popups, config)</code>
+        <code>{`// Define
+const routes = [
+  RegisterPopup("Name",()=> <Content/>, Wrapper)
+]
+// Create
+const router = new StackRouter(popups, config)
+// Open
+router.open("Name",{})
+// Close
+router.close()
+`}</code>
       </div>
       <ul className="feature-list">
         <li>为弹窗注册唯一 ID</li>

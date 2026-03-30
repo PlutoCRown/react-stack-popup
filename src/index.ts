@@ -1,6 +1,6 @@
 export * from "./components/PopupRenderer";
 export * from "./components/wrappers";
-export * from "./hooks/useStackContext";
+export * from "./hooks/useStackState";
 export * from "./store/StackRouter";
 export * from "./store/FocusLock";
 export * from "./store/popupRegistry";

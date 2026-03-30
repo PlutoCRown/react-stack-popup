@@ -14,7 +14,6 @@ import {
 } from '../types'
 import { EventBus } from '../utils/EventBus'
 import { HistoryManager } from './HistoryManager'
-import { createStackRouterContextStore } from './StackRouterContextStore'
 
 // Define event types for StackRouter
 type StackRouterEvents<ID extends string> = {
@@ -73,7 +72,6 @@ export class StackRouter<Config extends PopupConfigArray> {
       args: args as StackRouterArgs<Config, Ex>,
       visible: true,
       freeze: false,
-      contextStore: createStackRouterContextStore({ inStack: true }),
     }
     this.instance.open(stackItem)
     this.channel.emit('open', { id })

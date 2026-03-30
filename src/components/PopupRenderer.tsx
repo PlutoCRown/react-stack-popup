@@ -3,7 +3,7 @@ import type { FC } from "react";
 import { createPortal } from "react-dom";
 import { useStackRouter } from "../hooks/useStackRouter";
 import { StackRouter } from "../store/StackRouter";
-import { StackRouterContext } from "../context/StackRouterContext";
+import { StackStateContext } from "../context/StackStateContext";
 import {
   PopupConfigArray,
   StackRouterArgs,
@@ -66,13 +66,11 @@ export function PopupRenderer<Config extends PopupConfigArray>({
       ...popupConfig.wrapperProps,
     } as StackRouterWrapperProps<Config, StackRouterId<Config>>;
 
-    const store = item.contextStore ?? null;
-
     return (
       <Wrapper {...wrapperProps} key={item.key}>
-        <StackRouterContext.Provider value={store}>
+        <StackStateContext.Provider value={item}>
           {content}
-        </StackRouterContext.Provider>
+        </StackStateContext.Provider>
       </Wrapper>
     );
   });
