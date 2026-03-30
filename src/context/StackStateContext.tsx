@@ -1,6 +1,5 @@
 import { createContext } from "react";
-import type { StackItem, WrapperBaseProps } from "../types";
+import type { StackContext, WrapperBaseProps } from "../types";
 
-export const StackStateContext = createContext<
-  StackItem<string, any, WrapperBaseProps> | null
->(null);
+type ContextType = StackContext<string, any, WrapperBaseProps> | null;
+export const StackStateContext = createContext<ContextType>(null);

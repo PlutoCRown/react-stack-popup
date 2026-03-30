@@ -69,6 +69,10 @@ export interface StackItem<ID extends string, T extends any, W extends WrapperBa
   visible: boolean,
   freeze: boolean
 }
+export interface StackContext<ID extends string, T extends any, W extends WrapperBaseProps> extends StackItem<ID, T, W> {
+  /* 这个 onClose 只会关闭当前层的弹窗 */
+  onClose: () => Promise<void>
+}
 
 export interface RouterState<ID extends string, T extends any, W extends WrapperBaseProps> {
   stack: StackItem<ID, T, W>[]

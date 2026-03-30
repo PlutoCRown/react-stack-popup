@@ -1,5 +1,7 @@
 import { FC, PointerEvent, useEffect, useRef } from "react";
 import styles from "./index.module.css";
+import { stackRouter } from "../../stackRouter";
+import { useStackState } from "../../../src";
 
 export type SharedImageRect = {
   width: number;
@@ -12,7 +14,6 @@ type Props = {
   src: string;
   hiResSrc?: string;
   pos?: SharedImageRect;
-  onClose?: () => void;
   onLongPress?: () => void;
   objectFit?: "contain" | "cover";
   hiddenControl?: HTMLElement | null;
@@ -23,12 +24,13 @@ type Props = {
 export const ImageViewer: FC<Props> = ({
   src,
   pos,
-  onClose,
   objectFit = "cover",
   hiddenControl,
   plugin,
   duration = 300,
 }) => {
+  const { onClose } = useStackState()!;
+
   const imgRef = useRef<HTMLImageElement | null>(null);
   const imageWrapRef = useRef<HTMLDivElement | null>(null);
   const backgroundRef = useRef<HTMLDivElement | null>(null);
@@ -243,7 +245,8 @@ export const ImageViewer: FC<Props> = ({
     bg.style.opacity = "0";
     wrap.style.position = "fixed";
     wrap.style.overflow = "hidden";
-    wrap.style.willChange = "left, top, width, height, border-radius, transform";
+    wrap.style.willChange =
+      "left, top, width, height, border-radius, transform";
     if (pos) {
       applyRect(pos);
     } else {
@@ -270,21 +273,13 @@ export const ImageViewer: FC<Props> = ({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerCancel}
-          onClick={(e) => {
-            if (wasDraggingRef.current) {
-              e.stopPropagation();
-              return;
-            }
-            e.stopPropagation();
-          }}
+          onClick={() => stackRouter.close()}
           style={{
             left: `${initialRect.x}px`,
             top: `${initialRect.y}px`,
             width: `${initialRect.width}px`,
             height: `${initialRect.height}px`,
-            borderRadius: initialRect.radius
-              ? `${initialRect.radius}px`
-              : "0px",
+            borderRadius: `${initialRect.radius || 0}px`,
           }}
         >
           <img

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import type { StackItem, WrapperBaseProps } from "../types";
+import type { StackContext, WrapperBaseProps } from "../types";
 import { StackStateContext } from "../context/StackStateContext";
 
 export function useStackState<
@@ -7,5 +7,5 @@ export function useStackState<
   T = any,
   W extends WrapperBaseProps = WrapperBaseProps,
 >() {
-  return useContext(StackStateContext) as StackItem<ID, T, W> | null;
+  return useContext(StackStateContext) as StackContext<ID, T, W> | null;
 }

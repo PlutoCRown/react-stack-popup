@@ -1,4 +1,11 @@
-import { Fragment, Suspense, createElement, memo, useCallback } from "react";
+import {
+  Fragment,
+  Suspense,
+  createElement,
+  memo,
+  useCallback,
+  useMemo,
+} from "react";
 import type { FC } from "react";
 import { createPortal } from "react-dom";
 import { useStackRouter } from "../hooks/useStackRouter";
@@ -51,7 +58,7 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
 
   const onClose = stackRouter.close;
   const Component = popupConfig.content;
-  let content = <Component onClose={onClose} {...item.args} />;
+  let content = <Component {...item.args} />;
 
   const freeze = config.freeze !== false;
   const suspense = config.suspense !== false;
@@ -76,9 +83,14 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
     ...popupConfig.wrapperProps,
   } as StackRouterWrapperProps<Config, StackRouterId<Config>>;
 
+  const contextValue = useMemo(
+    () => ({ ...item, onClose: () => stackRouter.close(item.id) }),
+    [item],
+  );
+
   return (
     <Wrapper {...wrapperProps}>
-      <StackStateContext.Provider value={item}>
+      <StackStateContext.Provider value={contextValue}>
         {content}
       </StackStateContext.Provider>
     </Wrapper>
