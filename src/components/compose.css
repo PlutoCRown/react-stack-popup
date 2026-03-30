@@ -17,22 +17,22 @@
 
 /* ===================== SheetWrapper Animation ===================== */
 
-/* body:has(.rsp-sheet.rsp-exiting) {
+/* body:has(.rsp-sheet-full.rsp-exiting) {
     transition: all .3s;
     border-radius: 0;
 }
 
-.rsp-root:has(~ .rsp-sheet) {
+.rsp-root:has(~ .rsp-sheet-full) {
     border-radius: 16px;
     overflow: hidden;
     transform: scale(0.95) translateY(10px);
 } */
-/* 上面属于demo定制代码 */
+/* 上面属于demo定制代码，目的是为了让 sheet 对根页面生效 */
 
-.rsp-sheet:has(~ .rsp-sheet:not(.rsp-exiting)) .rsp-sheet-track  {
-    transform: scale(0.95) translateY(-40px);
+.rsp-sheet-full:has(~ .rsp-sheet-full:not(.rsp-exiting)) .rsp-sheet-track  {
+    transform: scale(0.95) translateY(-40px) !important; /* 主要为了覆盖pan效果 */
 }
 
-.rsp-sheet:has(~ .rsp-sheet ~ .rsp-sheet:not(.rsp-exiting)) .rsp-sheet-track {
-    transform: scale(0.92) translateY(-60px);
+.rsp-sheet-full:has(~ .rsp-sheet-full ~ .rsp-sheet-full:not(.rsp-exiting)) .rsp-sheet-track {
+    transform: scale(0.92) translateY(-60px) !important; /* 主要为了覆盖pan效果 */
 }

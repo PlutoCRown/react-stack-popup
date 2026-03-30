@@ -104,7 +104,12 @@ export const SheetWrapper = ({
   return (
     <div
       ref={containerRef}
-      className={clsx("rsp-stack", "rsp-sheet", styles.sheetWrapper)}
+      className={clsx(
+        "rsp-stack",
+        "rsp-sheet",
+        { "rsp-sheet-full": !fitContent },
+        styles.sheetWrapper,
+      )}
     >
       <div className={styles.mask} onClick={handleMaskClick} />
       <div

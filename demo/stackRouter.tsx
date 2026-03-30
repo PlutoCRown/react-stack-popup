@@ -97,5 +97,5 @@ const isMobileSafari = navigator.userAgent.includes("Mobile Safari");
 
 export const stackRouter = new StackRouter(popups, {
   urlManage: isMobileSafari ? false : true,
-  unloadDistance: 3,
+  unloadDistance: 5,
 });

@@ -8,7 +8,7 @@ export const RandomHeightPopup = () => {
 
   return (
     <div style={{ margin: 10 }}>
-      <DemoCard title="随机高度弹窗" subtitle="该弹窗高度随机">
+      <DemoCard title="随机高度弹窗" subtitle="该弹窗高度随机" closeable>
         <div
           style={{ width: "100%", height: `${randomSize.current * 50}vh` }}
         />
