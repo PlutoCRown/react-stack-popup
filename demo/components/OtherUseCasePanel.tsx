@@ -19,11 +19,7 @@ export function OtherUseCasePanel() {
             })
           }
         >
-          调用时传入内容
-        </button>
-
-        <button onClick={() => stackRouter.open(PopupID.CustomWrapper, {})}>
-          自定义包装
+          调用时传入内容当命令式Modal用
         </button>
       </div>
       <div className="subtle" style={{ marginBlock: 12 }}>
@@ -54,6 +50,14 @@ export function OtherUseCasePanel() {
           />
         ))}
       </div>
+      <div className="subtle" style={{ marginBlock: 12 }}>
+        ⬇️ 复杂的动画可以新增一种自定义包装来实现
+      </div>
+      <img
+        src="https://placehold.co/300x400?text=Click+Me!"
+        onClick={() => stackRouter.open(PopupID.CustomWrapper, {})}
+        style={{ borderRadius: 8 }}
+      />
     </section>
   );
 }

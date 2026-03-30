@@ -50,44 +50,7 @@ const popups = [
     MaskWrapper,
   ),
   // 特殊用法：自定义包装层弹窗
-  RegisterPopup(
-    PopupID.CustomWrapper,
-    CustomPopup,
-    // 该示例是错误的
-    ({
-      backgroundColor,
-      onClose,
-      children,
-    }: WrapperBaseProps & { backgroundColor?: string }) => (
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "rgba(0,0,0,0.3)",
-          animation: "pulse 1s ease",
-          border: "none",
-          padding: 0,
-        }}
-        onClick={(e) => e.target === e.currentTarget && onClose?.()}
-      >
-        <style>{`
-            @keyframes pulse {
-              0%, 100% { transform: scale(1); }
-              50% { transform: scale(1.05); }
-            }
-          `}</style>
-        <div
-          style={{ backgroundColor, padding: 20, borderRadius: 12, margin: 20 }}
-        >
-          {children}
-        </div>
-      </div>
-    ),
-    { backgroundColor: "#667eea", duration: 0 },
-  ),
+  RegisterPopup(PopupID.CustomWrapper, CustomPopup, PageWrapper),
   // 查看大图
 
   RegisterPopup(PopupID.ImageViewer, ImageViewer, NoneWrapper),

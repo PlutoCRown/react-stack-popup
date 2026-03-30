@@ -29,7 +29,10 @@ export const ImageViewer: FC<Props> = ({
   plugin,
   duration = 300,
 }) => {
-  const { onClose } = useStackState()!;
+  const context = useStackState();
+  const onClose = context.inStack
+    ? context.onClose
+    : () => console.warn("不在弹窗内");
 
   const imgRef = useRef<HTMLImageElement | null>(null);
   const imageWrapRef = useRef<HTMLDivElement | null>(null);
@@ -43,10 +46,7 @@ export const ImageViewer: FC<Props> = ({
     pointerId: -1,
   });
   const originRectRef = useRef<SharedImageRect | undefined>(undefined);
-  const imageRectRef = useRef<{
-    width: number;
-    height: number;
-  } | null>(null);
+  const imageRectRef = useRef<{ width: number; height: number } | null>(null);
   const TRANSITION_MS = duration;
   const initialRect: SharedImageRect = pos ?? {
     x: 0,

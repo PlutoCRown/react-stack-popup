@@ -7,5 +7,5 @@ export function useStackState<
   T = any,
   W extends WrapperBaseProps = WrapperBaseProps,
 >() {
-  return useContext(StackStateContext) as StackContext<ID, T, W> | null;
+  return useContext(StackStateContext) as StackContext<ID, T, W>;
 }

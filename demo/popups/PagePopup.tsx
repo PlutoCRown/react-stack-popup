@@ -90,9 +90,11 @@ export const AllWrapBtnGroup = () => {
 const ContextTest = () => {
   const item = useStackState();
   useEffect(() => {
-    if (!item) return;
+    if (!item.inStack) return;
     console.log({ id: item.id, key: item.key, visible: item.visible });
-  }, [item?.id, item?.key, item?.visible]);
+  }, [item]);
+
+  if (!item.inStack) return "不在弹窗中";
 
   return (
     <DemoCard title="Context测试" subtitle="展示当前层的 id 和 key">
