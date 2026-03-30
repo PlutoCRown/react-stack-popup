@@ -5,9 +5,15 @@ interface DemoCardProps {
   title: string;
   subtitle?: string;
   children?: React.ReactNode;
+  closeable?: boolean;
 }
 
-export function DemoCard({ title, subtitle, children }: DemoCardProps) {
+export function DemoCard({
+  title,
+  subtitle,
+  children,
+  closeable,
+}: DemoCardProps) {
   return (
     <div
       style={{
@@ -23,11 +29,13 @@ export function DemoCard({ title, subtitle, children }: DemoCardProps) {
         {subtitle && <p style={{ margin: 0, color: "#666" }}>{subtitle}</p>}
       </div>
       {children}
-      <div style={{ marginTop: 16 }}>
-        <button className="close-button" onClick={() => stackRouter.close()}>
-          关闭
-        </button>
-      </div>
+      {closeable && (
+        <div style={{ marginTop: 16 }}>
+          <button className="close-button" onClick={() => stackRouter.close()}>
+            关闭
+          </button>
+        </div>
+      )}
     </div>
   );
 }

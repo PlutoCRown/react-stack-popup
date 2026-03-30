@@ -1,13 +1,14 @@
+import { useEffect, useRef, useState } from "react";
 import { DemoCard } from "../components/DemoCard";
 import { stackRouter } from "../stackRouter";
 import { PopupID } from "../constants/popupIds";
+import { useStackState } from "../../src";
 
 export const PagePopup = () => {
   return (
     <div
       style={{
         padding: "20px",
-        height: "100%",
         display: "flex",
         flexDirection: "column",
         gap: 20,
@@ -17,6 +18,7 @@ export const PagePopup = () => {
       <DemoCard
         title="全屏页面"
         subtitle="打开时从右侧滑入，关闭时向右侧滑出。"
+        closeable
       >
         <AllWrapBtnGroup />
       </DemoCard>
@@ -49,6 +51,9 @@ export const PagePopup = () => {
           </button>
         </div>
       </DemoCard>
+      <ContextTest />
+      <InnerStateTest />
+      <RefreshTest />
     </div>
   );
 };
@@ -79,5 +84,43 @@ export const AllWrapBtnGroup = () => {
         None
       </button>
     </div>
+  );
+};
+
+const ContextTest = () => {
+  const item = useStackState();
+  useEffect(() => {
+    if (!item) return;
+    console.log({ id: item.id, key: item.key, visible: item.visible });
+  }, [item?.id, item?.key, item?.visible]);
+
+  return (
+    <DemoCard title="Context测试" subtitle="展示当前层的 id 和 key">
+      <div style={{ display: "grid", gap: 8 }}>
+        <div>id: {item?.id ?? "-"}</div>
+        <div>key: {item?.key ?? "-"}</div>
+      </div>
+    </DemoCard>
+  );
+};
+
+const RefreshTest = () => {
+  const item = useRef(Math.random());
+  console.log(item.current);
+
+  return null;
+};
+
+const InnerStateTest = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <DemoCard title="内部状态测试" subtitle="测试内部状态是否正常">
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <button onClick={() => setCount(count - 1)}>-</button>
+        <span>{count}</span>
+        <button onClick={() => setCount(count + 1)}>+</button>
+      </div>
+    </DemoCard>
   );
 };

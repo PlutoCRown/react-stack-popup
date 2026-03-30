@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { memo, ReactNode } from 'react'
 import { PopupConfig, Wrapper, WrapperBaseProps } from '../types'
 
 export type RegisterPopupOptions<ID extends string, T extends object, W extends WrapperBaseProps> = {
@@ -15,5 +15,5 @@ export function RegisterPopup<ID extends string, T extends object, W extends Wra
   wrapper: Wrapper<W>,
   wrapperProps?: W
 ): PopupConfig<ID, T, W> {
-  return Object.assign({ __register_popup }, { id, content, wrapper, wrapperProps })
+  return Object.assign({ __register_popup }, { id, content: memo(content), wrapper, wrapperProps })
 }

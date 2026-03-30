@@ -12,7 +12,8 @@ export const DrawerPopup = () => {
       <DemoCard
         title="侧边抽屉"
         subtitle="从左右侧滑入，关闭时向同侧滑出。"
-      ></DemoCard>
+        closeable
+      />
     </div>
   );
 };
