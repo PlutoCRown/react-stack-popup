@@ -43,16 +43,16 @@ function App() {
         </div>
         <div className="hero-panel">
           <div className="metric">
-            <span className="metric-label">包装器</span>
-            <span className="metric-value">5</span>
+            <span className="metric-label">可组合包装器</span>
+            <span className="metric-value">5 种</span>
           </div>
           <div className="metric">
-            <span className="metric-label">路由</span>
-            <span className="metric-value">地址</span>
+            <span className="metric-label">路由联动</span>
+            <span className="metric-value">URL 同步</span>
           </div>
           <div className="metric">
-            <span className="metric-label">堆叠</span>
-            <span className="metric-value">支持</span>
+            <span className="metric-label">层间交互</span>
+            <span className="metric-value">零刷新动画</span>
           </div>
         </div>
       </header>
@@ -61,8 +61,8 @@ function App() {
         <WrapperPanel />
         <SheetIntroPanel />
         <ScrollCompatiblePanel />
-        <QuickStartPanel />
         <OtherUseCasePanel />
+        <QuickStartPanel />
       </main>
 
       <PopupRenderer stackRouter={stackRouter} />
