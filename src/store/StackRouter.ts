@@ -64,7 +64,6 @@ export class StackRouter<Config extends PopupConfigArray> {
   private get instance() {
     return this.store.getState()
   }
-
   // 对外 API， 都用箭头函数避免this指去奇奇怪怪的地方
   open = <Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) => {
     if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
@@ -74,7 +73,7 @@ export class StackRouter<Config extends PopupConfigArray> {
       args: args as StackRouterArgs<Config, Ex>,
       visible: true,
       freeze: false,
-      contextStore: createStackRouterContextStore(),
+      contextStore: createStackRouterContextStore({ inStack: true }),
     }
     this.instance.open(stackItem)
     this.channel.emit('open', { id })

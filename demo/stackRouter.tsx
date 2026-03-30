@@ -93,9 +93,9 @@ const popups = [
   RegisterPopup(PopupID.ImageViewer, ImageViewer, NoneWrapper),
 ] as const;
 
-const isSafari = navigator.userAgent.includes("Safari");
+const isMobileSafari = navigator.userAgent.includes("Mobile Safari");
 
 export const stackRouter = new StackRouter(popups, {
-  urlManage: isSafari ? false : true,
+  urlManage: isMobileSafari ? false : true,
   unloadDistance: 3,
 });
