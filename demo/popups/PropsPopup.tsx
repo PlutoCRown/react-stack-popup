@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { DemoCard } from "../components/DemoCard";
 import { focusLock, stackRouter } from "../stackRouter";
 import { PopupID } from "../constants/popupIds";
@@ -14,14 +14,18 @@ export const PropsPopup: React.FC<SheetPopupProps> = ({
   message,
   blockClose,
 }) => {
+  const comfirmed = useRef(false);
   // 测试锁功能
-  const [confirm, setConfirm] = useState(false);
   focusLock.useWhenClose(
     () =>
       new Promise((resolve, reject) => {
-        if (!blockClose || confirm) return resolve();
+        if (!blockClose || comfirmed.current) return resolve();
         stackRouter.open(PopupID.ConfirmLeave, {
-          onConfirm: () => setConfirm(true),
+          onConfirm: () => {
+            comfirmed.current = true;
+            stackRouter.close();
+            stackRouter.close();
+          },
         });
         return reject();
       }),

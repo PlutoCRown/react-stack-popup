@@ -53,7 +53,7 @@ export const PagePopup = () => {
       </DemoCard>
       <ContextTest />
       <InnerStateTest />
-      <RefreshTest />
+      {/* <RefreshTest /> */}
     </div>
   );
 };
@@ -106,12 +106,12 @@ const ContextTest = () => {
   );
 };
 
-const RefreshTest = () => {
-  const item = useRef(Math.random());
-  console.log(item.current);
+// const RefreshTest = () => {
+//   const item = useRef(Math.random());
+//   console.log(item.current);
 
-  return null;
-};
+//   return null;
+// };
 
 const InnerStateTest = () => {
   const [count, setCount] = useState(0);

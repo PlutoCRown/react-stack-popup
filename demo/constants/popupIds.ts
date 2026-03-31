@@ -12,5 +12,6 @@ export enum PopupID {
   Drawer = "Drawer",
   CustomContent = "invoke",
   ImageViewer = "ImageViewer",
-  ConfirmLeave = "ConfirmLeave"
+  ConfirmLeave = "ConfirmLeave",
+  FormView = "FormView"
 }

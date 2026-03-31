@@ -55,6 +55,7 @@ const popups = [
   // 查看大图
 
   RegisterPopup(PopupID.ImageViewer, ImageViewer, NoneWrapper),
+  RegisterPopup(PopupID.FormView, PropsPopup, PageWrapper),
   RegisterPopup(PopupID.ConfirmLeave, ConfirmLeave, MaskWrapper),
 ] as const;
 

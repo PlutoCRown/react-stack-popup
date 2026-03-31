@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
-import { focusLock } from "../stackRouter";
+import { focusLock, stackRouter } from "../stackRouter";
 import { FocusLockState } from "../../src";
+import { PopupID } from "../constants/popupIds";
 
 const STATE_LABELS: Record<FocusLockState, string> = {
   [FocusLockState.None]: "None",
-  [FocusLockState.BlockOpen]: "Block Open",
-  [FocusLockState.BlockClose]: "Block Close",
   [FocusLockState.IgnoreOpen]: "Ignore Open",
   [FocusLockState.IgnoreClose]: "Ignore Close",
 };
@@ -31,12 +30,6 @@ export function LockStatePanel() {
       </div>
 
       <div className="button-group">
-        <button onClick={() => updateState(FocusLockState.BlockOpen)}>
-          Block Open
-        </button>
-        <button onClick={() => updateState(FocusLockState.BlockClose)}>
-          Block Close
-        </button>
         <button onClick={() => updateState(FocusLockState.IgnoreOpen)}>
           Ignore Open
         </button>
@@ -44,6 +37,17 @@ export function LockStatePanel() {
           Ignore Close
         </button>
         <button onClick={() => updateState(FocusLockState.None)}>Reset</button>
+        <button
+          onClick={() =>
+            stackRouter.open(PopupID.FormView, {
+              title: "假设你在编辑表单",
+              message: "这时候返回需要你确认",
+              blockClose: true,
+            })
+          }
+        >
+          打开实际用例
+        </button>
       </div>
     </section>
   );
