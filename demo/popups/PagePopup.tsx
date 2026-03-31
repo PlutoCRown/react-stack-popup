@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { DemoCard } from "../components/DemoCard";
 import { stackRouter } from "../stackRouter";
 import { PopupID } from "../constants/popupIds";
@@ -53,7 +53,6 @@ export const PagePopup = () => {
       </DemoCard>
       <ContextTest />
       <InnerStateTest />
-      {/* <RefreshTest /> */}
     </div>
   );
 };
@@ -89,11 +88,6 @@ export const AllWrapBtnGroup = () => {
 
 const ContextTest = () => {
   const item = useStackState();
-  useEffect(() => {
-    if (!item.inStack) return;
-    console.log({ id: item.id, key: item.key, visible: item.visible });
-  }, [item]);
-
   if (!item.inStack) return "不在弹窗中";
 
   return (
@@ -105,13 +99,6 @@ const ContextTest = () => {
     </DemoCard>
   );
 };
-
-// const RefreshTest = () => {
-//   const item = useRef(Math.random());
-//   console.log(item.current);
-
-//   return null;
-// };
 
 const InnerStateTest = () => {
   const [count, setCount] = useState(0);

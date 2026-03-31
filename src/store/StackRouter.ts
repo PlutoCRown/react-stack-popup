@@ -79,18 +79,23 @@ export class StackRouter<Config extends PopupConfigArray> {
     return Promise.resolve()
   }
   close = async (id?: StackRouterId<Config>) => {
-    if (this.config.lock?.shouldIgnoreClose()) return Promise.reject()
-    const stack = this.instance.stack
-    const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)
-    console.log('想要关闭', target)
-    const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : 0
-    if (!target) return Promise.resolve()
-    const okToClose = await (this.config.lock?.runCloseHooks(target.key) ?? Promise.resolve(true))
-    if (!okToClose) return Promise.resolve()
-    this.channel.emit('close', { id: id || null })
-    this.instance.close(target.key, duration)
-    this.historyManager?.pop()
-    return Promise.resolve()
+    const lock = this.config.lock
+    if (lock?.shouldIgnoreClose()) return Promise.reject()
+    const release = await (lock?.acquireCloseMutex() ?? Promise.resolve(null))
+    try {
+      const stack = this.instance.stack
+      const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)
+      const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : 0
+      if (!target) return Promise.resolve()
+      const okToClose = await (lock?.runCloseHooks(target.key) ?? Promise.resolve(true))
+      if (!okToClose) return Promise.resolve()
+      this.channel.emit('close', { id: id || null })
+      this.instance.close(target.key, duration)
+      this.historyManager?.pop()
+      return Promise.resolve()
+    } finally {
+      if (typeof release === "function") release()
+    }
   }
 
   // 服务于 Hook

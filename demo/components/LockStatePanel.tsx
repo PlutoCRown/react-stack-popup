@@ -5,6 +5,7 @@ import { PopupID } from "../constants/popupIds";
 
 const STATE_LABELS: Record<FocusLockState, string> = {
   [FocusLockState.None]: "None",
+  [FocusLockState.BlockClose]: "Block Close",
   [FocusLockState.IgnoreOpen]: "Ignore Open",
   [FocusLockState.IgnoreClose]: "Ignore Close",
 };

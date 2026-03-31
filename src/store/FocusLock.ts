@@ -3,12 +3,14 @@ import { useStackState } from "../hooks/useStackState";
 
 export enum FocusLockState {
   None = "none",
+  BlockClose = "block-close",
   IgnoreOpen = "ignore-open",
   IgnoreClose = "ignore-close",
 }
 
 export class FocusLock {
   private state = FocusLockState.None;
+  private closeQueue: Promise<void> = Promise.resolve();
   private closeHooks = new Map<string, Set<() => Promise<void>>>();
 
   getState() {
@@ -25,6 +27,10 @@ export class FocusLock {
 
   shouldIgnoreClose() {
     return this.state === FocusLockState.IgnoreClose;
+  }
+
+  shouldBlockClose() {
+    return this.state === FocusLockState.BlockClose;
   }
 
   useWhenClose(exec: () => Promise<void>) {
@@ -51,16 +57,32 @@ export class FocusLock {
     }
   }
 
+  /** 运行当前层的关闭hooks */
   async runCloseHooks(key: string): Promise<boolean> {
     const hooks = this.closeHooks.get(key)
     if (!hooks || hooks.size === 0) return true
-    for (const hook of Array.from(hooks)) {
-      try {
+    try {
+      for (const hook of Array.from(hooks)) {
         await hook()
-      } catch {
-        return false
       }
+      return true
+    } catch {
+      return false
     }
-    return true
+  }
+
+  async acquireCloseMutex() {
+    const prev = this.closeQueue
+    let release!: () => void
+    this.closeQueue = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    await prev
+    const prevState = this.state
+    this.state = FocusLockState.BlockClose
+    return () => {
+      this.state = prevState
+      release()
+    }
   }
 }
