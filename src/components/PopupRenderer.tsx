@@ -84,7 +84,11 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
   } as StackRouterWrapperProps<Config, StackRouterId<Config>>;
 
   const contextValue = useMemo(
-    () => ({ ...item, onClose: () => stackRouter.close(item.id) }),
+    () => ({
+      ...item,
+      onClose: () => stackRouter.close(item.id),
+      inStack: true,
+    }),
     [item],
   );
 

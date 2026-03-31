@@ -40,11 +40,7 @@ export const ImageViewer: FC<Props> = ({
   const isClosingRef = useRef(false);
   const isDraggingRef = useRef(false);
   const wasDraggingRef = useRef(false);
-  const dragStartRef = useRef({
-    x: 0,
-    y: 0,
-    pointerId: -1,
-  });
+  const dragStartRef = useRef({ x: 0, y: 0, pointerId: -1 });
   const originRectRef = useRef<SharedImageRect | undefined>(undefined);
   const imageRectRef = useRef<{ width: number; height: number } | null>(null);
   const TRANSITION_MS = duration;
@@ -124,6 +120,7 @@ export const ImageViewer: FC<Props> = ({
     if (hiddenControl) {
       hiddenControl.style.opacity = "1";
     }
+    console.log("关闭");
     onClose?.();
   };
 
@@ -155,7 +152,6 @@ export const ImageViewer: FC<Props> = ({
             width: renderWidth,
             height: renderHeight,
           };
-          console.log(pos, imageRectRef.current);
           img.style.transition = "none";
           img.style.width = `${renderWidth}%`;
           img.style.height = `${renderHeight}%`;
@@ -256,6 +252,10 @@ export const ImageViewer: FC<Props> = ({
       handleImageLoaded();
     }
   }, [pos, objectFit]);
+
+  useEffect(() => {
+    if (context.inStack && !context.visible) handleClose();
+  }, [context]);
 
   return (
     <div className={styles.root}>

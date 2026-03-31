@@ -6,7 +6,6 @@ import {
   DrawerWrapper,
   RegisterPopup,
   StackRouter,
-  WrapperBaseProps,
 } from "../src";
 import { PopupID } from "./constants/popupIds";
 
