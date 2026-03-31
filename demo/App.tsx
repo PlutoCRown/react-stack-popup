@@ -61,7 +61,6 @@ function App() {
       <main className="main">
         <WrapperPanel />
         <SheetIntroPanel />
-        <ScrollCompatiblePanel />
         <OtherUseCasePanel />
         <QuickStartPanel />
         <LockStatePanel />

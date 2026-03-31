@@ -1,9 +1,9 @@
 type HistoryManagerOptions = {
-  onPop: () => void
+  onPop: () => void | Promise<void>
 }
 
 export class HistoryManager {
-  private onPop: () => void
+  private onPop: () => void | Promise<void>
   private popThisFrame = false
   private scheduled = false
   private pendingPushes: Array<string> = []
@@ -41,14 +41,14 @@ export class HistoryManager {
     window.history.back()
   }
 
-  private handlePopState = (_event: PopStateEvent) => {
+  private handlePopState = async (_event: PopStateEvent) => {
     if (this.suppressPop > 0) {
       this.suppressPop--
       return
     }
     this.handlingPopState = true
     try {
-      this.onPop()
+      await this.onPop()
     } finally {
       this.handlingPopState = false
     }

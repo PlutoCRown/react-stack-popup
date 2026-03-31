@@ -27,6 +27,10 @@ export const PagePopup = () => {
         title="URL管理测试"
         subtitle="如果 new StackRouter(...,{ urlManage: true })，那么可以"
       >
+        <div style={{ display: "grid", gap: 8 }}>
+          <div>{navigator.userAgent}</div>
+          <div>{}</div>
+        </div>
         <div className="button-group">
           <button
             onClick={() =>

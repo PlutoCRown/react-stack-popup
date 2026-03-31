@@ -59,7 +59,9 @@ const popups = [
   RegisterPopup(PopupID.ConfirmLeave, ConfirmLeave, MaskWrapper),
 ] as const;
 
-const isMobileSafari = navigator.userAgent.includes("Mobile Safari");
+const ua = navigator.userAgent;
+const isMobileSafari =
+  /Mobile Safari/.test(ua) && !/Chrome|CriOS|Chromium/.test(ua);
 
 export const focusLock = new FocusLock();
 
