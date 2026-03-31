@@ -1,5 +1,5 @@
 import React from "react";
-import { stackRouter } from "../stackRouter";
+import { stackRouter } from "../../stackRouter";
 
 type Props = {};
 

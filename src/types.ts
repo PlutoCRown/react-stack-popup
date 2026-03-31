@@ -68,6 +68,7 @@ export interface StackItem<ID extends string, T extends any, W extends WrapperBa
   popupConfig?: PopupConfig<ID, T, W>
   visible: boolean,
   freeze: boolean
+  // hooks_close: Array<() => Promise<void>>
 }
 export type StackContext<ID extends string, T extends any, W extends WrapperBaseProps> = (StackItem<ID, T, W> & {
   /* 这个 onClose 只会关闭当前层的弹窗 */

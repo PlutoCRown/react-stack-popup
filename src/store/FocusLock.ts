@@ -1,3 +1,5 @@
+import { useStackState } from "../hooks/useStackState";
+
 export enum FocusLockState {
   None = "none",
   BlockOpen = "block-open",
@@ -8,6 +10,14 @@ export enum FocusLockState {
 
 export class FocusLock {
   private state = FocusLockState.None;
+
+  getState() {
+    return this.state;
+  }
+
+  setState(next: FocusLockState) {
+    this.state = next;
+  }
 
   shouldIgnoreOpen() {
     return this.state === FocusLockState.IgnoreOpen;
@@ -23,5 +33,12 @@ export class FocusLock {
 
   shouldBlockClose() {
     return this.state === FocusLockState.BlockClose;
+  }
+
+
+  useWhenClose(exec: () => Promise<void>) {
+    const context = useStackState()
+    if (!context.inStack) return
+    // return exec()
   }
 }

@@ -66,6 +66,7 @@ export class StackRouter<Config extends PopupConfigArray> {
   // 对外 API， 都用箭头函数避免this指去奇奇怪怪的地方
   open = <Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) => {
     if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
+    if (this.config.lock?.shouldBlockOpen()) return Promise.resolve()
     const stackItem = {
       id,
       key: this.generateKey(),
@@ -80,6 +81,7 @@ export class StackRouter<Config extends PopupConfigArray> {
   }
   close = (id?: StackRouterId<Config>) => {
     if (this.config.lock?.shouldIgnoreClose()) return Promise.reject()
+    if (this.config.lock?.shouldBlockClose()) return Promise.resolve()
     this.channel.emit('close', { id: id || null })
     const stack = this.instance.stack
     const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)

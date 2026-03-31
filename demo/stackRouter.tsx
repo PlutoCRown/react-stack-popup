@@ -6,18 +6,20 @@ import {
   DrawerWrapper,
   RegisterPopup,
   StackRouter,
+  FocusLock,
 } from "../src";
 import { PopupID } from "./constants/popupIds";
 
 import RandomHeightPopup from "./popups/RandomHeightPopup";
 import NormalPopup from "./popups/NormalPopup";
-import CustomPopup from "./popups/CustomPopup";
+import CustomPopup from "./popups/Custom/Popup";
 import PagePopup from "./popups/PagePopup";
 import DrawerPopup from "./popups/DrawerPopup";
 import PropsPopup from "./popups/PropsPopup";
 import React from "react";
 import LongContent from "./popups/LongContent";
 import { ImageViewer } from "./popups/ImageViewer";
+import ConfirmLeave from "./popups/ConfirmLeave";
 
 // Register popups
 const popups = [
@@ -53,11 +55,15 @@ const popups = [
   // 查看大图
 
   RegisterPopup(PopupID.ImageViewer, ImageViewer, NoneWrapper),
+  RegisterPopup(PopupID.ConfirmLeave, ConfirmLeave, MaskWrapper),
 ] as const;
 
 const isMobileSafari = navigator.userAgent.includes("Mobile Safari");
 
+export const focusLock = new FocusLock();
+
 export const stackRouter = new StackRouter(popups, {
   urlManage: isMobileSafari ? false : true,
   unloadDistance: 5,
+  lock: focusLock,
 });

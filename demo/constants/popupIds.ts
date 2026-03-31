@@ -11,5 +11,6 @@ export enum PopupID {
   ScrollMask = "ScrollMask",
   Drawer = "Drawer",
   CustomContent = "invoke",
-  ImageViewer = "ImageViewer"
+  ImageViewer = "ImageViewer",
+  ConfirmLeave = "ConfirmLeave"
 }
