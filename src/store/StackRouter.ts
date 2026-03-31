@@ -64,19 +64,20 @@ export class StackRouter<Config extends PopupConfigArray> {
     return this.store.getState()
   }
   // 对外 API， 都用箭头函数避免this指去奇奇怪怪的地方
+
   open = <Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) => {
-    if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
-    const stackItem = {
-      id,
-      key: this.generateKey(),
-      args: args as StackRouterArgs<Config, Ex>,
-      visible: true,
-      freeze: false,
+    const execOpen = () => {
+      if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
+      const stackItem = { id, key: this.generateKey(), args: args, visible: true, freeze: false, }
+      this.instance.open(stackItem)
+      this.channel.emit('open', { id })
+      this.historyManager?.push(extra?.url)
+      return Promise.resolve()
     }
-    this.instance.open(stackItem)
-    this.channel.emit('open', { id })
-    this.historyManager?.push(extra?.url)
-    return Promise.resolve()
+    if (this.config.lock?.shouldBlockOpen() && !this.config.lock?.isOpenAllowed()) {
+      return this.config.lock.enqueueOpen(execOpen)
+    }
+    return execOpen()
   }
   close = async (id?: StackRouterId<Config>) => {
     const lock = this.config.lock

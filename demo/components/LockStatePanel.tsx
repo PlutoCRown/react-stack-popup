@@ -6,13 +6,15 @@ import { PopupID } from "../constants/popupIds";
 const STATE_LABELS: Record<FocusLockState, string> = {
   [FocusLockState.None]: "None",
   [FocusLockState.BlockClose]: "Block Close",
+  [FocusLockState.BlockOpen]: "Block Open",
   [FocusLockState.IgnoreOpen]: "Ignore Open",
   [FocusLockState.IgnoreClose]: "Ignore Close",
+  [FocusLockState.IgnoreAll]: "Ignore All",
 };
 
 export function LockStatePanel() {
   const [state, setState] = useState<FocusLockState>(focusLock.getState());
-  const stateLabel = useMemo(() => STATE_LABELS[state], [state]);
+  const stateLabel = useMemo(() => STATE_LABELS[state] ?? "Custom", [state]);
 
   const updateState = (next: FocusLockState) => {
     focusLock.setState(next);
@@ -31,11 +33,17 @@ export function LockStatePanel() {
       </div>
 
       <div className="button-group">
+        <button onClick={() => updateState(FocusLockState.BlockOpen)}>
+          Block Open
+        </button>
         <button onClick={() => updateState(FocusLockState.IgnoreOpen)}>
           Ignore Open
         </button>
         <button onClick={() => updateState(FocusLockState.IgnoreClose)}>
           Ignore Close
+        </button>
+        <button onClick={() => updateState(FocusLockState.IgnoreAll)}>
+          Ignore All
         </button>
         <button onClick={() => updateState(FocusLockState.None)}>Reset</button>
         <button
