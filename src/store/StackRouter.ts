@@ -11,6 +11,7 @@ import {
   RouterState,
   WrapperBaseProps,
   StackRouterOpenArgs,
+  StackItemChannelEvents,
 } from '../types'
 import { EventBus } from '../utils/EventBus'
 import { HistoryManager } from './HistoryManager'
@@ -68,8 +69,16 @@ export class StackRouter<Config extends PopupConfigArray> {
   open = <Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) => {
     const execOpen = () => {
       if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
-      const stackItem = { id, key: this.generateKey(), args: args, visible: true, freeze: false, }
+      const duration = this.popupConfigs[id]?.wrapperProps?.duration ?? 300
+      const channel = new EventBus<StackItemChannelEvents>()
+      const stackItem = { id, key: this.generateKey(), args: args, visible: true, freeze: false, channel }
       this.instance.open(stackItem)
+      // 暂时这样，后续由包装层做这个
+      setTimeout(() => {
+        channel.emit('opend', null)
+      }, duration)
+      // 等所有包装层介入
+      // channel.on('entered',()=>channel.emit('opend',null))
       this.channel.emit('open', { id })
       this.historyManager?.push(extra?.url)
       return Promise.resolve()
@@ -87,15 +96,16 @@ export class StackRouter<Config extends PopupConfigArray> {
       const stack = this.instance.stack
       const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)
       const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : 0
-      if (!target) return Promise.resolve()
+      if (!target) return Promise.reject()
       const okToClose = await (lock?.runCloseHooks(target.key) ?? Promise.resolve(true))
-      if (!okToClose) return Promise.resolve()
+      if (!okToClose) return Promise.reject()
+      target.channel.emit('willClose', null)
       this.channel.emit('close', { id: id || null })
       this.instance.close(target.key, duration)
       this.historyManager?.pop()
       return Promise.resolve()
     } finally {
-      if (typeof release === "function") release()
+       release?.()
     }
   }
 
@@ -122,7 +132,8 @@ function createStore<ID extends string, T extends any, W extends WrapperBaseProp
         })
         setTimeout(() => {
           set(draft => {
-            draft.stack = draft.stack.filter(item => item.key !== key)
+            draft.stack.find(item => item.key == key)?.channel.emit('closed', null)
+      draft.stack = draft.stack.filter(item => item.key !== key)
           })
         }, duration)
       }

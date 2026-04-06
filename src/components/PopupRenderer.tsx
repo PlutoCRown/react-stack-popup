@@ -1,20 +1,17 @@
 import {
-  Fragment,
   Suspense,
   createElement,
   memo,
-  useCallback,
+  useEffect,
   useMemo,
+  useState,
 } from "react";
-import type { FC } from "react";
 import { createPortal } from "react-dom";
 import { useStackRouter } from "../hooks/useStackRouter";
 import { StackRouter } from "../store/StackRouter";
 import { StackStateContext } from "../context/StackStateContext";
 import {
   PopupConfigArray,
-  StackRouterArgs,
-  StackRouterConfig,
   StackRouterId,
   StackRouterItem,
   StackRouterWrapperProps,
@@ -83,13 +80,24 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
     ...popupConfig.wrapperProps,
   } as StackRouterWrapperProps<Config, StackRouterId<Config>>;
 
+  const [useMount, setUseMount] = useState(false);
+  useEffect(() => {
+    const offOpend = item.channel.on("opend", () => setUseMount(true));
+    const offWillClose = item.channel.on("willClose", () => setUseMount(false));
+    return () => {
+      offOpend();
+      offWillClose();
+    };
+  }, [item.channel]);
+
   const contextValue = useMemo(
     () => ({
       ...item,
       onClose: () => stackRouter.close(item.id),
+      useMount,
       inStack: true,
     }),
-    [item],
+    [item, stackRouter, useMount],
   );
 
   return (

@@ -1,6 +1,5 @@
-import { FC, PointerEvent, useEffect, useRef } from "react";
+import { FC, PointerEvent, useCallback, useEffect, useRef } from "react";
 import styles from "./index.module.css";
-import { stackRouter } from "../../stackRouter";
 import { useStackState } from "../../../src";
 
 export type SharedImageRect = {
@@ -103,7 +102,7 @@ export const ImageViewer: FC<Props> = ({
     bg.style.opacity = "0";
   };
 
-  const handleClose = () => {
+  const handleClosed = useCallback(() => {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
     isDraggingRef.current = false;
@@ -113,14 +112,16 @@ export const ImageViewer: FC<Props> = ({
         if (hiddenControl) {
           hiddenControl.style.opacity = "1";
         }
-        onClose?.();
       }, TRANSITION_MS);
       return;
     }
     if (hiddenControl) {
       hiddenControl.style.opacity = "1";
     }
-    console.log("关闭");
+  }, [hiddenControl, pos, TRANSITION_MS]);
+
+  const requestClose = () => {
+    if (isClosingRef.current) return;
     onClose?.();
   };
 
@@ -219,7 +220,7 @@ export const ImageViewer: FC<Props> = ({
       wrap.releasePointerCapture(start.pointerId);
     }
     if (distance > 200) {
-      handleClose();
+      requestClose();
       return;
     }
     wrap.style.transition = `all ${TRANSITION_MS}ms ease`;
@@ -254,18 +255,20 @@ export const ImageViewer: FC<Props> = ({
   }, [pos, objectFit]);
 
   useEffect(() => {
-    if (context.inStack && !context.visible) handleClose();
-  }, [context]);
+    if (!context.inStack) return;
+    const off = context.channel.on("closed", () => handleClosed());
+    return off;
+  }, [context, handleClosed]);
 
   return (
     <div className={styles.root}>
       <div
         ref={backgroundRef}
-        onClick={handleClose}
+        onClick={requestClose}
         className={styles.background}
       />
       <div className={styles.overlay}>{plugin}</div>
-      <div className={styles.content} onClick={handleClose}>
+      <div className={styles.content} onClick={requestClose}>
         <div
           ref={imageWrapRef}
           className={styles.imageWrap}
@@ -273,7 +276,7 @@ export const ImageViewer: FC<Props> = ({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerCancel}
-          onClick={() => stackRouter.close()}
+          onClick={requestClose}
           style={{
             left: `${initialRect.x}px`,
             top: `${initialRect.y}px`,

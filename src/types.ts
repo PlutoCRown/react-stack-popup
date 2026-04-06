@@ -1,4 +1,5 @@
 import React, { CSSProperties, ReactNode } from 'react'
+import type { EventBus } from './utils/EventBus'
 
 // 所有弹窗外层 Wrapper 的基础属性。
 // 为了兼容各种自定义 Wrapper，这里将 visible/onClose 都设为可选，
@@ -68,10 +69,19 @@ export interface StackItem<ID extends string, T extends any, W extends WrapperBa
   popupConfig?: PopupConfig<ID, T, W>
   visible: boolean,
   freeze: boolean
+  channel: EventBus<StackItemChannelEvents>
+}
+
+export type StackItemChannelEvents = {
+  opend: null
+  willClose: null
+  closed: null
+  entered: null
 }
 export type StackContext<ID extends string, T extends any, W extends WrapperBaseProps> = (StackItem<ID, T, W> & {
   /* 这个 onClose 只会关闭当前层的弹窗 */
   onClose: () => Promise<void>
+  useMount: boolean
   inStack: true
 }) | { inStack: false }
 
