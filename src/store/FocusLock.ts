@@ -90,7 +90,7 @@ export class FocusLock {
     const hooks = this.closeHooks.get(key)
     if (!hooks || hooks.size === 0) return true
     try {
-      for (const hook of Array.from(hooks)) {
+      for await (const hook of Array.from(hooks)) {
         await hook()
       }
       return true

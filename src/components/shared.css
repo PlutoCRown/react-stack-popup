@@ -1,6 +1,10 @@
 /**
  此文件为共享类名，均以 rsp- 开头
 */
+:root {
+    --rsp-duration: .3s;
+}
+
 .rsp-root {
     transition: all var(--rsp-duration);
 }
