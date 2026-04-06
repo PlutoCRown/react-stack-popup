@@ -52,11 +52,13 @@ export type StackRouterState<C extends PopupConfigArray> = RouterState<
   StackRouterWrapperProps<C, StackRouterId<C>>
 >
 
+export type StackWrapperComponent<P extends object = {}> = React.ComponentType<P & { children: ReactNode }>
+
 export interface StackRouterConfig {
   urlManage?: boolean
   freeze?: boolean
-  suspense?: boolean
-  errorBoundary?: boolean
+  suspense?: boolean | StackWrapperComponent<{ fallback?: ReactNode }>
+  errorBoundary?: boolean | StackWrapperComponent
   unloadDistance?: number
   lock?: import("./store/FocusLock").FocusLock | null
 }

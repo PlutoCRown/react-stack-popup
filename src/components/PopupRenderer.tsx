@@ -1,5 +1,4 @@
 import {
-  Suspense,
   createElement,
   memo,
   useEffect,
@@ -16,7 +15,6 @@ import {
   StackRouterItem,
   StackRouterWrapperProps,
 } from "../types";
-import { ErrorBoundary } from "./ErrorBoundary";
 import { Freeze } from "./Freeze";
 import { PopupLoading } from "./PopupLoading";
 
@@ -51,6 +49,7 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
 }: PopupItemProps<Config>) {
   const config = stackRouter.config;
   const popupConfig = stackRouter.popupConfigs[item.id];
+  const { Suspense, ErrorBoundary } = stackRouter
   if (!popupConfig) return null;
 
   const onClose = stackRouter.close;
@@ -58,18 +57,15 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
   let content = <Component {...item.args} />;
 
   const freeze = config.freeze !== false;
-  const suspense = config.suspense !== false;
-  const errorBoundary = config.errorBoundary !== false;
 
   if (freeze) {
     content = <Freeze freeze={false}>{content}</Freeze>;
   }
-
-  if (suspense) {
+  if (Suspense) {
     content = <Suspense fallback={<PopupLoading />}>{content}</Suspense>;
   }
 
-  if (errorBoundary) {
+  if (ErrorBoundary) {
     content = <ErrorBoundary>{content}</ErrorBoundary>;
   }
 

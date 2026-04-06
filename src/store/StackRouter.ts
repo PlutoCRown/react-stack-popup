@@ -12,9 +12,12 @@ import {
   WrapperBaseProps,
   StackRouterOpenArgs,
   StackItemChannelEvents,
+  StackWrapperComponent,
 } from '../types'
 import { EventBus } from '../utils/EventBus'
 import { HistoryManager } from './HistoryManager'
+import { Suspense, type ReactNode } from 'react'
+import { ErrorBoundary } from '../components/ErrorBoundary'
 
 // Define event types for StackRouter
 type StackRouterEvents<ID extends string> = {
@@ -36,6 +39,8 @@ export class StackRouter<Config extends PopupConfigArray> {
   private historyManager?: HistoryManager
   private keyCounter = 0
   public readonly channel: EventBus<StackRouterEvents<StackRouterId<Config>>>
+  public ErrorBoundary?: StackWrapperComponent
+  public Suspense?: StackWrapperComponent<{ fallback?: ReactNode }>
 
   constructor(popups: Config, config: Partial<StackRouterConfig> = {}) {
     const defaultConfig: Required<StackRouterConfig> = {
@@ -54,6 +59,16 @@ export class StackRouter<Config extends PopupConfigArray> {
 
     if (config.urlManage) {
       this.historyManager = new HistoryManager({ onPop: this.close })
+    }
+    if (this.config.suspense) {
+      this.Suspense = typeof this.config.suspense === "function"
+        ? this.config.suspense
+        : Suspense
+    }
+    if (this.config.errorBoundary) {
+      this.ErrorBoundary = typeof this.config.errorBoundary === "function"
+        ? this.config.errorBoundary
+        : ErrorBoundary
     }
   }
 
@@ -105,7 +120,7 @@ export class StackRouter<Config extends PopupConfigArray> {
       this.historyManager?.pop()
       return Promise.resolve()
     } finally {
-       release?.()
+      release?.()
     }
   }
 
@@ -133,7 +148,7 @@ function createStore<ID extends string, T extends any, W extends WrapperBaseProp
         setTimeout(() => {
           set(draft => {
             draft.stack.find(item => item.key == key)?.channel.emit('closed', null)
-      draft.stack = draft.stack.filter(item => item.key !== key)
+            draft.stack = draft.stack.filter(item => item.key !== key)
           })
         }, duration)
       }
