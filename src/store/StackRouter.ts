@@ -97,7 +97,7 @@ export class StackRouter<Config extends PopupConfigArray> {
       const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)
       const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : 0
       if (!target) return Promise.reject()
-      const okToClose = await (lock?.runCloseHooks(target.key) ?? Promise.resolve(true))
+      const okToClose = lock?.runCloseHooks(target.key) ?? true
       if (!okToClose) return Promise.reject()
       target.channel.emit('willClose', null)
       this.channel.emit('close', { id: id || null })

@@ -13,7 +13,7 @@ export enum FocusLockState {
 export class FocusLock {
   private ignoreMask: FocusLockState = FocusLockState.None;
   private closeQueue: Promise<void> = Promise.resolve();
-  private closeHooks = new Map<string, Set<() => Promise<void>>>();
+  private closeHooks = new Map<string, Set<() => boolean>>();
   private openQueue: Array<() => Promise<void>> = [];
   private openFlushRunning = false;
   private openBlockCount = 0;
@@ -61,7 +61,7 @@ export class FocusLock {
   // #endregion
 
   // #region Block-Close 部分
-  useWhenClose(exec: () => Promise<void>) {
+  useWhenClose(exec: () => boolean) {
     const context = useStackState()
 
     useEffect(() => {
@@ -70,7 +70,7 @@ export class FocusLock {
     }, [context.inStack && context.key, exec])
   }
 
-  private registerCloseHook(key: string, exec: () => Promise<void>) {
+  private registerCloseHook(key: string, exec: () => boolean) {
     let hooks = this.closeHooks.get(key)
     if (!hooks) {
       hooks = new Set()
@@ -86,17 +86,10 @@ export class FocusLock {
   }
 
   /** 运行当前层的关闭hooks */
-  async runCloseHooks(key: string): Promise<boolean> {
+  runCloseHooks(key: string): boolean {
     const hooks = this.closeHooks.get(key)
     if (!hooks || hooks.size === 0) return true
-    try {
-      for await (const hook of Array.from(hooks)) {
-        await hook()
-      }
-      return true
-    } catch {
-      return false
-    }
+    return Array.from(hooks).some(hook => !hook())
   }
 
   async acquireCloseMutex() {

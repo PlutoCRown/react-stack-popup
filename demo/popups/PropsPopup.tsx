@@ -17,18 +17,17 @@ export const PropsPopup: React.FC<SheetPopupProps> = ({
   const comfirmed = useRef(false);
   // 测试锁功能
   focusLock.useWhenClose(
-    () =>
-      new Promise((resolve, reject) => {
-        if (!blockClose || comfirmed.current) return resolve();
-        stackRouter.open(PopupID.ConfirmLeave, {
-          onConfirm: () => {
-            comfirmed.current = true;
-            stackRouter.close();
-            stackRouter.close();
-          },
-        });
-        return reject();
-      }),
+    () => {
+      if (!blockClose || comfirmed.current) return true;
+      stackRouter.open(PopupID.ConfirmLeave, {
+        onConfirm: () => {
+          comfirmed.current = true;
+          stackRouter.close();
+          stackRouter.close();
+        },
+      });
+      return false;
+    },
   );
 
   return <DemoCard title={title} subtitle={message} closeable />;
