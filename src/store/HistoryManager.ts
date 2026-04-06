@@ -49,6 +49,10 @@ export class HistoryManager {
     this.handlingPopState = true
     try {
       await this.onPop()
+    } catch {
+      // 浏览器返回已发生，但 close 被拒绝，主动前进恢复到返回前状态。
+      this.suppressPop++
+      window.history.forward()
     } finally {
       this.handlingPopState = false
     }
