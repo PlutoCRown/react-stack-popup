@@ -82,6 +82,7 @@ export type StackContext<ID extends string, T extends any, W extends WrapperBase
   /* 这个 onClose 只会关闭当前层的弹窗 */
   onClose: () => Promise<void>
   useMount: boolean
+  config: Required<StackRouterConfig>
   inStack: true
 }) | { inStack: false }
 

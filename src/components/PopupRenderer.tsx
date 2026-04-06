@@ -95,6 +95,7 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
       ...item,
       onClose: () => stackRouter.close(item.id),
       useMount,
+      config: stackRouter.config,
       inStack: true,
     }),
     [item, stackRouter, useMount],
