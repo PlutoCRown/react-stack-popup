@@ -89,7 +89,7 @@ export class FocusLock {
   runCloseHooks(key: string): boolean {
     const hooks = this.closeHooks.get(key)
     if (!hooks || hooks.size === 0) return true
-    return Array.from(hooks).some(hook => !hook())
+    return !Array.from(hooks).some(hook => !hook())
   }
 
   async acquireCloseMutex() {

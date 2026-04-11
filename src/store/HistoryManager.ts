@@ -42,6 +42,7 @@ export class HistoryManager {
   }
 
   private handlePopState = async (_event: PopStateEvent) => {
+    this.markPopThisFrame()
     if (this.suppressPop > 0) {
       this.suppressPop--
       return
