@@ -1,6 +1,6 @@
 import { FC, PointerEvent, useCallback, useEffect, useRef } from "react";
 import styles from "./index.module.css";
-import { useStackState } from "../../../src";
+import { useInStackState, } from "../../../src";
 
 export type SharedImageRect = {
   width: number;
@@ -26,12 +26,9 @@ export const ImageViewer: FC<Props> = ({
   objectFit = "cover",
   hiddenControl,
   plugin,
-  duration = 300,
+  duration = 200,
 }) => {
-  const context = useStackState();
-  const onClose = context.inStack
-    ? context.onClose
-    : () => console.warn("不在弹窗内");
+  const { onClose, channel } = useInStackState();
 
   const imgRef = useRef<HTMLImageElement | null>(null);
   const imageWrapRef = useRef<HTMLDivElement | null>(null);
@@ -119,6 +116,8 @@ export const ImageViewer: FC<Props> = ({
       hiddenControl.style.opacity = "1";
     }
   }, [hiddenControl, pos, TRANSITION_MS]);
+
+  useEffect(() => channel.on("willClose", () => handleClosed()), [channel, handleClosed]);
 
   const requestClose = () => {
     if (isClosingRef.current) return;
@@ -254,11 +253,6 @@ export const ImageViewer: FC<Props> = ({
     }
   }, [pos, objectFit]);
 
-  useEffect(() => {
-    if (!context.inStack) return;
-    const off = context.channel.on("closed", () => handleClosed());
-    return off;
-  }, [context, handleClosed]);
 
   return (
     <div className={styles.root}>

@@ -80,13 +80,15 @@ export type StackItemChannelEvents = {
   closed: null
   entered: null
 }
-export type StackContext<ID extends string, T extends any, W extends WrapperBaseProps> = (StackItem<ID, T, W> & {
+export type InStackContext<ID extends string, T extends any, W extends WrapperBaseProps> = StackItem<ID, T, W> & {
   /* 这个 onClose 只会关闭当前层的弹窗 */
   onClose: () => Promise<void>
   useMount: boolean
   config: Required<StackRouterConfig>
   inStack: true
-}) | { inStack: false }
+}
+
+export type StackContext<ID extends string, T extends any, W extends WrapperBaseProps> = InStackContext<ID, T, W> | { inStack: false }
 
 export interface RouterState<ID extends string, T extends any, W extends WrapperBaseProps> {
   stack: StackItem<ID, T, W>[]

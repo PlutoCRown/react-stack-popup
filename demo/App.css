@@ -16,6 +16,7 @@
   --shadow: 0 20px 50px rgba(46, 33, 20, 0.15);
   --border: rgba(43, 37, 32, 0.12);
 }
+
 body {
   background-color: black;
 }
@@ -30,13 +31,17 @@ body {
   display: flex;
   flex-direction: column;
 }
+
 * {
-  scrollbar-width: none;  /* Firefox */
-  -ms-overflow-style: none;  /* IE 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
 }
 
 *::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari, Edge */
+  display: none;
+  /* Chrome, Safari, Edge */
 }
 
 
@@ -240,6 +245,9 @@ button.ghost {
 
   .card {
     padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+
   }
 
   .card-header {
@@ -249,15 +257,16 @@ button.ghost {
 }
 
 .image-group {
-  
+
   display: flex;
   gap: 12px;
   width: 100%;
   aspect-ratio: 3;
+
   img {
     width: 0;
     height: 100%;
-    flex:1 0 0;
+    flex: 1 0 0;
     object-fit: cover;
     border-radius: 12px;
     aspect-ratio: 1;
