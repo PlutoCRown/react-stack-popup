@@ -66,7 +66,7 @@ export class HistoryManager {
       this.pendingAction.unshift(() => {
         this.suppressPop++
         window.history.forward()
-        console.warn('FIXME: 这里必须人工点一下屏幕浏览器才认，而且很快Chrome再也不认这样的行为，会被认定为拦截')
+        console.warn('FIXME: 这里必须人工点一下屏幕浏览器才认，而且很快Chrome再也不认这样的行为，会被认定为拦截。有原生层的建议此时对返回事件断开链接直到下一次交互。或则程序化替代交互（不能在JS层做）')
       })
     } finally {
       this.handlingPopState = false
