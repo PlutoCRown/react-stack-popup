@@ -3,9 +3,6 @@ name: Deploy Example to GitHub Pages
 on:
   push:
     branches: [main]
-    paths:
-      - "demo/**"
-      - ".github/workflows/deploy.yml"
 
 permissions:
   contents: read
