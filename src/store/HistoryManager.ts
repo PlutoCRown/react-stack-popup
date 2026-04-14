@@ -1,9 +1,9 @@
 type HistoryManagerOptions = {
-  onPop: () => void | Promise<void>
+  onPop: () => boolean | void
 }
 
 export class HistoryManager {
-  private onPop: () => void | Promise<void>
+  private onPop: () => boolean | void
   private popThisFrame = false
   private scheduled = false
   private pendingPushes: Array<string> = []
@@ -41,7 +41,7 @@ export class HistoryManager {
     window.history.back()
   }
 
-  private handlePopState = async (_event: PopStateEvent) => {
+  private handlePopState = (_event: PopStateEvent) => {
     this.markPopThisFrame()
     if (this.suppressPop > 0) {
       this.suppressPop--
@@ -49,9 +49,13 @@ export class HistoryManager {
     }
     this.handlingPopState = true
     try {
-      await this.onPop()
+      const closed = this.onPop()
+      if (closed === false) {
+        // 浏览器返回已发生，但 close 被拒绝，主动前进恢复到返回前状态。
+        this.suppressPop++
+        window.history.forward()
+      }
     } catch {
-      // 浏览器返回已发生，但 close 被拒绝，主动前进恢复到返回前状态。
       this.suppressPop++
       window.history.forward()
     } finally {

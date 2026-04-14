@@ -82,7 +82,7 @@ export type StackItemChannelEvents = {
 }
 export type InStackContext<ID extends string, T extends any, W extends WrapperBaseProps> = StackItem<ID, T, W> & {
   /* 这个 onClose 只会关闭当前层的弹窗 */
-  onClose: () => Promise<void>
+  onClose: () => boolean
   useMount: boolean
   config: Required<StackRouterConfig>
   inStack: true

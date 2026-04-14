@@ -12,7 +12,6 @@ export enum FocusLockState {
 
 export class FocusLock {
   private ignoreMask: FocusLockState = FocusLockState.None;
-  private closeQueue: Promise<void> = Promise.resolve();
   private closeHooks = new Map<string, Set<() => boolean>>();
   private openQueue: Array<() => Promise<void>> = [];
   private openFlushRunning = false;
@@ -92,17 +91,14 @@ export class FocusLock {
     return !Array.from(hooks).some(hook => !hook())
   }
 
-  async acquireCloseMutex() {
-    const prev = this.closeQueue
-    let release!: () => void
-    this.closeQueue = new Promise<void>((resolve) => {
-      release = resolve
-    })
-    await prev
+  /**
+   * @deprecated onclose不再是异步的了，不需要再串行做
+   */
+  acquireCloseMutex() {
+    if (this.closeBlockCount > 0) return null
     this.closeBlockCount += 1
     return () => {
       this.closeBlockCount = Math.max(0, this.closeBlockCount - 1)
-      release()
     }
   }
 
