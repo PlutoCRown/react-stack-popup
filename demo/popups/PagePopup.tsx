@@ -3,6 +3,7 @@ import { DemoCard } from "../components/DemoCard";
 import { stackRouter } from "../stackRouter";
 import { PopupID } from "../constants/popupIds";
 import { useStackState } from "../../src";
+import { LockStatePanel } from "../components/LockStatePanel";
 
 export const PagePopup = () => {
   return (
@@ -29,7 +30,7 @@ export const PagePopup = () => {
       >
         <div style={{ display: "grid", gap: 8 }}>
           <div>{navigator.userAgent}</div>
-          <div>{}</div>
+          <div>{ }</div>
         </div>
         <div className="button-group">
           <button
@@ -57,6 +58,7 @@ export const PagePopup = () => {
       </DemoCard>
       <ContextTest />
       <InnerStateTest />
+      <LockStatePanel />
     </div>
   );
 };

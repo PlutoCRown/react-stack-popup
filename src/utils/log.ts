@@ -1,0 +1,1 @@
+export const Log = (module: string, enable: boolean) => (...args: any[]) => enable ? console.log(`[${module}]`, ...args) : void 0;

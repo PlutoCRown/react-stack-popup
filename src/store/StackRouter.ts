@@ -18,6 +18,8 @@ import { EventBus } from '../utils/EventBus'
 import { HistoryManager } from './HistoryManager'
 import { Suspense, type ReactNode } from 'react'
 import { ErrorBoundary } from '../components/ErrorBoundary'
+import { Log } from '../utils/log'
+const log = Log("StackRouter", false)
 
 // Define event types for StackRouter
 type StackRouterEvents<ID extends string> = {
@@ -83,6 +85,7 @@ export class StackRouter<Config extends PopupConfigArray> {
 
   open = <Ex extends StackRouterId<Config>,>(id: Ex, args: StackRouterOpenArgs<Config, Ex>, extra?: StackRouterOpenOptions) => {
     const execOpen = () => {
+      log('打开')
       if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
       const duration = this.popupConfigs[id]?.wrapperProps?.duration ?? 300
       const channel = new EventBus<StackItemChannelEvents>()
@@ -104,6 +107,7 @@ export class StackRouter<Config extends PopupConfigArray> {
     return execOpen()
   }
   close = async (id?: StackRouterId<Config>) => {
+    log('关闭')
     const lock = this.config.lock
     if (lock?.shouldIgnoreClose()) return Promise.reject()
     const release = await (lock?.acquireCloseMutex() ?? Promise.resolve(null))
