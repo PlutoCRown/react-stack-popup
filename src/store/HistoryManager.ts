@@ -45,6 +45,7 @@ export class HistoryManager {
       return
     }
     log('返回')
+    this.suppressPop++
     window.history.back()
   }
 
