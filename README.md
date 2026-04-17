@@ -7,62 +7,87 @@
 - 栈式路由管理，支持多层弹窗与回退
 - 内置多种 Wrapper，可组合与可替换
 - 适合移动端：遮罩、底部弹窗、触摸交互
-- demo 站点，展示多种用法
 
-## 快速开始
-安装依赖（项目使用 Bun）：
+## 安装
 ```bash
-bun install
+npm install react-stack-popup
 ```
 
-运行 demo：
-```bash
-bun run dev
+```tsx
+import "react-stack-popup/style.css";
 ```
 
-构建 demo：
-```bash
-bun run build
-```
+`react` 和 `react-dom` 是 peer dependencies，需要由业务项目自己提供。
 
-## 核心用法
-注册弹窗：
-```ts
-const popup = RegisterPopup({
-  id: PopupID.Center,
-  content: (props) => <MyPopup {...props} />,
-  wrapper: (preset) => preset.Mask,
-})
-```
+## 最小用法
+```tsx
+import {
+  MaskWrapper,
+  PopupRenderer,
+  RegisterPopup,
+  StackRouter,
+} from "react-stack-popup";
 
-创建路由器：
-```ts
-const stackRouter = new StackRouter([popup], {
+type PopupId = "profile";
+
+const ProfilePopup = ({ userId }: { userId: string }) => {
+  return <div>User: {userId}</div>;
+};
+
+const popups = [
+  RegisterPopup("profile" as PopupId, ProfilePopup, MaskWrapper),
+] as const;
+
+export const stackRouter = new StackRouter(popups, {
   urlManage: true,
-})
-```
+});
 
-打开/关闭：
-```ts
-stackRouter.open(PopupID.Center, { userId: "42" })
-stackRouter.close(PopupID.Center)
+export function App() {
+  return (
+    <>
+      <button
+        onClick={() => stackRouter.open("profile", { userId: "42" })}
+      >
+        Open popup
+      </button>
+      <PopupRenderer stackRouter={stackRouter} />
+    </>
+  );
+}
 ```
-
-## 目录结构
-- `src/`：核心实现与内置 Wrapper
-- `demo/`：演示站点
-- `dist/`：构建产物
 
 ## 内置 Wrapper
 - `NoneWrapper`：不添加任何外层结构
 - `MaskWrapper`：遮罩层与渐隐动画
 - `SheetWrapper`：自适应高度 + 滑动关闭
 - `PageWrapper`：页面级过渡动画
+- `DrawerWrapper`：左右侧抽屉
 
-## 适用场景
-- 复杂流程的弹窗堆叠
-- 移动端底部弹窗与遮罩交互
-- 需要路由联动的弹窗导航
+## 仓库开发
+```bash
+bun install
+bun run dev
+```
+
+构建 npm 包：
+```bash
+bun run build
+```
+
+构建 demo：
+```bash
+bun run build:demo
+```
+
+检查最终 npm 包内容：
+```bash
+bun run pack:check
+```
+
+## 发布物
+- `dist/`：npm 包最小发布产物
+- `dist-demo/`：demo 站点构建产物
+- npm publish 仅包含 `dist`、`README.md`、`LICENSE`
 
 ## 许可
 MIT

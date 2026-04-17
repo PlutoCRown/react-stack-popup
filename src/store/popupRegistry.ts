@@ -1,4 +1,4 @@
-import React, { memo, ReactNode } from 'react'
+import React, { memo } from 'react'
 import { PopupConfig, Wrapper, WrapperBaseProps } from '../types'
 
 export type RegisterPopupOptions<ID extends string, T extends object, W extends WrapperBaseProps> = {

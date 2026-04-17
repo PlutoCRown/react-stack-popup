@@ -1,22 +1,48 @@
 {
   "name": "react-stack-popup",
-  "private": true,
   "version": "1.0.0",
+  "description": "Stack-based popup router for React with composable wrappers.",
+  "license": "MIT",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "./dist/*.css",
+    "./dist/**/*.css"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json",
+    "build:demo": "vite build",
+    "pack:check": "npm pack --json --dry-run",
     "preview": "vite preview",
     "lint": "oxlint",
-    "format": "oxfmt"
+    "format": "oxfmt",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "immer": "^11.1.4",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
     "react-freeze": "^1.0.4",
     "zustand": "^5.0.11"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
