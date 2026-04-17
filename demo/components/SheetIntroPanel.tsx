@@ -23,9 +23,12 @@ export function SheetIntroPanel() {
         <button onClick={() => stackRouter.open(PopupID.HighSheet, {})}>
           全高的
         </button>
+        <button onClick={() => stackRouter.open(PopupID.TransparentSheet, {})}>
+          自定义背景
+        </button>
 
         <button onClick={() => stackRouter.open(PopupID.ScrollSheet, {})}>
-          即使包含滚动内容
+          即使滚动内容
         </button>
       </div>
     </section>

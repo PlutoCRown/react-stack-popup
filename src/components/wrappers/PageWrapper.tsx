@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./PageWrapper.module.css";
@@ -11,6 +11,9 @@ export const PageWrapper = ({
   duration = 300,
 }: PageWrapperProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperStyle = {
+    "--rsp-duration": `${duration}ms`,
+  } as CSSProperties;
 
   useEffect(() => {
     const el = containerRef.current;
@@ -32,6 +35,7 @@ export const PageWrapper = ({
     <div
       ref={containerRef}
       className={clsx("rsp-stack", "rsp-page", styles.pageWrapper)}
+      style={wrapperStyle}
     >
       <div className={styles.mask} />
       {/* 

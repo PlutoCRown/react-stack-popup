@@ -5,6 +5,7 @@ export enum PopupID {
   CustomWrapper = "TestCustom",
   FullPage = "FullPage",
   TestSwipable = "TestSwipable",
+  TransparentSheet = "TransparentSheet",
   HighSheet = "HighSheet",
   ScrollSheet = "ScrollSheet",
   ScrollPage = "ScrollPage",

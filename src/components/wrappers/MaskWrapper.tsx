@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./MaskWrapper.module.css";
@@ -18,6 +18,9 @@ export const MaskWrapper = ({
   className,
 }: MaskWrapperProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperStyle = {
+    "--rsp-duration": `${duration}ms`,
+  } as CSSProperties;
 
   useEffect(() => {
     const el = containerRef.current;
@@ -48,6 +51,7 @@ export const MaskWrapper = ({
     <div
       ref={containerRef}
       className={clsx("rsp-stack", styles.maskWrapper, className)}
+      style={wrapperStyle}
     >
       <div
         className={styles.mask}

@@ -20,6 +20,7 @@ import React from "react";
 import LongContent from "./popups/LongContent";
 import { ImageViewer } from "./popups/ImageViewer";
 import ConfirmLeave from "./popups/ConfirmLeave";
+import TransparentSheetPopup from "./popups/TransparentSheetPopup";
 
 // Register popups
 const popups = [
@@ -35,6 +36,9 @@ const popups = [
   }),
   // Sheet
   RegisterPopup(PopupID.TestSwipable, PropsPopup, SheetWrapper),
+  RegisterPopup(PopupID.TransparentSheet, TransparentSheetPopup, SheetWrapper, {
+    transparentBackground: true,
+  }),
   RegisterPopup(PopupID.HighSheet, RandomHeightPopup, SheetWrapper, {
     fitContent: false,
   }),

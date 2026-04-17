@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { CSSProperties, useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./SheetWrapper.module.css";
@@ -7,15 +7,17 @@ export interface SheetWrapperProps extends WrapperBaseProps {
   fitContent?: boolean;
   swipable?: boolean;
   maskClosable?: boolean;
+  transparentBackground?: boolean;
 }
 
-const isAndroid = navigator?.userAgent?.includes("Android");
+// const isAndroid = navigator?.userAgent?.includes("Android");
 
 export const SheetWrapper = ({
   children,
   fitContent = true,
   swipable = true,
   maskClosable = true,
+  transparentBackground = false,
   onClose,
   visible,
   duration = 300,
@@ -101,6 +103,13 @@ export const SheetWrapper = ({
     };
   }, [swipable, onClose]);
 
+  const wrapperStyle = {
+    "--rsp-duration": `${duration}ms`,
+    ...(transparentBackground
+      ? { "--rsp-background": "transparent" }
+      : undefined),
+  } as CSSProperties;
+
   return (
     <div
       ref={containerRef}
@@ -110,6 +119,7 @@ export const SheetWrapper = ({
         { "rsp-sheet-full": !fitContent },
         styles.sheetWrapper,
       )}
+      style={wrapperStyle}
     >
       <div className={styles.mask} onClick={handleMaskClick} />
       <div

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./DrawerWrapper.module.css";
@@ -21,6 +21,10 @@ export const DrawerWrapper = ({
   onClose,
 }: DrawerWrapperProps) => {
   const drawerRef = useRef<HTMLDivElement>(null);
+  const wrapperStyle = {
+    "--rsp-duration": `${duration}ms`,
+    ...style,
+  } as CSSProperties;
 
   useEffect(() => {
     const el = drawerRef.current;
@@ -51,7 +55,7 @@ export const DrawerWrapper = ({
         styles[direction],
         className,
       )}
-      style={style}
+      style={wrapperStyle}
     >
       <div
         className={styles.mask}
