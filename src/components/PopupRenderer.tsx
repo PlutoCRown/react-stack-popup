@@ -105,10 +105,10 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
   );
 
   return (
-    <Wrapper {...wrapperProps}>
-      <StackStateContext.Provider value={contextValue}>
+    <StackStateContext.Provider value={contextValue}>
+      <Wrapper {...wrapperProps}>
         {content}
-      </StackStateContext.Provider>
-    </Wrapper>
+      </Wrapper>
+    </StackStateContext.Provider>
   );
 });

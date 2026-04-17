@@ -1,0 +1,46 @@
+.root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f6f6f6;
+}
+
+.header {
+  height: 48px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.backButton {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  cursor: pointer;
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.imageWrap {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+.image {
+  width: 100%;
+}
+
+.content {
+  padding: 16px 20px 32px;
+}

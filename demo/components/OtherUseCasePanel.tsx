@@ -53,11 +53,29 @@ export function OtherUseCasePanel() {
       <div className="subtle" style={{ marginBlock: 12 }}>
         ⬇️ 复杂的动画可以新增一种自定义包装来实现
       </div>
-      <img
-        src="https://placehold.co/300x400?text=Click+Me!"
-        onClick={() => stackRouter.open(PopupID.CustomWrapper, {})}
-        style={{ borderRadius: 8 }}
-      />
+      <div className="image-group" style={{ aspectRatio: 'unset' }}>
+        {[
+          "https://placehold.co/300x400?text=Click+Me!",
+          "https://placehold.co/300x400?text=Click+Me!",
+        ].map((src, index) => (
+          <img
+            src={src}
+            key={index}
+
+            onClick={(e) =>
+              stackRouter.open(PopupID.CustomWrapper, {
+                pos: Object.assign(
+                  (e.target as HTMLImageElement).getBoundingClientRect(),
+                  { radius: 8 },
+                ),
+                hiddenControl: e.target as HTMLElement,
+              })
+            }
+            style={{ borderRadius: 8, cursor: "pointer", aspectRatio: 'unset' }}
+          />
+        ))}
+      </div>
+
     </section>
   );
 }

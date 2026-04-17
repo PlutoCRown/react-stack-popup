@@ -1,40 +1,68 @@
-import React from "react";
+import { FC, useEffect, useRef } from "react";
+import { useInStackState } from "../../../src";
 import { stackRouter } from "../../stackRouter";
+import { SharedImageRect } from "../ImageViewer";
+import styles from "./Popup.module.css";
 
-type Props = {};
+export type CustomPopupProps = {
+  pos?: SharedImageRect;
+  hiddenControl?: HTMLElement | null;
+};
 
-export const CustomPopup: React.FC<Props> = ({}) => {
+function parseDurationMs(value: string): number {
+  const trimmed = value.trim();
+  if (!trimmed) return 0;
+  if (trimmed.endsWith("ms")) return Number.parseFloat(trimmed);
+  if (trimmed.endsWith("s")) return Number.parseFloat(trimmed) * 1000;
+  const parsed = Number.parseFloat(trimmed);
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+export const CustomPopup: FC<CustomPopupProps> = ({ pos }) => {
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+  const { channel } = useInStackState<string, CustomPopupProps>();
+
+  useEffect(() => {
+    if (!pos) return;
+    const header = headerRef.current;
+    const body = bodyRef.current;
+    if (!header || !body) return;
+
+    const headerHeight = header.getBoundingClientRect().height;
+    const transitionMs = parseDurationMs(
+      getComputedStyle(header).getPropertyValue("--rsp-duration"),
+    );
+    header.style.height = "0px";
+    header.style.overflow = "hidden";
+    header.style.transition = "none";
+
+    const rafId = requestAnimationFrame(() => {
+      header.style.transition = `height ${transitionMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+      header.style.height = `${headerHeight}px`;
+    });
+
+    const offWillClose = channel.on("willClose", () => {
+      header.style.transition = `height ${transitionMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+      header.style.height = "0px";
+      body.scrollTo({ top: 0, behavior: 'instant' })
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      offWillClose();
+      header.style.transition = "";
+      header.style.height = "";
+      header.style.overflow = "";
+    };
+  }, [channel, pos]);
+
   return (
-    <div
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        background: "#f6f6f6",
-      }}
-    >
-      <div
-        style={{
-          height: 48,
-          background: "#fff",
-          display: "flex",
-          alignItems: "center",
-          padding: "0 12px",
-          boxShadow: "0 1px 0 rgba(0,0,0,0.06)",
-          flexShrink: 0,
-        }}
-      >
+    <div className={styles.root}>
+      <div ref={headerRef} className={styles.header}>
         <div
           onClick={() => stackRouter.close()}
-          style={{
-            width: 32,
-            height: 32,
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "transparent",
-            cursor: "pointer",
-          }}
+          className={styles.backButton}
         >
           <svg
             width="18"
@@ -51,27 +79,15 @@ export const CustomPopup: React.FC<Props> = ({}) => {
           </svg>
         </div>
       </div>
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: 0,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            margin: 0,
-          }}
-        >
+      <div ref={bodyRef} className={styles.body}>
+        <div className={styles.imageWrap}>
           <img
             src="https://placehold.co/300x400?text=Click+Me!"
             alt="Click Me"
-            style={{ width: "100%" }}
+            className={styles.image}
           />
         </div>
-        <div style={{ padding: "16px 20px 32px" }}>
+        <div className={styles.content}>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
             sollicitudin, urna non luctus congue, dolor neque gravida nisl, eget

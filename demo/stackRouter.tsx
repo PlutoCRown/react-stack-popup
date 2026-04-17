@@ -13,6 +13,7 @@ import { PopupID } from "./constants/popupIds";
 import RandomHeightPopup from "./popups/RandomHeightPopup";
 import NormalPopup from "./popups/NormalPopup";
 import CustomPopup from "./popups/Custom/Popup";
+import CustomWrapper from "./popups/Custom/Wrapper";
 import PagePopup from "./popups/PagePopup";
 import DrawerPopup from "./popups/DrawerPopup";
 import PropsPopup from "./popups/PropsPopup";
@@ -55,7 +56,7 @@ const popups = [
     MaskWrapper,
   ),
   // 特殊用法：自定义包装层弹窗
-  RegisterPopup(PopupID.CustomWrapper, CustomPopup, PageWrapper),
+  RegisterPopup(PopupID.CustomWrapper, CustomPopup, CustomWrapper),
   // 查看大图
 
   RegisterPopup(PopupID.ImageViewer, ImageViewer, NoneWrapper, { duration: 200 }),
