@@ -1,7 +1,6 @@
 import {
   createElement,
   memo,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -35,7 +34,14 @@ export function PopupRenderer<Config extends PopupConfigArray>({
     );
 
   const portalTarget = document.body;
-  return createPortal(renderItems, portalTarget);
+  return (
+    <>
+      {config.prefersReducedMotion && (
+        <style>{":root { --rsp-duration: 0s; }"}</style>
+      )}
+      {createPortal(renderItems, portalTarget)}
+    </>
+  );
 }
 
 type PopupItemProps<Config extends PopupConfigArray> = {

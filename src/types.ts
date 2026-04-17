@@ -56,6 +56,7 @@ export type StackWrapperComponent<P extends object = {}> = React.ComponentType<P
 
 export interface StackRouterConfig {
   urlManage?: boolean
+  prefersReducedMotion?: boolean
   freeze?: boolean
   suspense?: boolean | StackWrapperComponent<{ fallback?: ReactNode }>
   errorBoundary?: boolean | StackWrapperComponent

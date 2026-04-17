@@ -47,6 +47,7 @@ export class StackRouter<Config extends PopupConfigArray> {
   constructor(popups: Config, config: Partial<StackRouterConfig> = {}) {
     const defaultConfig: Required<StackRouterConfig> = {
       urlManage: false,
+      prefersReducedMotion: false,
       freeze: true,
       suspense: true,
       errorBoundary: true,

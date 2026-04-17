@@ -62,11 +62,15 @@ const popups = [
 const ua = navigator.userAgent;
 const isMobileSafari =
   /Mobile Safari/.test(ua) && !/Chrome|CriOS|Chromium/.test(ua);
+const prefersReducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)",
+).matches;
 
 export const focusLock = new FocusLock();
 
 export const stackRouter = new StackRouter(popups, {
   urlManage: isMobileSafari ? false : true,
+  prefersReducedMotion,
   unloadDistance: 5,
   lock: focusLock,
 });

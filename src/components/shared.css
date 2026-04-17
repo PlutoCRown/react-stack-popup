@@ -3,6 +3,7 @@
 */
 :root {
     --rsp-duration: .3s;
+    --rsp-background: #FFFFFF;
 }
 
 .rsp-root {
