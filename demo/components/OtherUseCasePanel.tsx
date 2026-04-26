@@ -35,6 +35,7 @@ export function OtherUseCasePanel() {
             src={src}
             alt=""
             key={index}
+            draggable={false}
             style={{ objectFit: index == 1 ? "contain" : "cover" }}
             onClick={(e) =>
               stackRouter.open(PopupID.ImageViewer, {
@@ -61,7 +62,7 @@ export function OtherUseCasePanel() {
           <img
             src={src}
             key={index}
-
+            draggable={false}
             onClick={(e) =>
               stackRouter.open(PopupID.CustomWrapper, {
                 pos: Object.assign(

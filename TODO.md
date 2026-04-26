@@ -9,9 +9,6 @@
   - 阻止退出 ✅
   - 阻止进入
 
-[ ] 测试
-  - style visible
-
 [ ] 更丰富的关闭方法封装
 - 抽层的History问题修复
 - closeLayer(2)

@@ -33,7 +33,7 @@ export type StackRouterArgs<C extends PopupConfigArray, Id extends StackRouterId
 
 // 做此步封装的原因是 如果内容组件没写React.FC<参数>类型声明。默认是object，这时候只允许传空对象，避免外部误解
 export type StackRouterOpenArgs<C extends PopupConfigArray, Id extends StackRouterId<C>> =
-  object extends StackRouterArgs<C, Id> ? EmptyObject : StackRouterArgs<C, Id>
+  keyof StackRouterArgs<C, Id> extends never ? EmptyObject : StackRouterArgs<C, Id>
 
 export type StackRouterWrapperProps<C extends PopupConfigArray, Id extends StackRouterId<C>> =
   Parameters<Extract<C[number], { id: Id }>['wrapper']>[0]
