@@ -1,7 +1,8 @@
-import { type CSSProperties, useEffect, useRef } from "react";
+import { type CSSProperties, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./MaskWrapper.module.css";
+import { useWrapperAnimation } from "./useWrapperAnimation";
 
 export interface MaskWrapperProps extends WrapperBaseProps {
   opacity?: number;
@@ -13,33 +14,22 @@ export const MaskWrapper = ({
   opacity = 0.5,
   maskClosable = true,
   onClose,
-  visible = true,
   duration = 300,
   className,
 }: MaskWrapperProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const wrapperStyle = {
     "--rsp-duration": `${duration}ms`,
   } as CSSProperties;
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const enterClass = "rsp-entering";
-    const exitClass = "rsp-exiting";
-    const activeClass = visible ? enterClass : exitClass;
-
-    el.classList.remove(enterClass, exitClass);
-    el.classList.add(activeClass);
-
-    const timer = window.setTimeout(
-      () => el.classList.remove(activeClass),
-      duration,
-    );
-    return () => {
-      window.clearTimeout(timer);
-    };
-  }, [visible, duration]);
+  useWrapperAnimation({
+    rootRef: containerRef,
+    endTargetRef: panelRef,
+    endEvent: "animationend",
+    duration,
+    coverPrevious: false,
+  });
 
   const handleMaskClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (maskClosable && e.target === e.currentTarget && onClose) {
@@ -58,7 +48,7 @@ export const MaskWrapper = ({
         style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
         onClick={handleMaskClick}
       />
-      <div className={styles.panel}>{children}</div>
+      <div ref={panelRef} className={styles.panel}>{children}</div>
     </div>
   );
 };

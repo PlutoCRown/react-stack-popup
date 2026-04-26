@@ -40,6 +40,7 @@ export class StackRouter<Config extends PopupConfigArray> {
   >>
   private historyManager?: HistoryManager
   private keyCounter = 0
+  /** StackRouter 的事件总线 */
   public readonly channel: EventBus<StackRouterEvents<StackRouterId<Config>>>
   public ErrorBoundary?: StackWrapperComponent
   public Suspense?: StackWrapperComponent<{ fallback?: ReactNode }>
@@ -88,16 +89,14 @@ export class StackRouter<Config extends PopupConfigArray> {
     const execOpen = () => {
       log('打开')
       if (this.config.lock?.shouldIgnoreOpen()) return Promise.reject()
-      const duration = this.popupConfigs[id]?.wrapperProps?.duration ?? 300
       const channel = new EventBus<StackItemChannelEvents>()
-      const stackItem = { id, key: this.generateKey(), args: args, visible: true, freeze: false, channel }
+      const stackItem = { id, key: this.generateKey(), args: args, visible: true, freeze: null, channel, }
       this.instance.open(stackItem)
-      // 暂时这样，后续由包装层做这个
-      setTimeout(() => {
-        channel.emit('opend', null)
-      }, duration)
-      // 等所有包装层介入
-      // channel.on('entered',()=>channel.emit('opend',null))
+      channel.once('entered', (coverPrevious) => this.instance.markEntered(stackItem.key, coverPrevious))
+      channel.once('destroy', () => this.instance.destroy(stackItem.key))
+      window.requestAnimationFrame(() => {
+        channel.emit('willEnter', null)
+      })
       this.channel.emit('open', { id })
       this.historyManager?.push(extra?.url)
       return Promise.resolve()
@@ -115,13 +114,12 @@ export class StackRouter<Config extends PopupConfigArray> {
     try {
       const stack = this.instance.stack
       const target = id ? stack.find(i => i.id === id) : stack.findLast(i => i.visible)
-      const duration = target ? (this.popupConfigs[target.id]?.wrapperProps?.duration ?? 300) : 0
       if (!target) return Promise.reject()
       const okToClose = lock?.runCloseHooks(target.key) ?? true
       if (!okToClose) return Promise.reject()
       target.channel.emit('willClose', null)
       this.channel.emit('close', { id: id || null })
-      this.instance.close(target.key, duration)
+      this.instance.close(target.key)
       this.historyManager?.pop()
       return Promise.resolve()
     } finally {
@@ -144,18 +142,39 @@ function createStore<ID extends string, T extends any, W extends WrapperBaseProp
           state.stack.push(item as any)
         })
       },
-      close: (key, duration = 300) => {
+      markEntered: (key, coverPrevious) => {
+        set((draft) => {
+          let found = false
+          for (let i = draft.stack.length - 1; i >= 0; i -= 1) {
+            const item = draft.stack[i]
+            if (!found && item.key === key) {
+              if (!coverPrevious) break
+              found = true
+              continue
+            }
+            if (found) {
+              if (item.freeze) break
+              item.freeze = key
+            }
+          }
+        })
+      },
+      close: (key) => {
         set((draft) => {
           const item = draft.stack.find(i => i.key == key)
           if (!item) return;
           item.visible = false
-        })
-        setTimeout(() => {
-          set(draft => {
-            draft.stack.find(item => item.key == key)?.channel.emit('closed', null)
-            draft.stack = draft.stack.filter(item => item.key !== key)
+          draft.stack.forEach((stackItem) => {
+            if (stackItem.freeze === key) {
+              stackItem.freeze = null
+            }
           })
-        }, duration)
+        })
+      },
+      destroy: (key) => {
+        set(draft => {
+          draft.stack = draft.stack.filter(item => item.key !== key)
+        })
       }
     }))
   )

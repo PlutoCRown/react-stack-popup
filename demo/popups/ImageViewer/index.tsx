@@ -63,15 +63,15 @@ export const ImageViewer: FC<Props> = ({
     const bg = backgroundRef.current;
     const img = imgRef.current;
     if (!wrap || !bg || !img) return;
-    wrap.style.transition = `all ${TRANSITION_MS}ms ease`;
-    bg.style.transition = `opacity ${TRANSITION_MS}ms ease`;
+    wrap.style.transition = `all var(--rsp-duration) ease`;
+    bg.style.transition = `opacity var(--rsp-duration) ease`;
     wrap.style.left = "0px";
     wrap.style.top = "0px";
     wrap.style.width = "100vw";
     wrap.style.height = "100vh";
     wrap.style.borderRadius = "0px";
     wrap.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
-    img.style.transition = `all ${TRANSITION_MS}ms ease`;
+    img.style.transition = `all var(--rsp-duration) ease`;
     img.style.width = "100%";
     img.style.height = "100%";
     bg.style.opacity = "1";
@@ -83,12 +83,12 @@ export const ImageViewer: FC<Props> = ({
     const img = imgRef.current;
     const rect = originRectRef.current ?? pos;
     if (!wrap || !bg || !img || !rect) return;
-    wrap.style.transition = `all ${TRANSITION_MS}ms ease`;
-    bg.style.transition = `opacity ${TRANSITION_MS}ms ease`;
+    wrap.style.transition = `all var(--rsp-duration) ease`;
+    bg.style.transition = `opacity var(--rsp-duration) ease`;
     applyRect(rect);
     wrap.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
     const r = imageRectRef.current;
-    img.style.transition = `all ${TRANSITION_MS}ms ease`;
+    img.style.transition = `all var(--rsp-duration) ease`;
     if (r) {
       img.style.width = `${r.width}%`;
       img.style.height = `${r.height}%`;
@@ -99,25 +99,19 @@ export const ImageViewer: FC<Props> = ({
     bg.style.opacity = "0";
   };
 
-  const handleClosed = useCallback(() => {
+  useEffect(() => channel.on("willClose", () => {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
     isDraggingRef.current = false;
     if (pos) {
       toOrigin();
       window.setTimeout(() => {
-        if (hiddenControl) {
-          hiddenControl.style.opacity = "1";
-        }
+        if (hiddenControl) hiddenControl.style.opacity = "1";
       }, TRANSITION_MS);
       return;
     }
-    if (hiddenControl) {
-      hiddenControl.style.opacity = "1";
-    }
-  }, [hiddenControl, pos, TRANSITION_MS]);
-
-  useEffect(() => channel.on("willClose", () => handleClosed()), [channel, handleClosed]);
+    if (hiddenControl) hiddenControl.style.opacity = "1";
+  }), [channel, hiddenControl, pos, TRANSITION_MS]);
 
   const requestClose = () => {
     if (isClosingRef.current) return;
@@ -148,10 +142,7 @@ export const ImageViewer: FC<Props> = ({
             renderHeight =
               (((pos.width / naturalWidth) * naturalHeight) / pos.height) * 100;
           }
-          imageRectRef.current = {
-            width: renderWidth,
-            height: renderHeight,
-          };
+          imageRectRef.current = { width: renderWidth, height: renderHeight, };
           img.style.transition = "none";
           img.style.width = `${renderWidth}%`;
           img.style.height = `${renderHeight}%`;
@@ -176,16 +167,10 @@ export const ImageViewer: FC<Props> = ({
     e.stopPropagation();
     wasDraggingRef.current = false;
     isDraggingRef.current = true;
-    dragStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      pointerId: e.pointerId,
-    };
+    dragStartRef.current = { x: e.clientX, y: e.clientY, pointerId: e.pointerId, };
     wrap.style.transition = "none";
     bg.style.transition = "none";
-    if (wrap.setPointerCapture) {
-      wrap.setPointerCapture(e.pointerId);
-    }
+    wrap.setPointerCapture?.(e.pointerId);
   };
 
   const handlePointerMove = (e: PointerEvent<HTMLDivElement>) => {
@@ -215,15 +200,10 @@ export const ImageViewer: FC<Props> = ({
     const dy = e.clientY - start.y;
     const distance = Math.abs(dx) + Math.abs(dy);
     isDraggingRef.current = false;
-    if (wrap.releasePointerCapture) {
-      wrap.releasePointerCapture(start.pointerId);
-    }
-    if (distance > 200) {
-      requestClose();
-      return;
-    }
-    wrap.style.transition = `all ${TRANSITION_MS}ms ease`;
-    bg.style.transition = `opacity ${TRANSITION_MS}ms ease`;
+    wrap.releasePointerCapture?.(start.pointerId);
+    if (distance > 200) return requestClose();
+    wrap.style.transition = `all var(--rsp-duration) ease`;
+    bg.style.transition = `opacity var(--rsp-duration) ease`;
     wrap.style.transform = "translate3d(0px, 0px, 0px) scale(1)";
     bg.style.opacity = "1";
   };
@@ -243,14 +223,8 @@ export const ImageViewer: FC<Props> = ({
     wrap.style.overflow = "hidden";
     wrap.style.willChange =
       "left, top, width, height, border-radius, transform";
-    if (pos) {
-      applyRect(pos);
-    } else {
-      toFullscreen();
-    }
-    if (img.complete) {
-      handleImageLoaded();
-    }
+    pos ? applyRect(pos) : toFullscreen()
+    if (img.complete) handleImageLoaded();
   }, [pos, objectFit]);
 
 

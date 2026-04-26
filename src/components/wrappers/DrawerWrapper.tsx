@@ -1,7 +1,8 @@
-import { type CSSProperties, useEffect, useRef } from "react";
+import { type CSSProperties, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./DrawerWrapper.module.css";
+import { useWrapperAnimation } from "./useWrapperAnimation";
 
 export interface DrawerWrapperProps extends WrapperBaseProps {
   direction?: "left" | "right";
@@ -11,7 +12,6 @@ export interface DrawerWrapperProps extends WrapperBaseProps {
 
 export const DrawerWrapper = ({
   children,
-  visible = true,
   duration = 300,
   direction = "right",
   width,
@@ -21,28 +21,19 @@ export const DrawerWrapper = ({
   onClose,
 }: DrawerWrapperProps) => {
   const drawerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const wrapperStyle = {
     "--rsp-duration": `${duration}ms`,
     ...style,
   } as CSSProperties;
 
-  useEffect(() => {
-    const el = drawerRef.current;
-    if (!el) return;
-    const enterClass = "rsp-entering";
-    const exitClass = "rsp-exiting";
-    const activeClass = visible ? enterClass : exitClass;
-
-    el.classList.remove(enterClass, exitClass);
-    el.classList.add(activeClass);
-
-    const timer = window.setTimeout(() => {
-      el.classList.remove(activeClass);
-    }, duration);
-    return () => {
-      window.clearTimeout(timer);
-    };
-  }, [visible, duration, direction]);
+  useWrapperAnimation({
+    rootRef: drawerRef,
+    endTargetRef: trackRef,
+    endEvent: "animationend",
+    duration,
+    coverPrevious: false,
+  });
 
   const normalizedWidth = typeof width === "number" ? `${width}px` : width;
 
@@ -68,6 +59,7 @@ export const DrawerWrapper = ({
         }
       />
       <div
+        ref={trackRef}
         className={styles.track}
         style={{
           width: normalizedWidth,

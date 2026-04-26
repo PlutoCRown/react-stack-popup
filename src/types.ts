@@ -55,31 +55,40 @@ export type StackRouterState<C extends PopupConfigArray> = RouterState<
 export type StackWrapperComponent<P extends object = {}> = React.ComponentType<P & { children: ReactNode }>
 
 export interface StackRouterConfig {
+  /** 是否需要管理URL，default: false */
   urlManage?: boolean
+  /** 是否减少动画，default: false */
   prefersReducedMotion?: boolean
+  /** 是否启用 react-freeze，优化 default: true */
   freeze?: boolean
+  /** 是否 suspense，传react组件可以自定义fallback, default: true */
   suspense?: boolean | StackWrapperComponent<{ fallback?: ReactNode }>
+  /** 是否 errorBoundary，传react组件可以自定义fallback, default: true */
   errorBoundary?: boolean | StackWrapperComponent
+  /** 是否启用硬卸载，可能导致组件内部状态丢失 */
   unloadDistance?: number
+  /** 外部控制功能 */
   lock?: import("./store/FocusLock").FocusLock | null
 }
-
 
 export interface StackItem<ID extends string, T extends any, W extends WrapperBaseProps> {
   id: ID
   key: string
   args: T
+  /** 弹窗的公共配置 */
   popupConfig?: PopupConfig<ID, T, W>
-  visible: boolean,
-  freeze: boolean
+  visible: boolean
+  /** 如果被冻结，这里记录让它冻结的那一层 key */
+  freeze: string | null
+  /** 每个弹窗内独立的消息通道 */
   channel: EventBus<StackItemChannelEvents>
 }
 
 export type StackItemChannelEvents = {
-  opend: null
+  willEnter: null
   willClose: null
-  closed: null
-  entered: null
+  destroy: null
+  entered: boolean
 }
 export type InStackContext<ID extends string, T extends any, W extends WrapperBaseProps> = StackItem<ID, T, W> & {
   /* 这个 onClose 只会关闭当前层的弹窗 */
@@ -94,5 +103,7 @@ export type StackContext<ID extends string, T extends any, W extends WrapperBase
 export interface RouterState<ID extends string, T extends any, W extends WrapperBaseProps> {
   stack: StackItem<ID, T, W>[]
   open: (item: StackItem<ID, T, W>) => void
-  close: (key: string, duration?: number) => void
+  markEntered: (key: string, coverPrevious: boolean) => void
+  close: (key: string) => void
+  destroy: (key: string) => void
 }

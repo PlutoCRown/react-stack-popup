@@ -2,6 +2,7 @@ import { CSSProperties, useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./SheetWrapper.module.css";
+import { useWrapperAnimation } from "./useWrapperAnimation";
 
 export interface SheetWrapperProps extends WrapperBaseProps {
   fitContent?: boolean;
@@ -19,27 +20,18 @@ export const SheetWrapper = ({
   maskClosable = true,
   transparentBackground = false,
   onClose,
-  visible,
   duration = 300,
 }: SheetWrapperProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const enterClass = "rsp-entering";
-    const exitClass = "rsp-exiting";
-    const activeClass = visible ? enterClass : exitClass;
-
-    el.classList.remove(enterClass, exitClass);
-    el.classList.add(activeClass);
-
-    const timer = window.setTimeout(() => {
-      el.classList.remove(activeClass);
-    }, duration);
-    return () => window.clearTimeout(timer);
-  }, [visible, duration]);
+  useWrapperAnimation({
+    rootRef: containerRef,
+    endTargetRef: panelRef,
+    endEvent: "animationend",
+    duration,
+    coverPrevious: false,
+  });
 
   const handleMaskClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (maskClosable && e.target === e.currentTarget && onClose) {

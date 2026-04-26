@@ -1,35 +1,28 @@
-import { type CSSProperties, useEffect, useRef } from "react";
+import { type CSSProperties, useRef } from "react";
 import clsx from "clsx";
 import type { WrapperBaseProps } from "../../types";
 import styles from "./PageWrapper.module.css";
+import { useWrapperAnimation } from "./useWrapperAnimation";
 
 export interface PageWrapperProps extends WrapperBaseProps {}
 
 export const PageWrapper = ({
   children,
-  visible = true,
   duration = 300,
 }: PageWrapperProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const wrapperStyle = {
     "--rsp-duration": `${duration}ms`,
   } as CSSProperties;
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const enterClass = "rsp-entering";
-    const exitClass = "rsp-exiting";
-    const activeClass = visible ? enterClass : exitClass;
-
-    el.classList.remove(enterClass, exitClass);
-    el.classList.add(activeClass);
-
-    const timer = window.setTimeout(() => {
-      el.classList.remove(activeClass);
-    }, duration);
-    return () => window.clearTimeout(timer);
-  }, [visible, duration]);
+  useWrapperAnimation({
+    rootRef: containerRef,
+    endTargetRef: trackRef,
+    endEvent: "animationend",
+    duration,
+    coverPrevious: true,
+  });
 
   return (
     <div
@@ -44,7 +37,7 @@ export const PageWrapper = ({
         - 所以底色要在track上，滚动容器要在panel上
         - 如果要少一层元素，这个 overflow 的的复杂度要交给用户
       */}
-      <div className={styles.track}>
+      <div ref={trackRef} className={styles.track}>
         <div className={styles.panel}>{children}</div>
       </div>
     </div>

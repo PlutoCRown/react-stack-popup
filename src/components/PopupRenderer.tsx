@@ -65,9 +65,7 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
 
   const freeze = config.freeze !== false;
 
-  if (freeze) {
-    content = <Freeze freeze={item.freeze}>{content}</Freeze>;
-  }
+
   if (Suspense) {
     content = <Suspense fallback={<PopupLoading />}>{content}</Suspense>;
   }
@@ -84,7 +82,7 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
 
   const [useMount, setUseMount] = useState(false);
   useEffect(() => {
-    const offOpend = item.channel.on("opend", () => setUseMount(true));
+    const offOpend = item.channel.on("entered", () => setUseMount(true));
     const offWillClose = item.channel.on("willClose", () => setUseMount(false));
     return () => {
       offOpend();
@@ -102,12 +100,13 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
     }),
     [item, stackRouter, useMount],
   );
-
   return (
-    <StackStateContext.Provider value={contextValue}>
-      <Wrapper {...wrapperProps}>
-        {content}
-      </Wrapper>
-    </StackStateContext.Provider>
+    <Freeze freeze={freeze && Boolean(item.freeze)}>
+      <StackStateContext.Provider value={contextValue}>
+        <Wrapper {...wrapperProps}>
+          {content}
+        </Wrapper>
+      </StackStateContext.Provider>
+    </Freeze>
   );
 });
