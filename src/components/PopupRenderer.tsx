@@ -66,12 +66,11 @@ const PopupItem = memo(function PopupItem<Config extends PopupConfigArray>({
   const freeze = config.freeze !== false;
 
   if (freeze) {
-    content = <Freeze freeze={false}>{content}</Freeze>;
+    content = <Freeze freeze={item.freeze}>{content}</Freeze>;
   }
   if (Suspense) {
     content = <Suspense fallback={<PopupLoading />}>{content}</Suspense>;
   }
-
   if (ErrorBoundary) {
     content = <ErrorBoundary>{content}</ErrorBoundary>;
   }

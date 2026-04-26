@@ -3,6 +3,7 @@ import { useInStackState } from "../../../src";
 import { stackRouter } from "../../stackRouter";
 import { SharedImageRect } from "../ImageViewer";
 import styles from "./Popup.module.css";
+import { PopupID } from "../../constants/popupIds";
 
 export type CustomPopupProps = {
   pos?: SharedImageRect;
@@ -85,6 +86,16 @@ export const CustomPopup: FC<CustomPopupProps> = ({ pos }) => {
             src="https://placehold.co/300x400?text=Click+Me!"
             alt="Click Me"
             className={styles.image}
+            onClick={(e) =>
+              stackRouter.open(PopupID.ImageViewer, {
+                src: "https://placehold.co/300x400?text=Click+Me!",
+                pos: Object.assign(
+                  (e.target as HTMLImageElement).getBoundingClientRect(),
+                  { radius: 12 },
+                ),
+                hiddenControl: e.target as HTMLElement,
+              })
+            }
           />
         </div>
         <div className={styles.content}>
