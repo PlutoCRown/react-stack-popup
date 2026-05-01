@@ -1,93 +1,70 @@
-# react-stack-popup
+<h1 align="center">react-stack-popup</h1>
 
-一个面向移动端的轻量弹窗路由与堆叠系统。用“注册弹窗 + 栈式路由”的方式管理复杂流程，并通过可组合的 Wrapper 控制遮罩、动画与布局。
+<p align="center">
+  Strongly typed popup orchestration for React.
+</p>
 
-## 特性
-- 类型安全的弹窗注册与调用
-- 栈式路由管理，支持多层弹窗与回退
-- 内置多种 Wrapper，可组合与可替换
-- 适合移动端：遮罩、底部弹窗、触摸交互
+<p align="center">
+  <a href="./docs/guides/index.md">Documentation</a>
+  ·
+  <a href="https://deepwiki.com/PlutoCRown/react-stack-popup">DeepWiki</a>
+  ·
+  <a href="https://github.com/PlutoCRown/react-stack-popup">GitHub</a>
+</p>
 
-## 安装
+---
+
+`react-stack-popup` is a command-driven popup stack for React. It keeps popup registration, lifecycle handling, wrapper composition, URL history, and lock control in one system, with strong TypeScript inference across the whole API surface.
+
+## Installation
+
 ```bash
 npm install react-stack-popup
 ```
 
-```tsx
+Import the stylesheet:
+
+```bash
 import "react-stack-popup/style.css";
 ```
 
-`react` 和 `react-dom` 是 peer dependencies，需要由业务项目自己提供。
+## Documentation
 
-## 最小用法
-```tsx
-import {
-  MaskWrapper,
-  PopupRenderer,
-  RegisterPopup,
-  StackRouter,
-} from "react-stack-popup";
+See the full docs at [`docs/guides`](./docs/guides/index.md).
 
-type PopupId = "profile";
+## Core value
 
-const ProfilePopup = ({ userId }: { userId: string }) => {
-  return <div>User: {userId}</div>;
-};
+| Area | What you get |
+| --- | --- |
+| Command API | `StackRouter.open` and `close` for direct popup control |
+| Type safety | Popup IDs, content props, wrapper props, and stack state are inferred |
+| Runtime model | Multi-layer stack, lifecycle channels, and current-layer context |
+| Performance | Freeze inactive layers, cap render distance, and reduce motion |
+| Reliability | Suspense, error boundaries, lock sequencing, and close guards |
 
-const popups = [
-  RegisterPopup("profile" as PopupId, ProfilePopup, MaskWrapper),
-] as const;
+## Where it fits
 
-export const stackRouter = new StackRouter(popups, {
-  urlManage: true,
-});
+| Scenario | Fit |
+| --- | --- |
+| H5 app-like navigation | Popup flows that behave like native screens |
+| URL-aware flows | Browser-return coordination and deep-link friendly popup state |
+| WebView embedding | Popup orchestration inside host app containers |
 
-export function App() {
-  return (
-    <>
-      <button
-        onClick={() => stackRouter.open("profile", { userId: "42" })}
-      >
-        Open popup
-      </button>
-      <PopupRenderer stackRouter={stackRouter} />
-    </>
-  );
-}
-```
+## Contributing
 
-## 内置 Wrapper
-- `NoneWrapper`：不添加任何外层结构
-- `MaskWrapper`：遮罩层与渐隐动画
-- `SheetWrapper`：自适应高度 + 滑动关闭
-- `PageWrapper`：页面级过渡动画
-- `DrawerWrapper`：左右侧抽屉
+This repository is maintained as a library-first project. Typical contributions include:
 
-## 仓库开发
-```bash
-bun install
-bun run dev
-```
+- documentation improvements
+- bug fixes
+- wrapper or lifecycle refinements
+- demo coverage for new behaviors
 
-构建 npm 包：
-```bash
-bun run build
-```
+Before sending changes, run:
 
-构建 demo：
-```bash
-bun run build:demo
-```
+- `bun run build`
+- `bun run pack:check`
+- `bun run lint`
 
-检查最终 npm 包内容：
-```bash
-bun run pack:check
-```
+## License
 
-## 发布物
-- `dist/`：npm 包最小发布产物
-- `dist-demo/`：demo 站点构建产物
-- npm publish 仅包含 `dist`、`README.md`、`LICENSE`
-
-## 许可
 MIT
